@@ -1,0 +1,58 @@
+package omsu.imit.schedule.service
+
+import omsu.imit.schedule.exception.ErrorCode
+import omsu.imit.schedule.exception.ScheduleGeneratorException
+import omsu.imit.schedule.model.TimeBlock
+import omsu.imit.schedule.repository.TimeBlockRepository
+import omsu.imit.schedule.requests.CreateTimeBlockRequest
+import omsu.imit.schedule.requests.EditTimeBlockRequest
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+
+@Service
+class TimeBlockService
+@Autowired
+constructor(private val timeBlockRepository: TimeBlockRepository) {
+
+    fun addTimeBlock(request: CreateTimeBlockRequest): TimeBlock {
+        if (timeBlockRepository.findByTime(request.timeFrom, request.timeTo) != null)
+            throw ScheduleGeneratorException(ErrorCode.TIMEBLOCK_ALREADY_EXISTS, request.timeFrom, request.timeTo)
+
+        val timeBlock = TimeBlock(request.timeFrom, request.timeTo)
+        timeBlockRepository.save(timeBlock)
+
+        return timeBlock
+    }
+
+    fun getTimeBlockById(timeBlockId: Int): TimeBlock {
+        val timeBlock: TimeBlock? = timeBlockRepository.findById(timeBlockId).orElse(null)
+                ?: throw ScheduleGeneratorException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeBlockId.toString())
+        return timeBlock!!
+    }
+
+    fun getTimeBlocks(): MutableList<TimeBlock> {
+        return timeBlockRepository.findAll()
+    }
+
+    fun editTimeBlock(timeBlockId: Int, request: EditTimeBlockRequest): TimeBlock {
+        val timeBlock = timeBlockRepository.findById(timeBlockId).orElse(null)
+                ?: throw ScheduleGeneratorException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeBlockId.toString())
+
+        if (request.timeFrom != null) timeBlock.timeFrom = request.timeFrom!!
+        if (request.timeTo != null) timeBlock.timeTo = request.timeTo!!
+        else throw ScheduleGeneratorException(ErrorCode.EMPTY_REQUEST_BODY)
+
+        timeBlockRepository.save(timeBlock)
+        return timeBlock
+    }
+
+    fun deleteTimeBlock(timeBlockId: Int) {
+        if (!timeBlockRepository.existsById(timeBlockId))
+            throw ScheduleGeneratorException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeBlockId.toString())
+        timeBlockRepository.deleteById(timeBlockId)
+    }
+
+    fun deleteAllTimeBlocks() {
+        timeBlockRepository.deleteAll()
+    }
+}

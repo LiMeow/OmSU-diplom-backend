@@ -1,0 +1,5 @@
+jwt:
+  issuer: 'cactuscatoo@gmail.com'
+  signingKey: 'XBzE8HfMcQfTjWnZr4u7w1zEC2F4JaNdRgUkXp2s5v8yqAED7G5KbPeShVmYq3t6UkXp2s5v8yqAED7G5KbPeShVmYq3t6'
+  aTokenDuration: 30
+  aLongTokenDuration: 1440
