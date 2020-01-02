@@ -173,5 +173,6 @@
     <orderEntry type="library" name="Maven: org.mockito:mockito-core:2.21.0" level="project" />
     <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy-agent:1.9.12" level="project" />
     <orderEntry type="library" name="Maven: org.objenesis:objenesis:2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.liquibase:liquibase-core:3.8.4" level="project" />
   </component>
 </module>

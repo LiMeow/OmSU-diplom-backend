@@ -13,6 +13,7 @@ enum class ErrorCode {
     DISCIPLINE_NOT_EXISTS("id", "Discipline with id '%s' not exists."),
     DISCIPLINE_ALREADY_EXISTS("name", "Discipline '%s' already exists."),
     EMPTY_REQUEST_BODY("json", "Empty request body."),
+    FACULTY_ALREADY_EXISTS("faculty name", "Faculty with name '%s' in building with address '%s' already exists"),
     FACULTY_NOT_EXISTS("facultyId", "Faculty with id '%s' not exists"),
     GROUP_ALREADY_EXISTS("id", "Group with name '%s' already exists."),
     GROUP_NOT_EXISTS("id", "Group with id '%s' not exists."),

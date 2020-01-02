@@ -56,7 +56,7 @@ create TABLE chairs
 (
     id         serial primary key,
     name       text    not null,
-    faculty_id integer not null REFERENCES faculties (id) on delete cascade,
+    faculty_id integer not null REFERENCES faculties (id) on delete cascade
 );
 
 CREATE TABLE personal_datas

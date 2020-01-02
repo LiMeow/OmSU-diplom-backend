@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS activity_types
+(
+    id   SERIAL PRIMARY KEY,
+    type TEXT UNIQUE NOT NULL
+);

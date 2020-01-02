@@ -15,6 +15,8 @@ class Faculty(@Id
               @Column
               var name: String) {
 
+    constructor(building: Building, name: String) : this(0, building, name)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Faculty) return false
