@@ -4,15 +4,15 @@ jwt:
   aTokenDuration: 30
   aLongTokenDuration: 1440
 
-  server:
-    port: 8080
-    address: 0.0.0.0
+server:
+  port: 8080
+  address: 0.0.0.0
 
-  spring:
-    profiles:
-      active: swagger
+spring:
+  profiles:
+    active: swagger
 
-    datasource:
+  datasource:
       driver-class-name: org.postgresql.Driver
       url: jdbc:postgresql://localhost:5432/dplm_db
       username: admin
