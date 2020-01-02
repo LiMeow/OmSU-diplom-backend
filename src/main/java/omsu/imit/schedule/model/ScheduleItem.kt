@@ -18,9 +18,5 @@ class ScheduleItem(@Id
 
                    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
                    @JoinColumn(name = "activity_type_id")
-                   var activityType: ActivityType,
-
-                   @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-                   @JoinColumn(name = "schedule_id")
-                   var schedule: Schedule) {
+                   var activityType: ActivityType) {
 }

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS schedules
+CREATE TABLE IF NOT EXISTS schedule_headers
 (
     id               SERIAL PRIMARY KEY,
     course           INTEGER NOT NULL,

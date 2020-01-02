@@ -13,7 +13,7 @@ class StudyDirection(@Id
                      var faculty: Faculty,
 
                      @Column
-                     var qualification: Qualification,
+                     var qualification: String,
 
                      @Column
                      var name: String) {

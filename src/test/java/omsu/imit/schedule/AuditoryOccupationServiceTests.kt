@@ -268,7 +268,7 @@ class AuditoryOccupationServiceTests {
     }
 
     private fun getGroup(): Group {
-        val studyDirection = StudyDirection(1, getFaculty(), Qualification.BACCALAUREATE, "name")
+        val studyDirection = StudyDirection(1, getFaculty(), Qualification.BACCALAUREATE.toString(), "name")
         return Group(1, studyDirection, "МПБ-604")
     }
 
