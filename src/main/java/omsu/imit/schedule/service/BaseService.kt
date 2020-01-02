@@ -30,7 +30,7 @@ open class BaseService {
             occupationInfo.occupying = occupation.lecturer!!.getFullName()
 
         if (occupation.group != null)
-            occupationInfo.group = occupation.group!!
+            occupationInfo.group = occupation.group!!.get(0)
 
         return occupationInfo
     }

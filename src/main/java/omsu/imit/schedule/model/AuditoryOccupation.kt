@@ -24,14 +24,16 @@ class AuditoryOccupation(@Id
                          @JoinColumn(name = "lecturer_id")
                          var lecturer: Lecturer?,
 
-                         @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-                         @JoinColumn(name = "group_id")
-                         var group: Group?,
+                         @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+                         @JoinTable(name = "auditory_occupation_groups",
+                                 joinColumns = [JoinColumn(name = "auditory_occupation_id", referencedColumnName = "id")],
+                                 inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")])
+                         var group: List<Group>?,
 
                          @Column
                          var comment: String?) {
 
-    constructor(auditory: Auditory, timeBlock: TimeBlock, date: String, lecturer: Lecturer?, group: Group?, comment: String)
+    constructor(auditory: Auditory, timeBlock: TimeBlock, date: String, lecturer: Lecturer?, group: List<Group>?, comment: String)
             : this(0, auditory, timeBlock, date, lecturer, group, comment)
 
     constructor(id: Int, auditory: Auditory, timeFrom: String, timeTo: String, date: String, lecturer: Lecturer, groupId: Int?, comment: String)

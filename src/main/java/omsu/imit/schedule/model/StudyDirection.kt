@@ -13,10 +13,12 @@ class StudyDirection(@Id
                      var faculty: Faculty,
 
                      @Column
-                     var qualification: String,
+                     @Enumerated(EnumType.STRING)
+                     var qualification: Qualification,
 
                      @Column
                      var name: String) {
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is StudyDirection) return false

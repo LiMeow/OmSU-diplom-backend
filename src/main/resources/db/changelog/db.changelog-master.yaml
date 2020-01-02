@@ -138,24 +138,24 @@ databaseChangeLog:
   - changeSet:
       id: 18
       author: lsmirnova
-      comment: create table schedule items
+      comment: create table schedules
       sqlFile:
         encoding: UTF-8
-        path: migrations/018-create-table-schedule-items.sql
+        path: migrations/018-create-table-schedules.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 19
       author: lsmirnova
-      comment: create table schedule headers
+      comment: create table schedule items
       sqlFile:
         encoding: UTF-8
-        path: migrations/019-create-table-schedule-headers.sql
+        path: migrations/019-create-table-schedule-items.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 20
       author: lsmirnova
-      comment: create table schedules
+      comment: create table auditory occupation groups
       sqlFile:
         encoding: UTF-8
-        path: migrations/020-create-table-schedules.sql
+        path: migrations/020-create-table-auditory-occupation-groups.sql
         relativeToChangelogFile: true

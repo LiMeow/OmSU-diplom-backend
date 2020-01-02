@@ -43,7 +43,7 @@ constructor(private val auditoryRepository: AuditoryRepository,
                 timeBlock,
                 request.date,
                 lecturer,
-                group,
+                listOf(group!!),
                 request.comment)
 
         auditoryOccupationRepository.save(occupation)
