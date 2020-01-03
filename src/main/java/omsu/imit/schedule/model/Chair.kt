@@ -8,9 +8,9 @@ class Chair(@Id
             @GeneratedValue(strategy = GenerationType.IDENTITY)
             var id: Int,
 
-            @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-            @JoinColumn(name = "faculty_id")
-            var faculty: Faculty,
+//            @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+//            @JoinColumn(name = "faculty_id")
+//            var faculty: Faculty,
 
             @Column
             var name: String) {
@@ -20,7 +20,6 @@ class Chair(@Id
         if (other !is Chair) return false
 
         if (id != other.id) return false
-        if (faculty != other.faculty) return false
         if (name != other.name) return false
 
         return true
@@ -28,7 +27,6 @@ class Chair(@Id
 
     override fun hashCode(): Int {
         var result = id
-        result = 31 * result + faculty.hashCode()
         result = 31 * result + name.hashCode()
         return result
     }
@@ -36,7 +34,6 @@ class Chair(@Id
     override fun toString(): String {
         return "Chair(" +
                 "id=$id, " +
-                "faculty=$faculty, " +
                 "name='$name')"
     }
 

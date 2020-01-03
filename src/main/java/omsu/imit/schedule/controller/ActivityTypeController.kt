@@ -23,15 +23,13 @@ constructor(private val activityTypeService: ActivityTypeService) {
 
     @GetMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getActivityType(@PathVariable("id") activityTypeId: Int): ResponseEntity<*> {
         return ResponseEntity.ok().body(activityTypeService.getActivityTypeById(activityTypeId))
     }
 
     @GetMapping(
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAllActivityTypes(): ResponseEntity<*> {
         return ResponseEntity.ok().body(activityTypeService.getAllActivityTypes())
     }

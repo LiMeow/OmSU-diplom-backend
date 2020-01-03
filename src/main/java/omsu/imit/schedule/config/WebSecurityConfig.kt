@@ -62,9 +62,7 @@ open class WebSecurityConfig(val jwtTokenService: JwtTokenService) : WebSecurity
                         "/swagger*/**",
                         "/webjars/**").permitAll()
                 .and()
-                .authorizeRequests().antMatchers("/whoiam").authenticated()
-                .and()
-                .authorizeRequests().anyRequest().hasAuthority("ADMIN")
+                .authorizeRequests().anyRequest().permitAll()
 
     }
 

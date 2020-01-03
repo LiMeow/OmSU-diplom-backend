@@ -1,23 +1,21 @@
 package omsu.imit.schedule.model
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
 @Table(name = "buildings")
 open class Building(@Id
                     @GeneratedValue(strategy = GenerationType.IDENTITY)
-                    var id: Int,
+                    var id: Int = 0,
 
                     @Column
-                    var number: Int,
+                    var number: Int = 0,
 
                     @Column
-                    var address: String,
+                    var address: String = "",
 
-                    @JsonIgnore
-                    @OneToMany(fetch = FetchType.LAZY, mappedBy = "building")
-                    var auditories: List<Auditory>) {
+                    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "building")
+                    var auditories: List<Auditory> = ArrayList()) {
 
     constructor(id: Int, number: Int, address: String) : this(id, number, address, ArrayList<Auditory>())
 

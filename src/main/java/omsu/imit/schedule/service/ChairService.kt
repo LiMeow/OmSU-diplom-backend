@@ -1,5 +1,7 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.exception.ErrorCode
+import omsu.imit.schedule.exception.ScheduleGeneratorException
 import omsu.imit.schedule.repository.ChairRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -14,11 +16,15 @@ constructor(private val chairRepository: ChairRepository) {
     }
 
     fun getChair(chairId: Int): Any {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return chairRepository.findById(chairId).orElse(null)
+                ?: throw ScheduleGeneratorException(ErrorCode.CHAIR_NOT_EXISTS, chairId.toString())
     }
 
     fun deleteChair(chairId: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (!chairRepository.existsById(chairId))
+            throw ScheduleGeneratorException(ErrorCode.CHAIR_NOT_EXISTS, chairId.toString())
+
+        chairRepository.deleteById(chairId)
     }
 
 }

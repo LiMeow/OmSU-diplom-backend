@@ -24,16 +24,14 @@ constructor(private val tagService: TagService) {
 
     @GetMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getTag(@PathVariable("id") tagId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(tagService.getTagById(tagId))
     }
 
     @GetMapping(
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAllTags(): ResponseEntity<*> {
         return ResponseEntity.ok().body(tagService.getAllTags())
     }

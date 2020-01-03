@@ -1,6 +1,5 @@
 package omsu.imit.schedule
 
-import omsu.imit.schedule.model.*
 import omsu.imit.schedule.repository.*
 import omsu.imit.schedule.service.AuditoryOccupationService
 import org.junit.Before
@@ -236,42 +235,42 @@ class AuditoryOccupationServiceTests {
 //        verify(auditoryOccupationRepository).deleteAllByAuditory(1)
 //    }
 
-
-    private fun getAuditory(): Auditory {
-        return Auditory(1, getBuilding(), "214")
-    }
-
-    private fun getAuditoryOccupation(): AuditoryOccupation {
-        return AuditoryOccupation(getAuditory(), getTimeBlock(), "19.05.2019", getLecturer(), getGroup(), "comment")
-    }
-
-    private fun getBuilding(): Building {
-        return Building(1, 1, "пр. Мира, 55-а")
-    }
-
-    private fun getFaculty(): Faculty {
-        return Faculty(1, getBuilding(), "ИМИТ");
-    }
-
-    private fun getChair(): Chair {
-        return Chair(1, getFaculty(), "КАФЕДРА ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ И ЗАЩИТЫ ИНФОРМАЦИИ");
-    }
-
-    private fun getGroup(): List<Group> {
-        val studyDirection = StudyDirection(1, getFaculty(), Qualification.BACCALAUREATE, "name")
-        return listOf(Group(1, studyDirection, "МПБ-604"))
-    }
-
-    private fun getLecturer(): Lecturer {
-        return Lecturer(1, getChair(), getPersonalData(), false)
-    }
-
-    private fun getPersonalData(): PersonalData {
-        return PersonalData(1, "Firstname", "Patronymic", "Lastname")
-    }
-
-    private fun getTimeBlock(): TimeBlock {
-        return TimeBlock("8:00", "9:35")
-    }
+//
+//    private fun getAuditory(): Auditory {
+//        return Auditory(1, getBuilding(), "214")
+//    }
+//
+//    private fun getAuditoryOccupation(): AuditoryOccupation {
+//        return AuditoryOccupation(getAuditory(), getTimeBlock(), "19.05.2019", getLecturer(), getGroup(), "comment")
+//    }
+//
+//    private fun getBuilding(): Building {
+//        return Building(1, 1, "пр. Мира, 55-а")
+//    }
+//
+//    private fun getFaculty(): Faculty {
+//        return Faculty(1, getBuilding(), "ИМИТ");
+//    }
+//
+//    private fun getChair(): Chair {
+//        return Chair(1, getFaculty(), "КАФЕДРА ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ И ЗАЩИТЫ ИНФОРМАЦИИ");
+//    }
+//
+//    private fun getGroup(): List<Group> {
+//        val studyDirection = StudyDirection(1, getFaculty(), Qualification.BACCALAUREATE, "name")
+//        return listOf(Group(1, studyDirection, "МПБ-604"))
+//    }
+//
+//    private fun getLecturer(): Lecturer {
+//        return Lecturer(1, getChair(), getPersonalData(), false)
+//    }
+//
+//    private fun getPersonalData(): PersonalData {
+//        return PersonalData(1, "Firstname", "Patronymic", "Lastname")
+//    }
+//
+//    private fun getTimeBlock(): TimeBlock {
+//        return TimeBlock("8:00", "9:35")
+//    }
 
 }

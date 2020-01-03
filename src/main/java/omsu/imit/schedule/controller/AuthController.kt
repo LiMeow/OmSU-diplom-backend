@@ -76,8 +76,7 @@ constructor(private val authService: AuthService,
 
     @GetMapping(
             path = ["/whoiam"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun whoIAm(): ResponseEntity<*> {
 
         return ResponseEntity.ok(userService.whoIAm());

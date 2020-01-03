@@ -23,16 +23,14 @@ constructor(private val lecturerService: LecturerService) {
 
     @GetMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getLecturer(@PathVariable("id") lectureId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(lecturerService.getLecturer(lectureId))
     }
 
     @GetMapping(
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAllLecturers(): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(lecturerService.getAllLecturers())

@@ -23,16 +23,13 @@ constructor(private val disciplineService: DisciplineService) {
 
     @GetMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getDiscipline(@PathVariable("id") disciplineId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(disciplineService.getDiscipline(disciplineId))
     }
 
-    @GetMapping(
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAllDisciplines(): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(disciplineService.getAllDisciplines())

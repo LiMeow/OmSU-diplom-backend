@@ -4,26 +4,34 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "faculties")
-class Faculty(@Id
-              @GeneratedValue(strategy = GenerationType.IDENTITY)
-              var id: Int,
+class Faculty(
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        var id: Int = 0,
 
-              @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-              @JoinColumn(name = "building_id")
-              var building: Building,
+        @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+        @JoinColumn(name = "building_id")
+        var building: Building? = null,
 
-              @Column
-              var name: String) {
+        @Column
+        var name: String = "",
 
-    constructor(building: Building, name: String) : this(0, building, name)
+        @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+        @JoinColumn(name = "faculty_id")
+        var chairs: List<Chair> = ArrayList()) {
+
+    constructor(building: Building, name: String) : this(0, building, name, ArrayList<Chair>())
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Faculty) return false
+        if (javaClass != other?.javaClass) return false
+
+        other as Faculty
 
         if (id != other.id) return false
         if (building != other.building) return false
         if (name != other.name) return false
+        if (chairs != other.chairs) return false
 
         return true
     }
@@ -32,6 +40,7 @@ class Faculty(@Id
         var result = id
         result = 31 * result + building.hashCode()
         result = 31 * result + name.hashCode()
+        result = 31 * result + chairs.hashCode()
         return result
     }
 
@@ -39,7 +48,8 @@ class Faculty(@Id
         return "Faculty(" +
                 "id=$id, " +
                 "building=$building, " +
-                "name='$name')"
+                "name='$name', " +
+                "chairs=$chairs)"
     }
 
 

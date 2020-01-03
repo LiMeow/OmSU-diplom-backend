@@ -23,16 +23,14 @@ constructor(private val groupService: GroupService) {
 
     @GetMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getGroup(@PathVariable("id") groupId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(groupService.getGroupById(groupId))
     }
 
     @GetMapping(
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAllGroups(): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(groupService.getAllGroups())

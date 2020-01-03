@@ -16,6 +16,9 @@ class BuildingController @Autowired
 constructor(private val auditoryService: AuditoryService,
             private val buildingService: BuildingService) {
 
+    /**
+     * Create building
+     */
     @PostMapping(
             produces = [MediaType.APPLICATION_JSON_VALUE],
             consumes = [MediaType.APPLICATION_JSON_VALUE])
@@ -23,19 +26,23 @@ constructor(private val auditoryService: AuditoryService,
         return ResponseEntity.ok().body(buildingService.addBuilding(request))
     }
 
+    /**
+     * Return building by id
+     */
     @GetMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getBuilding(@PathVariable("id") buildingId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(buildingService.getBuildingById(buildingId))
     }
 
+    /**
+     * Return all auditories by buildings
+     */
     @GetMapping(
             value = ["/{id}/auditories"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAuditoriesByBuildingAndDate(@PathVariable("id") buildingId: Int,
                                        @RequestParam(required = false, defaultValue = "0") page: Int,
                                        @RequestParam(required = false, defaultValue = "8") size: Int,
@@ -44,6 +51,9 @@ constructor(private val auditoryService: AuditoryService,
         return ResponseEntity.ok().body(auditoryService.getAllAuditoriesByDate(buildingId, date, page, size))
     }
 
+    /**
+     * Edit building information
+     */
     @PutMapping(
             value = ["/{id}"],
             produces = [MediaType.APPLICATION_JSON_VALUE],
@@ -53,6 +63,9 @@ constructor(private val auditoryService: AuditoryService,
         return ResponseEntity.ok().body(buildingService.editBuilding(buildingId, request))
     }
 
+    /**
+     * Delete building by id
+     */
     @DeleteMapping(
             value = ["/{id}"],
             produces = [MediaType.APPLICATION_JSON_VALUE],

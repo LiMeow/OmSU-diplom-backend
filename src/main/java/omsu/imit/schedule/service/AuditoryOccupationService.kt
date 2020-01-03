@@ -23,11 +23,11 @@ constructor(private val auditoryRepository: AuditoryRepository,
 
 
     fun occupyAuditory(auditoryId: Int, request: OccupyAuditoryRequest): OccupationInfo {
-        var group: Group? = null
+        var group: List<Group>? = null
         var lecturer: Lecturer? = null
 
-        if (request.groupId != 0) group = groupRepository.findById(request.groupId!!).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.GROUP_NOT_EXISTS, request.groupId.toString())
+        if (!request.groups!!.isEmpty()) group = groupRepository.findAllById(request.groups!!)
+                ?: throw ScheduleGeneratorException(ErrorCode.GROUP_NOT_EXISTS, request.groups.toString())
 
         if (request.lecturerId != 0) lecturer = lecturerRepository.findById(request.lecturerId!!).orElse(null)
                 ?: throw ScheduleGeneratorException(ErrorCode.LECTURER_NOT_EXISTS, request.lecturerId.toString())
@@ -43,7 +43,7 @@ constructor(private val auditoryRepository: AuditoryRepository,
                 timeBlock,
                 request.date,
                 lecturer,
-                listOf(group!!),
+                group!!,
                 request.comment)
 
         auditoryOccupationRepository.save(occupation)

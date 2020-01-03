@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface UserRepository : JpaRepository<User, Int> {
-//    @Query("SELECT u FROM User u WHERE u.userType = 'LECTURER' ")
-//    fun findAllLecturers(): List<User>?
 
     @Query("SELECT u FROM User u WHERE u.email = :email ")
     fun findByEmail(@Param("email") email: String): User?

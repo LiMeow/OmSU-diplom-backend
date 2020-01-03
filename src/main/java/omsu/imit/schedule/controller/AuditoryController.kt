@@ -26,8 +26,7 @@ constructor(private val auditoryService: AuditoryService) {
 
     @GetMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAuditory(@PathVariable("id") auditoryId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(auditoryService.getAuditoryById(auditoryId))

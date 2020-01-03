@@ -8,9 +8,10 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/chairs")
+@RequestMapping("/chairs")
 class ChairController @Autowired
 constructor(private val chairService: ChairService) {
+
     @PostMapping(
             produces = [MediaType.APPLICATION_JSON_VALUE],
             consumes = [MediaType.APPLICATION_JSON_VALUE])
@@ -21,8 +22,7 @@ constructor(private val chairService: ChairService) {
 
     @GetMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getChair(@PathVariable("id") chairId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(chairService.getChair(chairId))
@@ -36,6 +36,4 @@ constructor(private val chairService: ChairService) {
         chairService.deleteChair(chairId)
         return ResponseEntity.noContent().build<Any>()
     }
-
-
 }
