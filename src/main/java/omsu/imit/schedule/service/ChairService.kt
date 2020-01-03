@@ -11,10 +11,6 @@ class ChairService
 @Autowired
 constructor(private val chairRepository: ChairRepository) {
 
-    fun createChair(request: Int, chairName: String): Any {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     fun getChair(chairId: Int): Any {
         return chairRepository.findById(chairId).orElse(null)
                 ?: throw ScheduleGeneratorException(ErrorCode.CHAIR_NOT_EXISTS, chairId.toString())

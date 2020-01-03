@@ -1,6 +1,5 @@
 package omsu.imit.schedule.controller
 
-import com.sun.istack.NotNull
 import omsu.imit.schedule.service.ChairService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -11,14 +10,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/chairs")
 class ChairController @Autowired
 constructor(private val chairService: ChairService) {
-
-    @PostMapping(
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createChair(@NotNull chairName: String,
-                    @NotNull facultyId: Int): ResponseEntity<*> {
-        return ResponseEntity.ok().body(chairService.createChair(facultyId, chairName))
-    }
 
     @GetMapping(
             value = ["/{id}"],

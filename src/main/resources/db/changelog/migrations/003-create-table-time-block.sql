@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS time_blocks
+CREATE TABLE IF NOT EXISTS time_block
 (
     id        SERIAL PRIMARY KEY,
     time_from TEXT UNIQUE NOT NULL,

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS buildings
+CREATE TABLE IF NOT EXISTS building
 (
     id      SERIAL PRIMARY KEY,
     number  INTEGER NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS buildings
     unique (number, address)
 );
 
-INSERT INTO buildings (number, address)
+INSERT INTO building (number, address)
 VALUES (1, 'пр. Мира, 55-а'),
        (2, 'пр. Мира, 55'),
        (3, 'ул. Андрианова, 28'),

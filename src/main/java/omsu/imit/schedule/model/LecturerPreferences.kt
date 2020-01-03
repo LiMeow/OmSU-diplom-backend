@@ -3,7 +3,7 @@ package omsu.imit.schedule.model
 import javax.persistence.*
 
 @Entity
-@Table(name = "lecturer_preferences")
+@Table(name = "lecturer_preference")
 class LecturerPreferences(@Id
                           @GeneratedValue(strategy = GenerationType.IDENTITY)
                           var id: Int,

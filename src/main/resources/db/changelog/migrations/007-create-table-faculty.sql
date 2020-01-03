@@ -1,11 +1,11 @@
-CREATE TABLE IF NOT EXISTS faculties
+CREATE TABLE IF NOT EXISTS faculty
 (
     id          SERIAL PRIMARY KEY,
-    building_id INTEGER     NOT NULL REFERENCES buildings (id) ON DELETE CASCADE,
+    building_id INTEGER     NOT NULL REFERENCES building (id) ON DELETE CASCADE,
     name        TEXT UNIQUE NOT NULL
 );
 
-INSERT INTO faculties (id, building_id, name)
+INSERT INTO faculty (id, building_id, name)
 VALUES (1, 1, 'ИНСТИТУТ МАТЕМАТИКИ И ИНФОРМАЦИОННЫХ ТЕХНОЛОГИЙ'),
        (2, 1, 'ФИЗИЧЕСКИЙ ФАКУЛЬТЕТ'),
        (3, 1, 'ХИМИЧЕСКИЙ ФАКУЛЬТЕТ'),

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 open class User(@Id
                 @GeneratedValue(strategy = GenerationType.IDENTITY)
                 var id: Int,
@@ -13,7 +13,7 @@ open class User(@Id
                 var email: String,
 
                 @JsonIgnore
-                @Column(name = "pswrd")
+                @Column(name = "password")
                 var password: String?,
 
                 @Column(name = "user_type")

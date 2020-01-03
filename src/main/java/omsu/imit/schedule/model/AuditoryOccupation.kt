@@ -4,7 +4,7 @@ import javax.persistence.*
 
 
 @Entity
-@Table(name = "auditory_occupations")
+@Table(name = "auditory_occupation")
 class AuditoryOccupation(@Id
                          @GeneratedValue(strategy = GenerationType.IDENTITY)
                          var id: Int,
@@ -25,7 +25,7 @@ class AuditoryOccupation(@Id
                          var lecturer: Lecturer?,
 
                          @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-                         @JoinTable(name = "auditory_occupation_groups",
+                         @JoinTable(name = "auditory_occupation_group",
                                  joinColumns = [JoinColumn(name = "auditory_occupation_id", referencedColumnName = "id")],
                                  inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")])
                          var group: List<Group>?,

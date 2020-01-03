@@ -1,12 +1,12 @@
-create TABLE IF NOT EXISTS chairs
+create TABLE IF NOT EXISTS chair
 (
     id         SERIAL PRIMARY KEY,
-    faculty_id INTEGER NOT NULL REFERENCES faculties (id) ON DELETE CASCADE,
+    faculty_id INTEGER NOT NULL REFERENCES faculty (id) ON DELETE CASCADE,
     name       TEXT    NOT NULL
 );
 
 /*ИМИТ*/
-INSERT INTO chairs (faculty_id, name)
+INSERT INTO chair (faculty_id, name)
 VALUES (1, 'КАФЕДРА ПРИКЛАДНОЙ И ВЫЧИСЛИТЕЛЬНОЙ МАТЕМАТИКИ'),
        (1, 'КАФЕДРА АЛГЕБРЫ И МАТЕМАТИЧЕСКОГО АНАЛИЗА'),
        (1, 'КАФЕДРА МАТЕМАТИЧЕСКОГО МОДЕЛИРОВАНИЯ'),
@@ -15,7 +15,7 @@ VALUES (1, 'КАФЕДРА ПРИКЛАДНОЙ И ВЫЧИСЛИТЕЛЬНОЙ 
        (1, 'КАФЕДРА ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ И ЗАЩИТЫ ИНФОРМАЦИИ');
 
 /*ФИЗФАК*/
-INSERT INTO chairs (faculty_id, name)
+INSERT INTO chair (faculty_id, name)
 VALUES (2, 'КАФЕДРА МОДЕЛИРОВАНИЯ РАДИОЭЛЕКТРОННЫХ СИСТЕМ'),
        (2, 'КАФЕДРА ОБЩЕЙ ФИЗИКИ'),
        (2, 'КАФЕДРА ПРИКЛАДНОЙ И МЕДИЦИНСКОЙ ФИЗИКИ'),
@@ -23,7 +23,7 @@ VALUES (2, 'КАФЕДРА МОДЕЛИРОВАНИЯ РАДИОЭЛЕКТРОН
        (2, 'КАФЕДРА ЭКСПЕРИМЕНТАЛЬНОЙ ФИЗИКИ И РАДИОФИЗИКИ');
 
 /*ХИМФАК*/
-INSERT INTO chairs (faculty_id, name)
+INSERT INTO chair (faculty_id, name)
 VALUES (3, 'КАФЕДРА АНАЛИТИЧЕСКОЙ ХИМИИ'),
        (3, 'КАФЕДРА НЕОРГАНИЧЕСКОЙ ХИМИИ'),
        (3, 'КАФЕДРА ОРГАНИЧЕСКОЙ ХИМИИ'),

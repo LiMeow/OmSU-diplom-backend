@@ -4,7 +4,7 @@ import javax.persistence.*
 
 
 @Entity
-@Table(name = "groups")
+@Table(name = "group")
 class Group(@Id
             @GeneratedValue(strategy = GenerationType.IDENTITY)
             var id: Int,

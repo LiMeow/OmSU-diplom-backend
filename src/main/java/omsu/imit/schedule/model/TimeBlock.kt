@@ -3,7 +3,7 @@ package omsu.imit.schedule.model
 import javax.persistence.*
 
 @Entity
-@Table(name = "time_blocks")
+@Table(name = "time_block")
 class TimeBlock(@Id
                 @GeneratedValue(strategy = GenerationType.IDENTITY)
                 var id: Int,

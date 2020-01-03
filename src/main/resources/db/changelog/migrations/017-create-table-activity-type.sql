@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS activity_types
+CREATE TABLE IF NOT EXISTS activity_type
 (
     id   SERIAL PRIMARY KEY,
     type TEXT UNIQUE NOT NULL

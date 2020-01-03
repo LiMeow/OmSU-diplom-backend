@@ -3,7 +3,7 @@ package omsu.imit.schedule.model
 import javax.persistence.*
 
 @Entity
-@Table(name = "auditories")
+@Table(name = "auditory")
 class Auditory(@Id
                @GeneratedValue(strategy = GenerationType.IDENTITY)
                var id: Int,
@@ -16,7 +16,7 @@ class Auditory(@Id
                var number: String,
 
                @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-               @JoinTable(name = "auditory_tags",
+               @JoinTable(name = "auditory_tag",
                        joinColumns = [JoinColumn(name = "auditory_id", referencedColumnName = "id")],
                        inverseJoinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")])
                var tags: List<Tag>,
