@@ -21,7 +21,7 @@ constructor(private val authService: AuthService,
             private val jwtTokenService: JwtTokenService) {
 
     @PostMapping(
-            path = ["/signup"],
+            path = ["/api/signup"],
             produces = [MediaType.APPLICATION_JSON_VALUE],
             consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun signUp(@Valid @RequestBody request: SignUpRequest,
@@ -39,7 +39,7 @@ constructor(private val authService: AuthService,
     }
 
     @PostMapping(
-            path = ["/signup/students"],
+            path = ["/api/signup/students"],
             produces = [MediaType.APPLICATION_JSON_VALUE],
             consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun signUpStudent(@Valid @RequestBody request: SignUpRequest,
@@ -57,7 +57,7 @@ constructor(private val authService: AuthService,
     }
 
     @PostMapping(
-            path = ["/signin"],
+            path = ["/api/signin"],
             produces = [MediaType.APPLICATION_JSON_VALUE],
             consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun signIn(@RequestBody
@@ -75,7 +75,7 @@ constructor(private val authService: AuthService,
     }
 
     @GetMapping(
-            path = ["/whoiam"],
+            path = ["/api/whoiam"],
             produces = [MediaType.APPLICATION_JSON_VALUE])
     fun whoIAm(): ResponseEntity<*> {
 
@@ -83,7 +83,7 @@ constructor(private val authService: AuthService,
     }
 
     @DeleteMapping(
-            path = ["/signout"],
+            path = ["/api/signout"],
             produces = [MediaType.APPLICATION_JSON_VALUE],
             consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun signOut(response: HttpServletResponse): ResponseEntity<*> {

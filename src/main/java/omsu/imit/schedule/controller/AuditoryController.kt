@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/auditories")
+@RequestMapping("/api/auditories")
 class AuditoryController
 @Autowired
 constructor(private val auditoryService: AuditoryService) {
 
-
+    /**
+     * Create auditory
+     */
     @PostMapping(
             produces = [MediaType.APPLICATION_JSON_VALUE],
             consumes = [MediaType.APPLICATION_JSON_VALUE])
@@ -24,29 +26,38 @@ constructor(private val auditoryService: AuditoryService) {
         return ResponseEntity.ok().body(auditoryService.addAuditory(request))
     }
 
+    /**
+     * Return auditory by id
+     */
     @GetMapping(
-            value = ["/{id}"],
+            value = ["/{auditoryId}"],
             produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getAuditory(@PathVariable("id") auditoryId: Int): ResponseEntity<*> {
+    fun getAuditory(@PathVariable("auditoryId") auditoryId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(auditoryService.getAuditoryById(auditoryId))
     }
 
+    /**
+     * Update auditory by id
+     */
     @PutMapping(
-            value = ["/{id}"],
+            value = ["/{auditoryId}"],
             produces = [MediaType.APPLICATION_JSON_VALUE],
             consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun editAuditory(@PathVariable("id") auditoryId: Int,
+    fun editAuditory(@PathVariable("auditoryId") auditoryId: Int,
                      @RequestBody request: EditAuditoryRequest): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(auditoryService.editAuditory(auditoryId, request))
     }
 
+    /**
+     * Delete auditory by id
+     */
     @DeleteMapping(
-            value = ["/{id}"],
+            value = ["/{auditoryId}"],
             produces = [MediaType.APPLICATION_JSON_VALUE],
             consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun deleteAuditory(@PathVariable("id") auditoryId: Int): ResponseEntity<*> {
+    fun deleteAuditory(@PathVariable("auditoryId") auditoryId: Int): ResponseEntity<*> {
         auditoryService.deleteAuditory(auditoryId)
         return ResponseEntity.noContent().build<Any>()
     }

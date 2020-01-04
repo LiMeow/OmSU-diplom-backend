@@ -1,5 +1,6 @@
 package omsu.imit.schedule.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
@@ -8,7 +9,8 @@ class Auditory(@Id
                @GeneratedValue(strategy = GenerationType.IDENTITY)
                var id: Int,
 
-               @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+               @JsonIgnore
+               @ManyToOne(fetch = FetchType.LAZY)
                @JoinColumn(name = "building_id")
                var building: Building,
 
@@ -21,7 +23,7 @@ class Auditory(@Id
                        inverseJoinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")])
                var tags: List<Tag>,
 
-
+               @JsonIgnore
                @OneToMany(fetch = FetchType.LAZY, mappedBy = "auditory")
                var auditoryOccupations: List<AuditoryOccupation>?) {
 
@@ -29,24 +31,24 @@ class Auditory(@Id
 
     constructor(building: Building, number: String) : this(0, building, number, mutableListOf(), mutableListOf())
 
-
-    val tagsIds: List<Int>
-        get() {
-            val tagsIds = ArrayList<Int>()
-            for (tag in this.tags) {
-                tagsIds.add(tag.id)
-            }
-            return tagsIds
-        }
-
-    val tagsNames: List<String>
-        get() {
-            val tagsNames = ArrayList<String>()
-            for (tag in this.tags) {
-                tagsNames.add(tag.tag)
-            }
-            return tagsNames
-        }
+//
+//    val tagsIds: List<Int>
+//        get() {
+//            val tagsIds = ArrayList<Int>()
+//            for (tag in this.tags) {
+//                tagsIds.add(tag.id)
+//            }
+//            return tagsIds
+//        }
+//
+//    val tagsNames: List<String>
+//        get() {
+//            val tagsNames = ArrayList<String>()
+//            for (tag in this.tags) {
+//                tagsNames.add(tag.tag)
+//            }
+//            return tagsNames
+//        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

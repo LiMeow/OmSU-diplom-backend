@@ -2,10 +2,10 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: lsmirnova
-      comment: create table 'user'
+      comment: create table 'personal_data'
       sqlFile:
         encoding: UTF-8
-        path: migrations/001-create-table-user.sql
+        path: migrations/001-create-table-personal-data.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 2
@@ -66,96 +66,104 @@ databaseChangeLog:
   - changeSet:
       id: 9
       author: lsmirnova
-      comment: create table 'personal data'
+      comment: create table 'lecturer'
       sqlFile:
         encoding: UTF-8
-        path: migrations/009-create-table-personal-data.sql
+        path: migrations/009-create-table-lecturer.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 10
       author: lsmirnova
-      comment: create table 'lecturer'
+      comment: create table 'lecturer preference'
       sqlFile:
         encoding: UTF-8
-        path: migrations/010-create-table-lecturer.sql
+        path: migrations/010-create-table-lecturer-preference.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 11
       author: lsmirnova
-      comment: create table 'lecturer preference'
+      comment: create table 'study direction'
       sqlFile:
         encoding: UTF-8
-        path: migrations/011-create-table-lecturer-preference.sql
+        path: migrations/011-create-table-study-direction.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 12
       author: lsmirnova
-      comment: create table 'study direction'
+      comment: create table 'group'
       sqlFile:
         encoding: UTF-8
-        path: migrations/012-create-table-study-direction.sql
+        path: migrations/012-create-table-group.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 13
       author: lsmirnova
-      comment: create table 'group'
+      comment: create table 'student'
       sqlFile:
         encoding: UTF-8
-        path: migrations/013-create-table-group.sql
+        path: migrations/013-create-table-student.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 14
       author: lsmirnova
-      comment: create table 'student'
+      comment: create table 'auditory occupation'
       sqlFile:
         encoding: UTF-8
-        path: migrations/014-create-table-student.sql
+        path: migrations/014-create-table-auditory-occupetion.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 15
       author: lsmirnova
-      comment: create table 'auditory occupation'
+      comment: create table 'discipline'
       sqlFile:
         encoding: UTF-8
-        path: migrations/015-create-table-auditory-occupetion.sql
+        path: migrations/015-create-table-discipline.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 16
       author: lsmirnova
-      comment: create table 'discipline'
+      comment: create table 'activity type'
       sqlFile:
         encoding: UTF-8
-        path: migrations/016-create-table-discipline.sql
+        path: migrations/016-create-table-activity-type.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 17
       author: lsmirnova
-      comment: create table 'activity type'
+      comment: create table 'schedule'
       sqlFile:
         encoding: UTF-8
-        path: migrations/017-create-table-activity-type.sql
+        path: migrations/017-create-table-schedule.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 18
       author: lsmirnova
-      comment: create table 'schedule'
+      comment: create table 'schedule item'
       sqlFile:
         encoding: UTF-8
-        path: migrations/018-create-table-schedule.sql
+        path: migrations/018-create-table-schedule-item.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 19
       author: lsmirnova
-      comment: create table 'schedule item'
+      comment: create table 'auditory occupation group'
       sqlFile:
         encoding: UTF-8
-        path: migrations/019-create-table-schedule-item.sql
+        path: migrations/019-create-table-auditory-occupation-group.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 20
       author: lsmirnova
-      comment: create table 'auditory occupation group'
+      comment: create data for auditories
       sqlFile:
         encoding: UTF-8
-        path: migrations/020-create-table-auditory-occupation-group.sql
+        path: migrations/020-create-auditories-data.sql
+        relativeToChangelogFile: true
+  - changeSet:
+      id: 21
+      author: lsmirnova
+      comment: create tags for auditories
+      sqlFile:
+        encoding: UTF-8
+        path: migrations/021-create-auditory-tags.sql
         relativeToChangelogFile: true

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/groups")
+@RequestMapping("/api/groups")
 class GroupsController @Autowired
 constructor(private val groupService: GroupService) {
 

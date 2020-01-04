@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/auditories/tags")
+@RequestMapping("/api/auditories/tags")
 class TagController
 @Autowired
 constructor(private val tagService: TagService) {

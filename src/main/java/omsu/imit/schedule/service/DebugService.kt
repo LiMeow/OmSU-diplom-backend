@@ -11,12 +11,10 @@ constructor(private val buildingRepository: BuildingRepository,
             private val disciplineRepository: DisciplineRepository,
             private val groupRepository: GroupRepository,
             private val tagRepository: TagRepository,
-            private val userRepository: UserRepository,
             private val timeBlockRepository: TimeBlockRepository,
             private val activityTypeRepository: ActivityTypeRepository) {
 
     fun clear() {
-        userRepository.deleteAll()
         timeBlockRepository.deleteAll()
         groupRepository.deleteAll()
         buildingRepository.deleteAll()

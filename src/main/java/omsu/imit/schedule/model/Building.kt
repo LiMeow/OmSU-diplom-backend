@@ -14,7 +14,10 @@ open class Building(@Id
                     @Column
                     var address: String = "",
 
-                    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "building")
+                    @OneToMany(
+                            mappedBy = "building",
+                            fetch = FetchType.LAZY,
+                            cascade = [CascadeType.ALL])
                     var auditories: List<Auditory> = ArrayList()) {
 
     constructor(id: Int, number: Int, address: String) : this(id, number, address, ArrayList<Auditory>())

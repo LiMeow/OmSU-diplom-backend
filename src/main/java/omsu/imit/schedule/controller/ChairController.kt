@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/chairs")
+@RequestMapping("/api/chairs")
 class ChairController @Autowired
 constructor(private val chairService: ChairService) {
 

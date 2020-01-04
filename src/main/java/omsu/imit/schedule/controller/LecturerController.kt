@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/lecturers")
+@RequestMapping("/api/lecturers")
 class LecturerController
 @Autowired
 constructor(private val lecturerService: LecturerService) {

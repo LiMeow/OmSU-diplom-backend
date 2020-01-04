@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/buildings")
+@RequestMapping("/api/buildings")
 class BuildingController @Autowired
 constructor(private val auditoryService: AuditoryService,
             private val buildingService: BuildingService) {
@@ -43,12 +43,11 @@ constructor(private val auditoryService: AuditoryService,
     @GetMapping(
             value = ["/{id}/auditories"],
             produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getAuditoriesByBuildingAndDate(@PathVariable("id") buildingId: Int,
-                                       @RequestParam(required = false, defaultValue = "0") page: Int,
-                                       @RequestParam(required = false, defaultValue = "8") size: Int,
-                                       @RequestParam date: String): ResponseEntity<*> {
+    fun getAuditoriesByBuilding(@PathVariable("id") buildingId: Int,
+                                @RequestParam(required = false, defaultValue = "0") page: Int,
+                                @RequestParam(required = false, defaultValue = "8") size: Int): ResponseEntity<*> {
 
-        return ResponseEntity.ok().body(auditoryService.getAllAuditoriesByDate(buildingId, date, page, size))
+        return ResponseEntity.ok().body(auditoryService.getAllAuditoriesByBuilding(buildingId, page, size))
     }
 
     /**

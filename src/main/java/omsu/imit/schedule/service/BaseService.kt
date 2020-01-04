@@ -12,9 +12,8 @@ open class BaseService {
     protected fun createAuditoryInfo(auditory: Auditory): AuditoryInfo {
         return AuditoryInfo(
                 auditory.id,
-                auditory.building.id,
                 auditory.number,
-                auditory.tagsNames,
+                auditory.tags,
                 createOccupationInfo(auditory.auditoryOccupations))
     }
 

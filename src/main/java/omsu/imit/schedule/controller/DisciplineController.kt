@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/disciplines")
+@RequestMapping("/api/disciplines")
 class DisciplineController
 @Autowired
 constructor(private val disciplineService: DisciplineService) {

@@ -47,6 +47,14 @@ constructor(private val auditoryRepository: AuditoryRepository,
         return createAuditoryInfo(auditory)
     }
 
+    fun getAllAuditoriesByBuilding(buildingId: Int, page: Int, size: Int): List<Auditory>? {
+        if (!buildingRepository.existsById(buildingId))
+            throw ScheduleGeneratorException(ErrorCode.BUILDING_NOT_EXISTS, buildingId.toString())
+
+        val pageable: Pageable = PageRequest.of(page, size, Sort.by("number"))
+        return auditoryRepository.findAllByBuilding(buildingId, pageable)
+    }
+
     fun getAllAuditoriesByDate(buildingId: Int, date: String, page: Int, size: Int): AuditoryFullInfo {
         if (!buildingRepository.existsById(buildingId))
             throw ScheduleGeneratorException(ErrorCode.BUILDING_NOT_EXISTS, buildingId.toString())

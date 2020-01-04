@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@RequestMapping("/debug/clear")
+@RequestMapping("/api/debug/clear")
 class DebugController @Autowired
 constructor(private val debugService: DebugService) {
 

@@ -6,7 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm
 import omsu.imit.schedule.jwt.AuthenticatedJwtToken
 import omsu.imit.schedule.jwt.JwtSettings
 import omsu.imit.schedule.jwt.JwtTokenService
-import omsu.imit.schedule.model.User
+import omsu.imit.schedule.model.PersonalData
 import omsu.imit.schedule.requests.SignUpRequest
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
@@ -33,16 +33,16 @@ class JsonWebTokenService(private val settings: JwtSettings) : JwtTokenService {
     }
 
 
-    override fun createToken(user: User): String {
-        logger.debug("Generating token for {}", user.email)
+    override fun createToken(personalData: PersonalData): String {
+        logger.debug("Generating token for {}", personalData.email)
         val now = Instant.now()
 
         val claims = Jwts.claims()
                 .setIssuer(settings.tokenIssuer)
                 .setIssuedAt(Date.from(now))
-                .setSubject(user.email)
+                .setSubject(personalData.email)
                 .setExpiration(Date.from(now.plus(settings.getTokenExpiredIn())))
-        claims[AUTHORITY] = user.userRole
+        claims[AUTHORITY] = personalData.userRole
 
         return Jwts.builder()
                 .setClaims(claims)

@@ -6,7 +6,7 @@ class OccupyAuditoryRequest(@NotNull var timeFrom: String,
                             @NotNull var timeTo: String,
                             @NotNull var date: String,
                             @NotNull var lecturerId: Int? = 0,
-                            var groups: List<Int>? = null,
+                            var groupIds: List<Int>? = null,
                             @NotNull var comment: String) {
 
     override fun toString(): String {
@@ -15,7 +15,7 @@ class OccupyAuditoryRequest(@NotNull var timeFrom: String,
                 "timeTo='$timeTo', " +
                 "date='$date', " +
                 "lecturerId=$lecturerId, " +
-                "groupId=$groups, " +
+                "groupIds=$groupIds, " +
                 "comment='$comment')"
     }
 }

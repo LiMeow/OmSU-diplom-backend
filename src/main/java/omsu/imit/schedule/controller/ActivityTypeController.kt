@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/activity_type")
+@RequestMapping("/api/activity_type")
 class ActivityTypeController
 @Autowired
 constructor(private val activityTypeService: ActivityTypeService) {
