@@ -47,8 +47,7 @@ constructor(private val disciplineService: DisciplineService) {
 
     @DeleteMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteDiscipline(@PathVariable("id") disciplineId: Int): ResponseEntity<*> {
         disciplineService.deleteDiscipline(disciplineId)
         return ResponseEntity.noContent().build<Any>()

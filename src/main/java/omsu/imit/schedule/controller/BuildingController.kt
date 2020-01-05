@@ -30,9 +30,9 @@ constructor(private val auditoryService: AuditoryService,
      * Return building by id
      */
     @GetMapping(
-            value = ["/{id}"],
+            value = ["/{buildingId}"],
             produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getBuilding(@PathVariable("id") buildingId: Int): ResponseEntity<*> {
+    fun getBuilding(@PathVariable("buildingId") buildingId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(buildingService.getBuildingById(buildingId))
     }
@@ -41,9 +41,9 @@ constructor(private val auditoryService: AuditoryService,
      * Return all auditories by buildings
      */
     @GetMapping(
-            value = ["/{id}/auditories"],
+            value = ["/{buildingId}/auditories"],
             produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getAuditoriesByBuilding(@PathVariable("id") buildingId: Int,
+    fun getAuditoriesByBuilding(@PathVariable("buildingId") buildingId: Int,
                                 @RequestParam(required = false, defaultValue = "0") page: Int,
                                 @RequestParam(required = false, defaultValue = "8") size: Int): ResponseEntity<*> {
 
@@ -54,10 +54,10 @@ constructor(private val auditoryService: AuditoryService,
      * Edit building information
      */
     @PutMapping(
-            value = ["/{id}"],
+            value = ["/{buildingId}"],
             produces = [MediaType.APPLICATION_JSON_VALUE],
             consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun editBuilding(@PathVariable("id") buildingId: Int,
+    fun editBuilding(@PathVariable("buildingId") buildingId: Int,
                      @RequestBody request: EditBuildingRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(buildingService.editBuilding(buildingId, request))
     }
@@ -66,10 +66,9 @@ constructor(private val auditoryService: AuditoryService,
      * Delete building by id
      */
     @DeleteMapping(
-            value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun deleteBuilding(@PathVariable("id") buildingId: Int): ResponseEntity<*> {
+            value = ["/{buildingId}"],
+            produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun deleteBuilding(@PathVariable("buildingId") buildingId: Int): ResponseEntity<*> {
         buildingService.deleteBuilding(buildingId)
         return ResponseEntity.noContent().build<Any>()
     }

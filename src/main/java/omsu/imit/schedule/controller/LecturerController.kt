@@ -48,8 +48,7 @@ constructor(private val lecturerService: LecturerService) {
 
     @DeleteMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteLecturer(@PathVariable("id") lectureId: Int): ResponseEntity<*> {
         lecturerService.deleteLecturer(lectureId)
         return ResponseEntity.noContent().build<Any>()

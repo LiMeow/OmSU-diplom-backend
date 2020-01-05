@@ -2,11 +2,13 @@ package omsu.imit.schedule.service
 
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.ScheduleGeneratorException
+import omsu.imit.schedule.model.Auditory
 import omsu.imit.schedule.model.AuditoryOccupation
 import omsu.imit.schedule.model.Group
 import omsu.imit.schedule.model.Lecturer
 import omsu.imit.schedule.repository.*
 import omsu.imit.schedule.requests.OccupyAuditoryRequest
+import omsu.imit.schedule.response.AuditoryInfo
 import omsu.imit.schedule.response.OccupationInfo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -50,11 +52,12 @@ constructor(private val auditoryRepository: AuditoryRepository,
         return createOccupationInfo(occupation)
     }
 
-    fun getOccupationByAuditoryAndDate(auditoryId: Int, date: String): List<AuditoryOccupation>? {
-        if (!auditoryRepository.existsById(auditoryId))
-            throw ScheduleGeneratorException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString())
+    fun getAuditoryWithOccupationsByDate(auditoryId: Int, date: String): AuditoryInfo {
+        val auditory = auditoryRepository.findById(auditoryId).orElse(null)
+                ?: throw ScheduleGeneratorException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString())
 
-        return auditoryOccupationRepository.findByAuditoryAndDate(auditoryId, date)
+        auditory.auditoryOccupations = auditoryOccupationRepository.findByAuditoryAndDate(auditoryId, date)
+        return createAuditoryInfo(auditory)
     }
 
     fun deleteAuditoryOccupation(occupationId: Int) {

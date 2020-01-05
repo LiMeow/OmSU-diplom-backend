@@ -55,8 +55,7 @@ constructor(private val auditoryService: AuditoryService) {
      */
     @DeleteMapping(
             value = ["/{auditoryId}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteAuditory(@PathVariable("auditoryId") auditoryId: Int): ResponseEntity<*> {
         auditoryService.deleteAuditory(auditoryId)
         return ResponseEntity.noContent().build<Any>()

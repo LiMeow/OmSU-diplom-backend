@@ -1,4 +1,4 @@
-package omsu.imit.schedule.config
+package omsu.imit.schedule.configuration
 
 import com.google.common.collect.Lists
 import org.springframework.context.annotation.Bean

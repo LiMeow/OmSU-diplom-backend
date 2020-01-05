@@ -5,7 +5,7 @@ import omsu.imit.schedule.model.Tag
 class AuditoryInfo(var id: Int,
                    var number: String,
                    var tags: List<Tag>,
-                   var occupationInfo: List<OccupationInfo>?) {
+                   var occupations: List<OccupationInfo>?) {
 
     constructor(id: Int, number: String) : this(id, number, mutableListOf(), mutableListOf())
 
@@ -16,7 +16,7 @@ class AuditoryInfo(var id: Int,
         if (id != other.id) return false
         if (number != other.number) return false
         if (tags != other.tags) return false
-        if (occupationInfo != other.occupationInfo) return false
+        if (occupations != other.occupations) return false
 
         return true
     }
@@ -25,7 +25,7 @@ class AuditoryInfo(var id: Int,
         var result = id
         result = 31 * result + number.hashCode()
         result = 31 * result + (tags?.hashCode() ?: 0)
-        result = 31 * result + (occupationInfo?.hashCode() ?: 0)
+        result = 31 * result + (occupations?.hashCode() ?: 0)
         return result
     }
 
@@ -34,6 +34,6 @@ class AuditoryInfo(var id: Int,
                 "id=$id, " +
                 "number='$number', " +
                 "tags=$tags, " +
-                "occupationInfo=$occupationInfo)"
+                "occupationInfo=$occupations)"
     }
 }

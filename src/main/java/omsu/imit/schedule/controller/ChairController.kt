@@ -21,8 +21,7 @@ constructor(private val chairService: ChairService) {
 
     @DeleteMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteChair(@PathVariable("id") chairId: Int): ResponseEntity<*> {
         chairService.deleteChair(chairId)
         return ResponseEntity.noContent().build<Any>()

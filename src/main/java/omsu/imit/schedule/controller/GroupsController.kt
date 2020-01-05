@@ -39,8 +39,7 @@ constructor(private val groupService: GroupService) {
 
     @DeleteMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteGroup(@PathVariable("id") groupId: Int): ResponseEntity<*> {
         groupService.deleteGroupById(groupId)
         return ResponseEntity.noContent().build<Any>()

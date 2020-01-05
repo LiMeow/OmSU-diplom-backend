@@ -55,21 +55,6 @@ constructor(private val auditoryRepository: AuditoryRepository,
         return auditoryRepository.findAllByBuilding(buildingId, pageable)
     }
 
-    fun getAllAuditoriesByDate(buildingId: Int, date: String, page: Int, size: Int): AuditoryFullInfo {
-        if (!buildingRepository.existsById(buildingId))
-            throw ScheduleGeneratorException(ErrorCode.BUILDING_NOT_EXISTS, buildingId.toString())
-
-        val pageable: Pageable = PageRequest.of(page, size, Sort.by("number"))
-        val auditories = auditoryRepository.findAllByBuilding(buildingId, pageable)
-        val auditoryInfoList = ArrayList<AuditoryInfo>()
-
-        for (auditory in auditories!!) {
-            auditory.auditoryOccupations = auditoryOccupationRepository.findByAuditoryAndDate(auditory.id, date)
-            auditoryInfoList.add(createAuditoryInfo(auditory))
-        }
-        return AuditoryFullInfo(createMetaInfo(buildingId, page, size), auditoryInfoList)
-    }
-
     fun editAuditory(auditoryId: Int, request: EditAuditoryRequest): AuditoryInfo {
         val auditory = auditoryRepository.findById(auditoryId).orElse(null)
                 ?: throw ScheduleGeneratorException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString());

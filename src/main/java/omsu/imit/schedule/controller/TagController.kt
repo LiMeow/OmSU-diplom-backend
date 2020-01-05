@@ -38,8 +38,7 @@ constructor(private val tagService: TagService) {
 
     @DeleteMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteTag(@PathVariable("id") tagId: Int): ResponseEntity<*> {
         tagService.deleteTagById(tagId)
         return ResponseEntity.noContent().build<Any>()

@@ -21,6 +21,9 @@ class Schedule(@Id
                var studyYear: String,
 
                @OneToMany(fetch = FetchType.LAZY, mappedBy = "schedule")
-               var scheduleItems: List<ScheduleItem>) {
+               var scheduleItems: List<ScheduleItem>?) {
+    constructor(course: Int,semester: Int,studyForm: String,studyYear: String)
+            : this(0, course,semester,studyForm,studyYear,ArrayList())
+
 
 }

@@ -1,6 +1,6 @@
-package omsu.imit.schedule.model;
+package omsu.imit.schedule.model
 
-public enum Qualification {
+enum class Qualification {
     BACCALAUREATE,
     SPECIALIST,
     MAGISTER

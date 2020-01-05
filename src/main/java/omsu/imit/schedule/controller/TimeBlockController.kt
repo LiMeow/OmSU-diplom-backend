@@ -24,16 +24,14 @@ constructor(private val timeBlockService: TimeBlockService) {
 
     @GetMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getTimeBlockById(@PathVariable("id") timeBlockId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(timeBlockService.getTimeBlockById(timeBlockId))
     }
 
     @GetMapping(
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getTimeBlockById(): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(timeBlockService.getTimeBlocks())
@@ -51,16 +49,14 @@ constructor(private val timeBlockService: TimeBlockService) {
 
     @DeleteMapping(
             value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteTimeBlock(@PathVariable("id") timeBlockId: Int): ResponseEntity<*> {
         timeBlockService.deleteTimeBlock(timeBlockId)
         return ResponseEntity.noContent().build<Any>()
     }
 
     @DeleteMapping(
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+            produces = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteTimeBlocks(): ResponseEntity<*> {
         timeBlockService.deleteAllTimeBlocks()
         return ResponseEntity.noContent().build<Any>()

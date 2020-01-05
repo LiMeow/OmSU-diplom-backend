@@ -1,12 +1,11 @@
 package omsu.imit.schedule.service
 
-import omsu.imit.schedule.exception.ErrorCode
-import omsu.imit.schedule.exception.ScheduleGeneratorException
 import omsu.imit.schedule.model.ActivityType
 import omsu.imit.schedule.repository.ActivityTypeRepository
 import omsu.imit.schedule.requests.CreateActivityTypeRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import javax.persistence.EntityNotFoundException
 
 @Service
 class ActivityTypeService
@@ -14,9 +13,6 @@ class ActivityTypeService
 constructor(private val activityTypeRepository: ActivityTypeRepository) {
 
     fun createActivityType(request: CreateActivityTypeRequest): ActivityType {
-        if (activityTypeRepository.findByActivityType(request.type) != null)
-            throw ScheduleGeneratorException(ErrorCode.ACTIVITY_TYPE_ALREADY_EXISTS, request.type)
-
         val activityType = ActivityType(request.type)
         activityTypeRepository.save(activityType)
 
@@ -24,8 +20,9 @@ constructor(private val activityTypeRepository: ActivityTypeRepository) {
     }
 
     fun getActivityTypeById(activityTypeId: Int): ActivityType? {
-        return activityTypeRepository.findById(activityTypeId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.ACTIVITY_TYPE_NOT_EXISTS, activityTypeId.toString())
+        return activityTypeRepository
+                .findById(activityTypeId)
+                .orElseThrow { EntityNotFoundException(String.format("Activity type  with id=%d not found", activityTypeId)) };
     }
 
     fun getAllActivityTypes(): Any {
@@ -33,9 +30,6 @@ constructor(private val activityTypeRepository: ActivityTypeRepository) {
     }
 
     fun deleteActivityType(activityTypeId: Int) {
-        if (!activityTypeRepository.existsById(activityTypeId))
-            throw ScheduleGeneratorException(ErrorCode.ACTIVITY_TYPE_NOT_EXISTS, activityTypeId.toString())
-
         activityTypeRepository.deleteById(activityTypeId)
     }
 

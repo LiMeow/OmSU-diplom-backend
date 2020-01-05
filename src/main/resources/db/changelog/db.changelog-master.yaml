@@ -167,3 +167,11 @@ databaseChangeLog:
         encoding: UTF-8
         path: migrations/021-create-auditory-tags.sql
         relativeToChangelogFile: true
+  - changeSet:
+      id: 22
+      author: lsmirnova
+      comment: create time blocks
+      sqlFile:
+        encoding: UTF-8
+        path: migrations/022-create-time-blocks.sql
+        relativeToChangelogFile: true

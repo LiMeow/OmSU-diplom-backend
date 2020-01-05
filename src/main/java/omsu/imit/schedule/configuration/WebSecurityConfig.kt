@@ -1,4 +1,4 @@
-package omsu.imit.schedule.config
+package omsu.imit.schedule.configuration
 
 import omsu.imit.schedule.jwt.JwtAuthenticationProvider
 import omsu.imit.schedule.jwt.JwtSettings

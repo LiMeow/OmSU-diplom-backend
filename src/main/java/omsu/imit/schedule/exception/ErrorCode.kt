@@ -41,9 +41,9 @@ enum class ErrorCode {
     var field: String = ""
     var message: String = ""
 
-    private constructor() {}
+    constructor() {}
 
-    private constructor(field: String, message: String) {
+    constructor(field: String, message: String) {
         this.field = field
         this.message = message
     }

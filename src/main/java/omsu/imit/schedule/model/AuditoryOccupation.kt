@@ -28,7 +28,7 @@ class AuditoryOccupation(@Id
                          @JoinTable(name = "auditory_occupation_group",
                                  joinColumns = [JoinColumn(name = "auditory_occupation_id", referencedColumnName = "id")],
                                  inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")])
-                         var group: List<Group>?,
+                         var groups: List<Group>?,
 
                          @Column
                          var comment: String?) {
@@ -53,7 +53,7 @@ class AuditoryOccupation(@Id
         if (timeBlock != other.timeBlock) return false
         if (date != other.date) return false
         if (lecturer != other.lecturer) return false
-        if (group != other.group) return false
+        if (groups != other.groups) return false
         if (comment != other.comment) return false
 
         return true
@@ -65,7 +65,7 @@ class AuditoryOccupation(@Id
         result = 31 * result + timeBlock.hashCode()
         result = 31 * result + date.hashCode()
         result = 31 * result + (lecturer?.hashCode() ?: 0)
-        result = 31 * result + (group?.hashCode() ?: 0)
+        result = 31 * result + (groups?.hashCode() ?: 0)
         result = 31 * result + (comment?.hashCode() ?: 0)
         return result
     }
@@ -76,7 +76,7 @@ class AuditoryOccupation(@Id
                 "timeBlock=$timeBlock, " +
                 "date='$date', " +
                 "lecturer=$lecturer, " +
-                "group=$group, " +
+                "group=$groups, " +
                 "comment=$comment)"
     }
 }

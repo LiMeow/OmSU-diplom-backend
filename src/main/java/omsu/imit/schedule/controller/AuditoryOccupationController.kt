@@ -26,15 +26,15 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
     }
 
     /**
-     * Return occupations by auditory id and date
+     * Return auditory with occupations by date
      */
     @GetMapping(
             value = ["/{auditoryId}/occupations"],
             produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getOccupationsByAuditoryAndDate(@PathVariable("auditoryId") auditoryId: Int,
+    fun getAuditoryWithOccupationsByDate(@PathVariable("auditoryId") auditoryId: Int,
                                         @RequestParam date: String): ResponseEntity<*> {
 
-        return ResponseEntity.ok().body(auditoryOccupationService.getOccupationByAuditoryAndDate(auditoryId, date))
+        return ResponseEntity.ok().body(auditoryOccupationService.getAuditoryWithOccupationsByDate(auditoryId, date))
     }
 
     /**
