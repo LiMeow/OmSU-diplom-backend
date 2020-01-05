@@ -6,7 +6,6 @@ import omsu.imit.schedule.model.Lecturer
 import omsu.imit.schedule.model.PersonalData
 import omsu.imit.schedule.model.UserRole
 import omsu.imit.schedule.repository.ChairRepository
-import omsu.imit.schedule.repository.FacultyRepository
 import omsu.imit.schedule.repository.LecturerRepository
 import omsu.imit.schedule.repository.PersonalDataRepository
 import omsu.imit.schedule.requests.CreateLecturerRequest
@@ -14,21 +13,26 @@ import omsu.imit.schedule.response.LecturerInfo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.persistence.EntityNotFoundException
 
 @Service
 class LecturerService
 @Autowired
 constructor(
         private val chairRepository: ChairRepository,
-        private val facultyRepository: FacultyRepository,
         private val lecturerRepository: LecturerRepository,
         private val personalDataRepository: PersonalDataRepository) {
 
     fun createLecturer(request: CreateLecturerRequest): LecturerInfo {
-        val chair = chairRepository.findById(request.charId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.CHAIR_NOT_EXISTS, request.charId.toString())
+        val chair = chairRepository.findById(request.charId)
+                .orElseThrow { EntityNotFoundException(String.format("Chair with id=%d not found", request.charId)) }
 
-        val personalData = PersonalData(request.firstName, request.patronymic, request.lastName, request.email, UserRole.LECTURER)
+        val personalData = PersonalData(
+                request.firstName,
+                request.patronymic,
+                request.lastName,
+                request.email,
+                UserRole.LECTURER)
         personalDataRepository.save(personalData)
 
         val lecturer = Lecturer(chair, personalData, false)
@@ -38,8 +42,8 @@ constructor(
     }
 
     fun getLecturer(lectureId: Int): LecturerInfo {
-        val lecturer = lecturerRepository.findById(lectureId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.LECTURER_NOT_EXISTS, lectureId.toString())
+        val lecturer = lecturerRepository.findById(lectureId)
+                .orElseThrow { EntityNotFoundException(String.format("Lecturer with id=%d not found", lectureId)) }
         return createLecturerInfo(lecturer)
     }
 

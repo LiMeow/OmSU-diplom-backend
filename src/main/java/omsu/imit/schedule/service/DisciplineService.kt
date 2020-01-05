@@ -1,12 +1,11 @@
 package omsu.imit.schedule.service
 
-import omsu.imit.schedule.exception.ErrorCode
-import omsu.imit.schedule.exception.ScheduleGeneratorException
 import omsu.imit.schedule.model.Discipline
 import omsu.imit.schedule.repository.DisciplineRepository
 import omsu.imit.schedule.requests.DisciplineRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import javax.persistence.EntityNotFoundException
 
 @Service
 class DisciplineService
@@ -15,18 +14,14 @@ constructor(private val disciplineRepository: DisciplineRepository) {
 
     fun createDiscipline(request: DisciplineRequest): Discipline {
         val discipline = Discipline(request.name)
-
-        if (disciplineRepository.findByDisciplineName(discipline.name) != null)
-            throw ScheduleGeneratorException(ErrorCode.DISCIPLINE_ALREADY_EXISTS, request.name)
-
         disciplineRepository.save(discipline)
         return discipline
 
     }
 
-    fun getDiscipline(disciplineId: Int): Discipline? {
-        return disciplineRepository.findById(disciplineId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.DISCIPLINE_NOT_EXISTS, disciplineId.toString())
+    fun getDiscipline(disciplineId: Int): Discipline {
+        return disciplineRepository.findById(disciplineId)
+                .orElseThrow { EntityNotFoundException(String.format("Discipline with id=%d not found", disciplineId)) }
     }
 
     fun getAllDisciplines(): MutableList<Discipline> {
@@ -34,8 +29,7 @@ constructor(private val disciplineRepository: DisciplineRepository) {
     }
 
     fun editDiscipline(disciplineId: Int, request: DisciplineRequest): Discipline {
-        val discipline = disciplineRepository.findById(disciplineId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.DISCIPLINE_NOT_EXISTS, disciplineId.toString())
+        val discipline = getDiscipline(disciplineId)
 
         discipline.name = request.name
         disciplineRepository.save(discipline)
@@ -43,9 +37,6 @@ constructor(private val disciplineRepository: DisciplineRepository) {
     }
 
     fun deleteDiscipline(disciplineId: Int) {
-        if (!disciplineRepository.existsById(disciplineId))
-            throw ScheduleGeneratorException(ErrorCode.DISCIPLINE_NOT_EXISTS, disciplineId.toString())
-
         disciplineRepository.deleteById(disciplineId)
     }
 

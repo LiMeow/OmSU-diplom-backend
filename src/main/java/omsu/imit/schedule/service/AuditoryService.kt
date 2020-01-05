@@ -9,7 +9,6 @@ import omsu.imit.schedule.repository.BuildingRepository
 import omsu.imit.schedule.repository.TagRepository
 import omsu.imit.schedule.requests.CreateAuditoryRequest
 import omsu.imit.schedule.requests.EditAuditoryRequest
-import omsu.imit.schedule.response.AuditoryFullInfo
 import omsu.imit.schedule.response.AuditoryInfo
 import omsu.imit.schedule.response.MetaInfo
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +16,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
-import java.util.*
+import javax.persistence.EntityNotFoundException
 
 @Service
 class AuditoryService
@@ -48,20 +47,17 @@ constructor(private val auditoryRepository: AuditoryRepository,
     }
 
     fun getAllAuditoriesByBuilding(buildingId: Int, page: Int, size: Int): List<Auditory>? {
-        if (!buildingRepository.existsById(buildingId))
-            throw ScheduleGeneratorException(ErrorCode.BUILDING_NOT_EXISTS, buildingId.toString())
-
         val pageable: Pageable = PageRequest.of(page, size, Sort.by("number"))
         return auditoryRepository.findAllByBuilding(buildingId, pageable)
     }
 
     fun editAuditory(auditoryId: Int, request: EditAuditoryRequest): AuditoryInfo {
-        val auditory = auditoryRepository.findById(auditoryId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString());
+        val auditory = auditoryRepository
+                .findById(auditoryId)
+                .orElseThrow { EntityNotFoundException(String.format("Auditory with id=%d not found", auditoryId)) }
 
         if (!request.number.isNullOrEmpty()) auditory.number = request.number!!
         if (!request.tags.isNullOrEmpty()) auditory.tags = tagRepository.findAllById(request.tags!!)
-        if (request.number.isNullOrEmpty() && request.tags.isNullOrEmpty()) throw ScheduleGeneratorException(ErrorCode.EMPTY_REQUEST_BODY)
 
         auditoryRepository.save(auditory)
         return createAuditoryInfo(auditory)
@@ -69,9 +65,6 @@ constructor(private val auditoryRepository: AuditoryRepository,
     }
 
     fun deleteAuditory(auditoryId: Int) {
-        if (!auditoryRepository.existsById(auditoryId))
-            throw ScheduleGeneratorException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString())
-
         auditoryRepository.deleteById(auditoryId)
     }
 
