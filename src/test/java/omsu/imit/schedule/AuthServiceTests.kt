@@ -86,7 +86,7 @@ class AuthServiceTests {
     fun testSignInByNonExistingUser() {
         val request = SignInRequest("student@omsu.ru", "password")
 
-        `when`(personalDataRepository.findByEmail(request.email)).thenReturn(null)
+        `when`(personalDataRepository.findByEmail(request.email)).thenReturn(Optional.empty())
 
         assertThrows(NotFoundException::class.java) { authService.signIn(request) }
         verify(personalDataRepository).findByEmail(request.email)

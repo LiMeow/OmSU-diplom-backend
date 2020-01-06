@@ -20,6 +20,9 @@ constructor(
         private val personalDataRepository: PersonalDataRepository) {
 
     fun signUp(request: SignUpRequest): PersonalData {
+        if (personalDataRepository.findByEmail(request.email).isPresent)
+            throw CommonValidationException(ErrorCode.USER_ALREADY_EXISTS, request.email)
+
         val personalData = PersonalData(
                 request.firstName,
                 request.patronymic, request.lastName,

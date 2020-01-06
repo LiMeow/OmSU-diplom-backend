@@ -39,7 +39,7 @@ class AuditoryServiceTests {
 //        val request = CreateAuditoryRequest(1, "214")
 //        val building = Building(1, 1, "пр. Мира, 55-а")
 //        val auditory = Auditory(0, building, request.number)
-//        val response = AuditoryInfo(auditory.id, building.id, auditory.number)
+//        val response = AuditoryInfo(auditory.id, auditory.number)
 //
 //        `when`(buildingRepository.findById(1)).thenReturn(Optional.of(building))
 //        `when`(auditoryRepository.findByBuildingAndNumber(request.buildingId, request.number)).thenReturn(null)
@@ -71,7 +71,7 @@ class AuditoryServiceTests {
 //        val request = CreateAuditoryRequest(1, "214")
 //        val building = Building(1, 1, "пр. Мира, 55-а")
 //        val auditory = Auditory(0, building, request.number)
-//        val response = AuditoryInfo(auditory.id, building.id, auditory.number)
+//        val response = AuditoryInfo(auditory.id, auditory.number)
 //
 //        `when`(buildingRepository.findById(1)).thenReturn(Optional.of(building))
 //        `when`(auditoryRepository.findByBuildingAndNumber(request.buildingId, request.number)).thenReturn(auditory)
@@ -90,7 +90,7 @@ class AuditoryServiceTests {
 //    fun testGetAuditoryById() {
 //        val building = Building(1, 1, "пр. Мира, 55-а")
 //        val auditory = Auditory(1, building, "214")
-//        val response = AuditoryInfo(auditory.id, building.id, auditory.number)
+//        val response = AuditoryInfo(auditory.id, auditory.number)
 //
 //        `when`(auditoryRepository.findById(1)).thenReturn(Optional.of(auditory))
 //        assertEquals(response, auditoryService.getAuditoryById(1))

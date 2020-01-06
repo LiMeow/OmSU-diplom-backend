@@ -1,5 +1,6 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Building
@@ -15,6 +16,9 @@ constructor(private val buildingRepository: BuildingRepository) {
 
 
     fun addBuilding(request: CreateBuildingRequest): Building {
+        if (buildingRepository.findByNumberAndAddress(request.number, request.address) != null)
+            throw CommonValidationException(ErrorCode.BUILDING_ALREADY_EXISTS, request.number.toString(), request.address);
+
         val building = Building(request.number, request.address)
         buildingRepository.save(building)
 
