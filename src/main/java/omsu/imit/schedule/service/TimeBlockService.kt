@@ -1,7 +1,7 @@
 package omsu.imit.schedule.service
 
 import omsu.imit.schedule.exception.ErrorCode
-import omsu.imit.schedule.exception.ScheduleGeneratorException
+import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.TimeBlock
 import omsu.imit.schedule.repository.TimeBlockRepository
 import omsu.imit.schedule.requests.CreateTimeBlockRequest
@@ -15,8 +15,6 @@ class TimeBlockService
 constructor(private val timeBlockRepository: TimeBlockRepository) {
 
     fun addTimeBlock(request: CreateTimeBlockRequest): TimeBlock {
-        if (timeBlockRepository.findByTime(request.timeFrom, request.timeTo) != null)
-            throw ScheduleGeneratorException(ErrorCode.TIMEBLOCK_ALREADY_EXISTS, request.timeFrom, request.timeTo)
 
         val timeBlock = TimeBlock(request.timeFrom, request.timeTo)
         timeBlockRepository.save(timeBlock)
@@ -25,9 +23,9 @@ constructor(private val timeBlockRepository: TimeBlockRepository) {
     }
 
     fun getTimeBlockById(timeBlockId: Int): TimeBlock {
-        val timeBlock: TimeBlock? = timeBlockRepository.findById(timeBlockId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeBlockId.toString())
-        return timeBlock!!
+        return timeBlockRepository
+                .findById(timeBlockId)
+                .orElseThrow { NotFoundException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeBlockId.toString()) }
     }
 
     fun getTimeBlocks(): MutableList<TimeBlock> {
@@ -35,12 +33,10 @@ constructor(private val timeBlockRepository: TimeBlockRepository) {
     }
 
     fun editTimeBlock(timeBlockId: Int, request: EditTimeBlockRequest): TimeBlock {
-        val timeBlock = timeBlockRepository.findById(timeBlockId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeBlockId.toString())
+        val timeBlock = getTimeBlockById(timeBlockId)
 
         if (request.timeFrom != null) timeBlock.timeFrom = request.timeFrom!!
         if (request.timeTo != null) timeBlock.timeTo = request.timeTo!!
-        else throw ScheduleGeneratorException(ErrorCode.EMPTY_REQUEST_BODY)
 
         timeBlockRepository.save(timeBlock)
         return timeBlock
@@ -48,7 +44,7 @@ constructor(private val timeBlockRepository: TimeBlockRepository) {
 
     fun deleteTimeBlock(timeBlockId: Int) {
         if (!timeBlockRepository.existsById(timeBlockId))
-            throw ScheduleGeneratorException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeBlockId.toString())
+            throw NotFoundException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeBlockId.toString())
         timeBlockRepository.deleteById(timeBlockId)
     }
 

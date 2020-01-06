@@ -1,5 +1,6 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.model.Auditory
 import omsu.imit.schedule.model.AuditoryOccupation
 import omsu.imit.schedule.response.AuditoryInfo
@@ -8,6 +9,10 @@ import org.springframework.stereotype.Service
 
 @Service
 open class BaseService {
+
+    protected fun throwNotFound(errorCode: ErrorCode, param: String) {
+
+    }
 
     protected fun createAuditoryInfo(auditory: Auditory): AuditoryInfo {
         return AuditoryInfo(

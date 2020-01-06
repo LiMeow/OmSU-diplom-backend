@@ -60,9 +60,9 @@ class ApiErrorHandler {
         val issues = ex.bindingResult
                 .fieldErrors
                 .stream()
-                .map<Any> { e: FieldError -> Pair.of(e.field, e.defaultMessage) }
+                .map { e: FieldError -> Pair.of(e.field, e.defaultMessage) }
                 .collect(Collectors.toList())
-        return builder.addIssues(issues as List<Pair<String?, String?>>).build()
+        return builder.addIssues(issues).build()
     }
 
     /**
@@ -96,13 +96,15 @@ class ApiErrorHandler {
         return StatusResponse(StatusResponse.Status.ERROR, ex.message)
     }
 
+    /**
+     * Handles CommonValidationException and returns response with according message and http status.
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ScheduleGeneratorException::class)
+    @ExceptionHandler(CommonValidationException::class)
     @ResponseBody
-    fun handleError(ex: ScheduleGeneratorException): Errors {
-        val errors = Errors()
-        errors.addError(ErrorItem(ex))
-        return errors
+    fun handleCommonValidation(ex: CommonValidationException): StatusResponse? {
+        LOGGER.warn("Validation error {}", ex.message)
+        return StatusResponse(StatusResponse.Status.ERROR, ex.message)
     }
 
     /**

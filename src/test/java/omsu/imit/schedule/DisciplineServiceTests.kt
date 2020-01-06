@@ -1,7 +1,7 @@
 package omsu.imit.schedule.servicetests
 
-import omsu.imit.schedule.exception.ErrorCode
-import omsu.imit.schedule.exception.ScheduleGeneratorException
+import omsu.imit.schedule.exception.CommonValidationException
+import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Discipline
 import omsu.imit.schedule.repository.DisciplineRepository
 import omsu.imit.schedule.requests.DisciplineRequest
@@ -9,6 +9,7 @@ import omsu.imit.schedule.service.DisciplineService
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -52,11 +53,8 @@ class DisciplineServiceTests {
         val discipline = Discipline(1, request.name)
 
         `when`(disciplineRepository.findByDisciplineName(discipline.name)).thenReturn(discipline)
-        try {
-            disciplineService.createDiscipline(request)
-        } catch (ex: ScheduleGeneratorException) {
-            assertEquals(ErrorCode.DISCIPLINE_ALREADY_EXISTS, ex.errorCode);
-        }
+
+        assertThrows(CommonValidationException::class.java) { disciplineService.createDiscipline(request) }
         verify(disciplineRepository).findByDisciplineName(discipline.name)
     }
 
@@ -73,11 +71,8 @@ class DisciplineServiceTests {
     fun testGetNonExistingDisciplineById() {
 
         `when`(disciplineRepository.findById(1)).thenReturn(Optional.empty())
-        try {
-            disciplineService.getDiscipline(1)
-        } catch (ex: ScheduleGeneratorException) {
-            assertEquals(ErrorCode.DISCIPLINE_NOT_EXISTS, ex.errorCode);
-        }
+
+        assertThrows(NotFoundException::class.java) { disciplineService.getDiscipline(1) }
         verify(disciplineRepository).findById(1)
     }
 
@@ -114,12 +109,7 @@ class DisciplineServiceTests {
 
         `when`(disciplineRepository.findById(1)).thenReturn(Optional.empty())
 
-        try {
-            disciplineService.editDiscipline(1, request)
-        } catch (ex: ScheduleGeneratorException) {
-            assertEquals(ErrorCode.DISCIPLINE_NOT_EXISTS, ex.errorCode);
-        }
-
+        assertThrows(NotFoundException::class.java) { disciplineService.editDiscipline(1, request) }
         verify(disciplineRepository).findById(1)
     }
 
@@ -138,11 +128,8 @@ class DisciplineServiceTests {
     fun testDeleteNonExistingDiscipline() {
 
         `when`(disciplineRepository.existsById(1)).thenReturn(false)
-        try {
-            disciplineService.deleteDiscipline(1)
-        } catch (ex: ScheduleGeneratorException) {
-            assertEquals(ErrorCode.DISCIPLINE_NOT_EXISTS, ex.errorCode);
-        }
+
+        assertThrows(NotFoundException::class.java) { disciplineService.deleteDiscipline(1) }
         verify(disciplineRepository).existsById(1)
     }
 

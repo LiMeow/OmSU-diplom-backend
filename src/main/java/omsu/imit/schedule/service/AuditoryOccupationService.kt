@@ -1,8 +1,7 @@
 package omsu.imit.schedule.service
 
 import omsu.imit.schedule.exception.ErrorCode
-import omsu.imit.schedule.exception.ScheduleGeneratorException
-import omsu.imit.schedule.model.Auditory
+import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.AuditoryOccupation
 import omsu.imit.schedule.model.Group
 import omsu.imit.schedule.model.Lecturer
@@ -29,16 +28,16 @@ constructor(private val auditoryRepository: AuditoryRepository,
         var lecturer: Lecturer? = null
 
         if (request.groupIds!!.isNotEmpty()) group = groupRepository.findAllById(request.groupIds!!)
-                ?: throw ScheduleGeneratorException(ErrorCode.GROUP_NOT_EXISTS, request.groupIds.toString())
+                ?: throw NotFoundException(ErrorCode.GROUP_NOT_EXISTS, request.groupIds.toString())
 
-        if (request.lecturerId != 0) lecturer = lecturerRepository.findById(request.lecturerId!!).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.LECTURER_NOT_EXISTS, request.lecturerId.toString())
+        if (request.lecturerId != 0) lecturer = lecturerRepository.findById(request.lecturerId!!)
+                .orElseThrow { NotFoundException(ErrorCode.LECTURER_NOT_EXISTS, request.lecturerId.toString()) }
 
         val timeBlock = timeBlockRepository.findByTime(request.timeFrom, request.timeTo)
-                ?: throw ScheduleGeneratorException(ErrorCode.TIMEBLOCK_NOT_EXISTS, request.timeFrom, request.timeTo)
+                ?: throw NotFoundException(ErrorCode.TIMEBLOCK_NOT_EXISTS, request.timeFrom, request.timeTo)
 
-        val auditory = auditoryRepository.findById(auditoryId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString())
+        val auditory = auditoryRepository.findById(auditoryId)
+                .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
 
         val occupation = AuditoryOccupation(
                 auditory,
@@ -53,8 +52,9 @@ constructor(private val auditoryRepository: AuditoryRepository,
     }
 
     fun getAuditoryWithOccupationsByDate(auditoryId: Int, date: String): AuditoryInfo {
-        val auditory = auditoryRepository.findById(auditoryId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString())
+        val auditory = auditoryRepository
+                .findById(auditoryId)
+                .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
 
         auditory.auditoryOccupations = auditoryOccupationRepository.findByAuditoryAndDate(auditoryId, date)
         return createAuditoryInfo(auditory)
@@ -62,7 +62,7 @@ constructor(private val auditoryRepository: AuditoryRepository,
 
     fun deleteAuditoryOccupation(occupationId: Int) {
         if (!auditoryOccupationRepository.existsById(occupationId))
-            throw ScheduleGeneratorException(ErrorCode.AUDITORY_OCCUPATION_NOT_EXISTS, occupationId.toString())
+            throw  NotFoundException(ErrorCode.AUDITORY_OCCUPATION_NOT_EXISTS, occupationId.toString())
 
         auditoryOccupationRepository.deleteById(occupationId)
     }

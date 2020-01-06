@@ -1,12 +1,13 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.exception.ErrorCode
+import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Building
 import omsu.imit.schedule.repository.BuildingRepository
 import omsu.imit.schedule.requests.CreateBuildingRequest
 import omsu.imit.schedule.requests.EditBuildingRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import javax.persistence.EntityNotFoundException
 
 @Service
 open class BuildingService @Autowired
@@ -23,7 +24,9 @@ constructor(private val buildingRepository: BuildingRepository) {
     fun getBuildingById(buildingId: Int): Building {
         return buildingRepository
                 .findById(buildingId)
-                .orElseThrow { EntityNotFoundException(String.format("Building with id=%d not found", buildingId)) }
+                .orElseThrow {
+                    NotFoundException(ErrorCode.BUILDING_NOT_EXISTS, buildingId.toString())
+                }
     }
 
     fun editBuilding(buildingId: Int, request: EditBuildingRequest): Building {
@@ -37,6 +40,9 @@ constructor(private val buildingRepository: BuildingRepository) {
     }
 
     fun deleteBuilding(buildingId: Int) {
+        if (!buildingRepository.existsById(buildingId))
+            throw  NotFoundException(ErrorCode.BUILDING_NOT_EXISTS, buildingId.toString())
+
         buildingRepository.deleteById(buildingId)
     }
 }

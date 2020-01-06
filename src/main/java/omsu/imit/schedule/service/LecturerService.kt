@@ -1,7 +1,7 @@
 package omsu.imit.schedule.service
 
 import omsu.imit.schedule.exception.ErrorCode
-import omsu.imit.schedule.exception.ScheduleGeneratorException
+import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Lecturer
 import omsu.imit.schedule.model.PersonalData
 import omsu.imit.schedule.model.UserRole
@@ -13,7 +13,6 @@ import omsu.imit.schedule.response.LecturerInfo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
-import javax.persistence.EntityNotFoundException
 
 @Service
 class LecturerService
@@ -25,7 +24,7 @@ constructor(
 
     fun createLecturer(request: CreateLecturerRequest): LecturerInfo {
         val chair = chairRepository.findById(request.charId)
-                .orElseThrow { EntityNotFoundException(String.format("Chair with id=%d not found", request.charId)) }
+                .orElseThrow { NotFoundException(ErrorCode.CHAIR_NOT_EXISTS, request.charId.toString()) }
 
         val personalData = PersonalData(
                 request.firstName,
@@ -43,7 +42,7 @@ constructor(
 
     fun getLecturer(lectureId: Int): LecturerInfo {
         val lecturer = lecturerRepository.findById(lectureId)
-                .orElseThrow { EntityNotFoundException(String.format("Lecturer with id=%d not found", lectureId)) }
+                .orElseThrow { NotFoundException(ErrorCode.LECTURER_NOT_EXISTS, lectureId.toString()) }
         return createLecturerInfo(lecturer)
     }
 
@@ -71,11 +70,10 @@ constructor(
     }*/
 
     fun deleteLecturer(lectureId: Int) {
-        TODO("Why lecturer deleted from personal data and not from lecturer repository??")
-        if (!personalDataRepository.existsById(lectureId))
-            throw ScheduleGeneratorException(ErrorCode.USER_NOT_EXISTS, lectureId.toString())
+        if (!lecturerRepository.existsById(lectureId))
+            throw NotFoundException(ErrorCode.LECTURER_NOT_EXISTS, lectureId.toString())
 
-        personalDataRepository.deleteById(lectureId)
+        lecturerRepository.deleteById(lectureId)
     }
 
     private fun createLecturerInfo(lecturer: Lecturer): LecturerInfo {

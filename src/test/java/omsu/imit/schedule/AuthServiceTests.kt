@@ -1,7 +1,7 @@
 package omsu.imit.schedule
 
-import omsu.imit.schedule.exception.ErrorCode
-import omsu.imit.schedule.exception.ScheduleGeneratorException
+import omsu.imit.schedule.exception.CommonValidationException
+import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.PersonalData
 import omsu.imit.schedule.model.UserRole
 import omsu.imit.schedule.repository.PersonalDataRepository
@@ -11,6 +11,7 @@ import omsu.imit.schedule.service.AuthService
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -18,6 +19,7 @@ import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 import org.springframework.security.crypto.password.PasswordEncoder
+import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
 class AuthServiceTests {
@@ -58,13 +60,10 @@ class AuthServiceTests {
         val request = SignUpRequest("FirstName", "Patronymic", "LastName", "student@omsu.ru", "password", UserRole.STUDENT)
         val user = PersonalData(0, request.firstName, request.patronymic, request.lastName, request.email, request.password, UserRole.STUDENT)
 
-        `when`(personalDataRepository.findByEmail(request.email)).thenReturn(user)
+        `when`(personalDataRepository.findByEmail(request.email)).thenReturn(Optional.of(user))
 
-        try {
-            authService.signUp(request)
-        } catch (ex: ScheduleGeneratorException) {
-            assertEquals(ErrorCode.USER_ALREADY_EXISTS, ex.errorCode);
-        }
+
+        assertThrows(CommonValidationException::class.java) { authService.signUp(request) }
         verify(personalDataRepository).findByEmail(request.email)
     }
 
@@ -88,11 +87,8 @@ class AuthServiceTests {
         val request = SignInRequest("student@omsu.ru", "password")
 
         `when`(personalDataRepository.findByEmail(request.email)).thenReturn(null)
-        try {
-            authService.signIn(request)
-        } catch (ex: ScheduleGeneratorException) {
-            assertEquals(ErrorCode.USER_NOT_EXISTS, ex.errorCode);
-        }
+
+        assertThrows(NotFoundException::class.java) { authService.signIn(request) }
         verify(personalDataRepository).findByEmail(request.email)
     }
 

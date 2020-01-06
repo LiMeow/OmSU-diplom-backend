@@ -1,7 +1,7 @@
 package omsu.imit.schedule
 
-import omsu.imit.schedule.exception.ErrorCode
-import omsu.imit.schedule.exception.ScheduleGeneratorException
+import omsu.imit.schedule.exception.CommonValidationException
+import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Building
 import omsu.imit.schedule.repository.BuildingRepository
 import omsu.imit.schedule.requests.CreateBuildingRequest
@@ -10,6 +10,7 @@ import omsu.imit.schedule.service.BuildingService
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -17,6 +18,7 @@ import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 import java.util.*
+
 
 @RunWith(MockitoJUnitRunner::class)
 class BuildingServiceTests {
@@ -54,12 +56,7 @@ class BuildingServiceTests {
 
         `when`(buildingRepository.findByNumberAndAddress(request.number, request.address)).thenReturn(building)
 
-        try {
-            buildingService.addBuilding(request)
-        } catch (ex: ScheduleGeneratorException) {
-            assertEquals(ErrorCode.BUILDING_ALREADY_EXISTS, ex.errorCode);
-        }
-
+        assertThrows(CommonValidationException::class.java) { buildingService.addBuilding(request) }
         verify(buildingRepository).findByNumberAndAddress(request.number, request.address)
     }
 
@@ -79,11 +76,7 @@ class BuildingServiceTests {
 
         `when`(buildingRepository.findById(1)).thenReturn(Optional.empty())
 
-        try {
-            buildingService.getBuildingById(1)
-        } catch (ex: ScheduleGeneratorException) {
-            assertEquals(ErrorCode.BUILDING_NOT_EXISTS, ex.errorCode);
-        }
+        assertThrows(NotFoundException::class.java) { buildingService.getBuildingById(1) }
         verify(buildingRepository).findById(1)
     }
 
@@ -109,12 +102,7 @@ class BuildingServiceTests {
 
         `when`(buildingRepository.findById(2)).thenReturn(Optional.empty())
 
-        try {
-            buildingService.editBuilding(2, request)
-        } catch (ex: ScheduleGeneratorException) {
-            assertEquals(ErrorCode.BUILDING_NOT_EXISTS, ex.errorCode);
-        }
-
+        assertThrows(NotFoundException::class.java) { buildingService.editBuilding(2, request) }
         verify(buildingRepository).findById(2)
     }
 
@@ -125,12 +113,7 @@ class BuildingServiceTests {
 
         `when`(buildingRepository.findById(building.id)).thenReturn(Optional.of(building))
 
-        try {
-            buildingService.editBuilding(building.id, request)
-        } catch (ex: ScheduleGeneratorException) {
-            assertEquals(ErrorCode.EMPTY_REQUEST_BODY, ex.errorCode);
-        }
-
+        assertEquals(building, buildingService.editBuilding(building.id, request))
         verify(buildingRepository).findById(building.id)
     }
 
@@ -148,12 +131,8 @@ class BuildingServiceTests {
     fun testDeleteNonExistingBuilding() {
 
         `when`(buildingRepository.existsById(1)).thenReturn(false)
-        try {
-            buildingService.deleteBuilding(1)
-        } catch (ex: ScheduleGeneratorException) {
-            assertEquals(ErrorCode.BUILDING_NOT_EXISTS, ex.errorCode);
-        }
 
+        assertThrows(NotFoundException::class.java) { buildingService.deleteBuilding(1) }
         verify(buildingRepository).existsById(1)
     }
 }

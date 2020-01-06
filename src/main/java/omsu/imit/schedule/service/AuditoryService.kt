@@ -1,7 +1,7 @@
 package omsu.imit.schedule.service
 
 import omsu.imit.schedule.exception.ErrorCode
-import omsu.imit.schedule.exception.ScheduleGeneratorException
+import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Auditory
 import omsu.imit.schedule.repository.AuditoryOccupationRepository
 import omsu.imit.schedule.repository.AuditoryRepository
@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
-import javax.persistence.EntityNotFoundException
 
 @Service
 class AuditoryService
@@ -27,11 +26,11 @@ constructor(private val auditoryRepository: AuditoryRepository,
             private val tagRepository: TagRepository) : BaseService() {
 
     fun addAuditory(request: CreateAuditoryRequest): AuditoryInfo {
-        val building = buildingRepository.findById(request.buildingId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.BUILDING_NOT_EXISTS, request.buildingId.toString())
+        val building = buildingRepository.findById(request.buildingId)
+                .orElseThrow { NotFoundException(ErrorCode.BUILDING_NOT_EXISTS, request.buildingId.toString()) }
 
         if (auditoryRepository.findByBuildingAndNumber(request.buildingId, request.number) != null)
-            throw ScheduleGeneratorException(ErrorCode.AUDITORY_ALREADY_EXISTS, request.number, request.buildingId.toString())
+            throw NotFoundException(ErrorCode.AUDITORY_ALREADY_EXISTS, request.number, request.buildingId.toString())
 
         val auditory = Auditory(building, request.number)
         if (!request.tags.isNullOrEmpty()) auditory.tags = tagRepository.findAllById(request.tags!!)
@@ -41,8 +40,9 @@ constructor(private val auditoryRepository: AuditoryRepository,
     }
 
     fun getAuditoryById(auditoryId: Int): AuditoryInfo {
-        val auditory = auditoryRepository.findById(auditoryId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString())
+        val auditory = auditoryRepository
+                .findById(auditoryId)
+                .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
         return createAuditoryInfo(auditory)
     }
 
@@ -54,7 +54,7 @@ constructor(private val auditoryRepository: AuditoryRepository,
     fun editAuditory(auditoryId: Int, request: EditAuditoryRequest): AuditoryInfo {
         val auditory = auditoryRepository
                 .findById(auditoryId)
-                .orElseThrow { EntityNotFoundException(String.format("Auditory with id=%d not found", auditoryId)) }
+                .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
 
         if (!request.number.isNullOrEmpty()) auditory.number = request.number!!
         if (!request.tags.isNullOrEmpty()) auditory.tags = tagRepository.findAllById(request.tags!!)
