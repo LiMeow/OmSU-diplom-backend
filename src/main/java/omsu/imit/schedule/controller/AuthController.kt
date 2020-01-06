@@ -6,7 +6,6 @@ import omsu.imit.schedule.requests.SignUpRequest
 import omsu.imit.schedule.service.AuthService
 import omsu.imit.schedule.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.Cookie
@@ -20,10 +19,7 @@ constructor(private val authService: AuthService,
             private val userService: UserService,
             private val jwtTokenService: JwtTokenService) {
 
-    @PostMapping(
-            path = ["/api/signup"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping(path = ["/api/signup"])
     fun signUp(@Valid @RequestBody request: SignUpRequest,
                response: HttpServletResponse): ResponseEntity<*> {
 
@@ -38,10 +34,7 @@ constructor(private val authService: AuthService,
         return ResponseEntity.ok(userInfo);
     }
 
-    @PostMapping(
-            path = ["/api/signup/students"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping(path = ["/api/signup/students"])
     fun signUpStudent(@Valid @RequestBody request: SignUpRequest,
                       response: HttpServletResponse): ResponseEntity<*> {
 
@@ -56,12 +49,8 @@ constructor(private val authService: AuthService,
         return ResponseEntity.ok(userInfo);
     }
 
-    @PostMapping(
-            path = ["/api/signin"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun signIn(@RequestBody
-               request: SignInRequest,
+    @PostMapping(path = ["/api/signin"])
+    fun signIn(@Valid @RequestBody request: SignInRequest,
                response: HttpServletResponse): ResponseEntity<*> {
 
         val userInfo = authService.signIn(request)
@@ -74,18 +63,13 @@ constructor(private val authService: AuthService,
         return ResponseEntity.ok(userInfo);
     }
 
-    @GetMapping(
-            path = ["/api/whoiam"],
-            produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(path = ["/api/whoiam"])
     fun whoIAm(): ResponseEntity<*> {
 
         return ResponseEntity.ok(userService.whoIAm());
     }
 
-    @DeleteMapping(
-            path = ["/api/signout"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @DeleteMapping(path = ["/api/signout"])
     fun signOut(response: HttpServletResponse): ResponseEntity<*> {
         val cookie = Cookie("accessToken", "")
         cookie.isHttpOnly = true

@@ -1,9 +1,19 @@
 package omsu.imit.schedule.dto.request
 
-import omsu.imit.schedule.model.StudyDirection
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.*
 
-class CreateScheduleRequest(@NotNull var course: Int,
-                            @NotNull var semester: Int,
-                            @NotNull var studyDirectionId: StudyDirection,
-                            @NotNull var studyYear: String)
+class CreateScheduleRequest(@NotNull
+                            @Min(value = 1, message = "Course cannot be less than 1")
+                            @Max(value = 5, message = "Course cannot be more than 5")
+                            var course: Int,
+
+                            @NotNull
+                            @Min(value = 1, message = "Semester cannot be less than 1")
+                            @Max(value = 10, message = "Semester cannot be more than 10")
+                            var semester: Int,
+
+                            @NotNull var studyDirectionId: Int,
+
+                            @NotBlank
+                            @Pattern(regexp = "([12]\\d{3}(/)[12]\\d{3})")
+                            var studyYear: String)

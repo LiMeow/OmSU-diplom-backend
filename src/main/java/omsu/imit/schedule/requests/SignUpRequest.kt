@@ -2,15 +2,16 @@ package omsu.imit.schedule.requests
 
 import omsu.imit.schedule.model.UserRole
 import javax.validation.constraints.Email
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 class SignUpRequest(
         var firstName: String,
         var patronymic: String?,
         var lastName: String,
-        @NotNull @Email
+        @NotBlank @Email
         var email: String,
-        @NotNull
+        @NotBlank
         var password: String,
         @NotNull
         var userRole: UserRole)

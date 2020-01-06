@@ -1,7 +1,8 @@
 package omsu.imit.schedule.requests
 
 import com.sun.istack.NotNull
+import javax.validation.constraints.NotBlank
 
-class CreateFacultyRequest(
-        @NotNull var buildingId: Int,
-        @NotNull var name: String)
+data class CreateFacultyRequest(
+        @get: NotNull var buildingId: Int,
+        @get: NotBlank var name: String)

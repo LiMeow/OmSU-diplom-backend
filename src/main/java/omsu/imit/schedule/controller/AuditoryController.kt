@@ -4,7 +4,6 @@ import omsu.imit.schedule.requests.CreateAuditoryRequest
 import omsu.imit.schedule.requests.EditAuditoryRequest
 import omsu.imit.schedule.service.AuditoryService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -19,19 +18,15 @@ constructor(private val auditoryService: AuditoryService) {
     /**
      * Create auditory
      */
-    @PostMapping(
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun addAuditory(@Valid @RequestBody request: CreateAuditoryRequest): ResponseEntity<*> {
+    @PostMapping
+    fun createAuditory(@Valid @RequestBody request: CreateAuditoryRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(auditoryService.addAuditory(request))
     }
 
     /**
      * Return auditory by id
      */
-    @GetMapping(
-            value = ["/{auditoryId}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = ["/{auditoryId}"])
     fun getAuditory(@PathVariable("auditoryId") auditoryId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(auditoryService.getAuditoryById(auditoryId))
@@ -40,10 +35,7 @@ constructor(private val auditoryService: AuditoryService) {
     /**
      * Update auditory by id
      */
-    @PutMapping(
-            value = ["/{auditoryId}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @PutMapping(value = ["/{auditoryId}"])
     fun editAuditory(@PathVariable("auditoryId") auditoryId: Int,
                      @RequestBody request: EditAuditoryRequest): ResponseEntity<*> {
 
@@ -53,9 +45,7 @@ constructor(private val auditoryService: AuditoryService) {
     /**
      * Delete auditory by id
      */
-    @DeleteMapping(
-            value = ["/{auditoryId}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE])
+    @DeleteMapping(value = ["/{auditoryId}"])
     fun deleteAuditory(@PathVariable("auditoryId") auditoryId: Int): ResponseEntity<*> {
         auditoryService.deleteAuditory(auditoryId)
         return ResponseEntity.noContent().build<Any>()

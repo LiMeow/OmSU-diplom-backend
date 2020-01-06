@@ -11,17 +11,10 @@ class ScheduleService
 constructor(private val scheduleRepository: ScheduleRepository) {
 
     fun createSchedule(request: CreateScheduleRequest): Any {
-        if(request.course<1 || request.course>4){
-
-        }
         TODO("not implemented")
     }
 
     fun getSchedule(scheduleId: Int): Any {
         TODO("not implemented")
-    }
-
-    private fun validate() {
-
     }
 }

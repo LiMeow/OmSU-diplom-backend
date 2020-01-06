@@ -1,5 +1,5 @@
 package omsu.imit.schedule.requests
 
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.NotBlank
 
-class CreateActivityTypeRequest(@NotNull var type: String)
+data class CreateActivityTypeRequest(@get: NotBlank var type: String)

@@ -1,5 +1,5 @@
 package omsu.imit.schedule.requests
 
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.NotBlank
 
-class CreateTagRequest(@NotNull var tag: String)
+data class CreateTagRequest(@get: NotBlank var tag: String)

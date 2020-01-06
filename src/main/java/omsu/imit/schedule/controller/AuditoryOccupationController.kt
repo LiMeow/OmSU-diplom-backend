@@ -3,7 +3,6 @@ package omsu.imit.schedule.controller
 import omsu.imit.schedule.requests.OccupyAuditoryRequest
 import omsu.imit.schedule.service.AuditoryOccupationService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -16,10 +15,7 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
     /**
      * Create auditory occupation
      */
-    @PostMapping(
-            value = ["/{auditoryId}/occupations"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping(value = ["/{auditoryId}/occupations"])
     fun occupyAuditory(@PathVariable("auditoryId") auditoryId: Int,
                        @Valid @RequestBody request: OccupyAuditoryRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(auditoryOccupationService.occupyAuditory(auditoryId, request))
@@ -28,9 +24,7 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
     /**
      * Return auditory with occupations by date
      */
-    @GetMapping(
-            value = ["/{auditoryId}/occupations"],
-            produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = ["/{auditoryId}/occupations"])
     fun getAuditoryWithOccupationsByDate(@PathVariable("auditoryId") auditoryId: Int,
                                         @RequestParam date: String): ResponseEntity<*> {
 
@@ -40,10 +34,7 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
     /**
      * Delete occupation by id
      */
-    @DeleteMapping(
-            value = ["/occupations/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @DeleteMapping(value = ["/occupations/{id}"])
     fun deleteAuditoryOccupation(@PathVariable("id") occupationId: Int): ResponseEntity<*> {
         auditoryOccupationService.deleteAuditoryOccupation(occupationId)
         return ResponseEntity.noContent().build<Any>()
@@ -52,10 +43,7 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
     /**
      * Delete all occupations by auditory id
      */
-    @DeleteMapping(
-            value = ["/{auditoryId}/occupations"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @DeleteMapping(value = ["/{auditoryId}/occupations"])
     fun deleteAllAuditoryOccupations(@PathVariable("auditoryId") auditoryId: Int): ResponseEntity<*> {
         auditoryOccupationService.deleteAllAuditoryOccupations(auditoryId)
         return ResponseEntity.noContent().build<Any>()

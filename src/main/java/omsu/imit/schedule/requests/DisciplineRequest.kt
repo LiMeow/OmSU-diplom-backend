@@ -1,5 +1,5 @@
 package omsu.imit.schedule.requests
 
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.NotBlank
 
-class DisciplineRequest(@NotNull var name: String)
+data class DisciplineRequest(@get: NotBlank var name: String)

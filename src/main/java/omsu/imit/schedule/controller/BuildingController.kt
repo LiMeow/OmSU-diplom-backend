@@ -5,10 +5,9 @@ import omsu.imit.schedule.requests.EditBuildingRequest
 import omsu.imit.schedule.service.AuditoryService
 import omsu.imit.schedule.service.BuildingService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/buildings")
@@ -19,19 +18,15 @@ constructor(private val auditoryService: AuditoryService,
     /**
      * Create building
      */
-    @PostMapping(
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun addBuilding(@Validated @RequestBody request: CreateBuildingRequest): ResponseEntity<*> {
+    @PostMapping
+    fun addBuilding(@Valid @RequestBody request: CreateBuildingRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(buildingService.addBuilding(request))
     }
 
     /**
      * Return building by id
      */
-    @GetMapping(
-            value = ["/{buildingId}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = ["/{buildingId}"])
     fun getBuilding(@PathVariable("buildingId") buildingId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(buildingService.getBuildingById(buildingId))
@@ -40,9 +35,7 @@ constructor(private val auditoryService: AuditoryService,
     /**
      * Return all auditories by buildings
      */
-    @GetMapping(
-            value = ["/{buildingId}/auditories"],
-            produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping(value = ["/{buildingId}/auditories"])
     fun getAuditoriesByBuilding(@PathVariable("buildingId") buildingId: Int,
                                 @RequestParam(required = false, defaultValue = "0") page: Int,
                                 @RequestParam(required = false, defaultValue = "8") size: Int): ResponseEntity<*> {
@@ -53,10 +46,7 @@ constructor(private val auditoryService: AuditoryService,
     /**
      * Edit building information
      */
-    @PutMapping(
-            value = ["/{buildingId}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @PutMapping(value = ["/{buildingId}"])
     fun editBuilding(@PathVariable("buildingId") buildingId: Int,
                      @RequestBody request: EditBuildingRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(buildingService.editBuilding(buildingId, request))
@@ -65,9 +55,7 @@ constructor(private val auditoryService: AuditoryService,
     /**
      * Delete building by id
      */
-    @DeleteMapping(
-            value = ["/{buildingId}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE])
+    @DeleteMapping(value = ["/{buildingId}"])
     fun deleteBuilding(@PathVariable("buildingId") buildingId: Int): ResponseEntity<*> {
         buildingService.deleteBuilding(buildingId)
         return ResponseEntity.noContent().build<Any>()

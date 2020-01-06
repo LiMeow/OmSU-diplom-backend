@@ -1,7 +1,7 @@
 package omsu.imit.schedule.requests
 
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.NotBlank
 
-class SignInRequest(@NotNull var email: String,
-                    @NotNull var password: String)
+class SignInRequest(@NotBlank var email: String,
+                    @NotBlank var password: String)
 

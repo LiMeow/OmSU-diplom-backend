@@ -1,6 +1,6 @@
 package omsu.imit.schedule.requests
 
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.NotBlank
 
-class CreateTimeBlockRequest(@NotNull var timeFrom: String,
-                             @NotNull var timeTo: String)
+data class CreateTimeBlockRequest(@get:NotBlank var timeFrom: String,
+                                  @get:NotBlank var timeTo: String)
