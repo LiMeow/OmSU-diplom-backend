@@ -1,10 +1,10 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.dto.response.AuditoryInfo
+import omsu.imit.schedule.dto.response.OccupationInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.model.Auditory
 import omsu.imit.schedule.model.AuditoryOccupation
-import omsu.imit.schedule.response.AuditoryInfo
-import omsu.imit.schedule.response.OccupationInfo
 import org.springframework.stereotype.Service
 
 @Service

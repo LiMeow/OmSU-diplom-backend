@@ -1,4 +1,4 @@
-package omsu.imit.schedule.response
+package omsu.imit.schedule.dto.response
 
 class AuditoryFullInfo(var metaInfo: MetaInfo,
                        var auditoryInfoList: List<AuditoryInfo>) {

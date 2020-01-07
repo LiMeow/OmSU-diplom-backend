@@ -1,6 +1,6 @@
 package omsu.imit.schedule.controller
 
-import omsu.imit.schedule.requests.CreateGroupRequest
+import omsu.imit.schedule.dto.request.CreateGroupRequest
 import omsu.imit.schedule.service.GroupService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity

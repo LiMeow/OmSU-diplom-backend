@@ -1,4 +1,4 @@
-package omsu.imit.schedule.requests
+package omsu.imit.schedule.dto.request
 
 import javax.validation.constraints.NotNull
 

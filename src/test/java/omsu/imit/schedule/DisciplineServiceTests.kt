@@ -1,10 +1,10 @@
 package omsu.imit.schedule.servicetests
 
+import omsu.imit.schedule.dto.request.DisciplineRequest
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Discipline
 import omsu.imit.schedule.repository.DisciplineRepository
-import omsu.imit.schedule.requests.DisciplineRequest
 import omsu.imit.schedule.service.DisciplineService
 import org.junit.Assert.assertEquals
 import org.junit.Before

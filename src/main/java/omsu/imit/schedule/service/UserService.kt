@@ -1,10 +1,10 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.dto.request.ChangeUserTypeRequest
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.PersonalData
 import omsu.imit.schedule.repository.PersonalDataRepository
-import omsu.imit.schedule.requests.ChangeUserTypeRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service

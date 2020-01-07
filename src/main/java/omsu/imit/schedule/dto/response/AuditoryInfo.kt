@@ -1,4 +1,4 @@
-package omsu.imit.schedule.response
+package omsu.imit.schedule.dto.response
 
 import omsu.imit.schedule.model.Tag
 

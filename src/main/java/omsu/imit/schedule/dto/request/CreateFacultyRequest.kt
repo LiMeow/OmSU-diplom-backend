@@ -1,4 +1,4 @@
-package omsu.imit.schedule.requests
+package omsu.imit.schedule.dto.request
 
 import com.sun.istack.NotNull
 import javax.validation.constraints.NotBlank

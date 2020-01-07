@@ -1,11 +1,11 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.dto.request.CreateTimeBlockRequest
+import omsu.imit.schedule.dto.request.EditTimeBlockRequest
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.TimeBlock
 import omsu.imit.schedule.repository.TimeBlockRepository
-import omsu.imit.schedule.requests.CreateTimeBlockRequest
-import omsu.imit.schedule.requests.EditTimeBlockRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

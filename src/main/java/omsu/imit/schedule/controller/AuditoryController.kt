@@ -1,7 +1,7 @@
 package omsu.imit.schedule.controller
 
-import omsu.imit.schedule.requests.CreateAuditoryRequest
-import omsu.imit.schedule.requests.EditAuditoryRequest
+import omsu.imit.schedule.dto.request.CreateAuditoryRequest
+import omsu.imit.schedule.dto.request.EditAuditoryRequest
 import omsu.imit.schedule.service.AuditoryService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity

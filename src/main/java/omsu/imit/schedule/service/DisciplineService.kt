@@ -1,11 +1,11 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.dto.request.DisciplineRequest
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Discipline
 import omsu.imit.schedule.repository.DisciplineRepository
-import omsu.imit.schedule.requests.DisciplineRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

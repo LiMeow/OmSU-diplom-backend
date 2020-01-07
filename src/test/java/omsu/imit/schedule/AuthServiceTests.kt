@@ -1,12 +1,12 @@
 package omsu.imit.schedule
 
+import omsu.imit.schedule.dto.request.SignInRequest
+import omsu.imit.schedule.dto.request.SignUpRequest
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.PersonalData
 import omsu.imit.schedule.model.UserRole
 import omsu.imit.schedule.repository.PersonalDataRepository
-import omsu.imit.schedule.requests.SignInRequest
-import omsu.imit.schedule.requests.SignUpRequest
 import omsu.imit.schedule.service.AuthService
 import org.junit.Assert.assertEquals
 import org.junit.Before

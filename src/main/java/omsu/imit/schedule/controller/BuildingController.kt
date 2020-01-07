@@ -1,7 +1,7 @@
 package omsu.imit.schedule.controller
 
-import omsu.imit.schedule.requests.CreateBuildingRequest
-import omsu.imit.schedule.requests.EditBuildingRequest
+import omsu.imit.schedule.dto.request.CreateBuildingRequest
+import omsu.imit.schedule.dto.request.EditBuildingRequest
 import omsu.imit.schedule.service.AuditoryService
 import omsu.imit.schedule.service.BuildingService
 import org.springframework.beans.factory.annotation.Autowired

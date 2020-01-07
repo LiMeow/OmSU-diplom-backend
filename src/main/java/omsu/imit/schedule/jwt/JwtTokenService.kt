@@ -1,7 +1,7 @@
 package omsu.imit.schedule.jwt
 
+import omsu.imit.schedule.dto.request.SignUpRequest
 import omsu.imit.schedule.model.PersonalData
-import omsu.imit.schedule.requests.SignUpRequest
 import org.springframework.security.core.Authentication
 import java.time.Duration
 

@@ -13,11 +13,18 @@ class StudyDirection(@Id
                      var faculty: Faculty,
 
                      @Column
+                     var code: String,
+
+                     @Column
+                     var name: String,
+
+                     @Column
                      @Enumerated(EnumType.STRING)
                      var qualification: Qualification,
 
-                     @Column
-                     var name: String) {
+                     @Column(name = "study_form")
+                     @Enumerated(EnumType.STRING)
+                     var studyForm: StudyForm) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

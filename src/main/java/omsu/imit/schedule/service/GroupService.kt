@@ -1,12 +1,12 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.dto.request.CreateGroupRequest
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Group
 import omsu.imit.schedule.repository.GroupRepository
 import omsu.imit.schedule.repository.StudyDirectionRepository
-import omsu.imit.schedule.requests.CreateGroupRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

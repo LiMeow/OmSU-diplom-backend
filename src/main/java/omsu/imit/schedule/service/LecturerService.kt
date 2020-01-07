@@ -1,5 +1,7 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.dto.request.CreateLecturerRequest
+import omsu.imit.schedule.dto.response.LecturerInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Lecturer
@@ -8,8 +10,6 @@ import omsu.imit.schedule.model.UserRole
 import omsu.imit.schedule.repository.ChairRepository
 import omsu.imit.schedule.repository.LecturerRepository
 import omsu.imit.schedule.repository.PersonalDataRepository
-import omsu.imit.schedule.requests.CreateLecturerRequest
-import omsu.imit.schedule.response.LecturerInfo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*

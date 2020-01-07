@@ -14,16 +14,23 @@ class Schedule(@Id
                @Column
                var semester: Int,
 
-               @Column(name = "study_form")
-               var studyForm: String,
-
                @Column(name = "study_year")
                var studyYear: String,
 
+               @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+               @JoinTable(name = "schedule_group",
+                       joinColumns = [JoinColumn(name = "schedule_id", referencedColumnName = "id")],
+                       inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")])
+               var groups: List<Group>?,
+
                @OneToMany(fetch = FetchType.LAZY, mappedBy = "schedule")
                var scheduleItems: List<ScheduleItem>?) {
-    constructor(course: Int,semester: Int,studyForm: String,studyYear: String)
-            : this(0, course,semester,studyForm,studyYear,ArrayList())
+
+    constructor(course: Int, semester: Int, studyYear: String, groups: List<Group>?)
+            : this(0, course, semester, studyYear, groups, ArrayList())
+
+    constructor(course: Int, semester: Int, studyYear: String)
+            : this(course, semester, studyYear, ArrayList())
 
 
 }

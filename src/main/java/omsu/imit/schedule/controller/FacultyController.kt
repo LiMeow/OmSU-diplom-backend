@@ -1,6 +1,6 @@
 package omsu.imit.schedule.controller
 
-import omsu.imit.schedule.requests.CreateFacultyRequest
+import omsu.imit.schedule.dto.request.CreateFacultyRequest
 import omsu.imit.schedule.service.FacultyService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity

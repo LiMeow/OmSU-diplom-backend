@@ -1,5 +1,9 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.dto.request.CreateAuditoryRequest
+import omsu.imit.schedule.dto.request.EditAuditoryRequest
+import omsu.imit.schedule.dto.response.AuditoryInfo
+import omsu.imit.schedule.dto.response.MetaInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Auditory
@@ -7,10 +11,6 @@ import omsu.imit.schedule.repository.AuditoryOccupationRepository
 import omsu.imit.schedule.repository.AuditoryRepository
 import omsu.imit.schedule.repository.BuildingRepository
 import omsu.imit.schedule.repository.TagRepository
-import omsu.imit.schedule.requests.CreateAuditoryRequest
-import omsu.imit.schedule.requests.EditAuditoryRequest
-import omsu.imit.schedule.response.AuditoryInfo
-import omsu.imit.schedule.response.MetaInfo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable

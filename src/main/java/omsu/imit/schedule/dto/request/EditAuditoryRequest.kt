@@ -1,4 +1,4 @@
-package omsu.imit.schedule.requests
+package omsu.imit.schedule.dto.request
 
 class EditAuditoryRequest(var number: String? = null,
                           var tags: List<Int>? = null) {

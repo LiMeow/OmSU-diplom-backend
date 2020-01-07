@@ -1,8 +1,8 @@
 package omsu.imit.schedule.controller
 
+import omsu.imit.schedule.dto.request.SignInRequest
+import omsu.imit.schedule.dto.request.SignUpRequest
 import omsu.imit.schedule.jwt.JwtTokenService
-import omsu.imit.schedule.requests.SignInRequest
-import omsu.imit.schedule.requests.SignUpRequest
 import omsu.imit.schedule.service.AuthService
 import omsu.imit.schedule.service.UserService
 import org.springframework.beans.factory.annotation.Autowired

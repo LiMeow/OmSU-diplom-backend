@@ -1,14 +1,14 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.dto.request.OccupyAuditoryRequest
+import omsu.imit.schedule.dto.response.AuditoryInfo
+import omsu.imit.schedule.dto.response.OccupationInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.AuditoryOccupation
 import omsu.imit.schedule.model.Group
 import omsu.imit.schedule.model.Lecturer
 import omsu.imit.schedule.repository.*
-import omsu.imit.schedule.requests.OccupyAuditoryRequest
-import omsu.imit.schedule.response.AuditoryInfo
-import omsu.imit.schedule.response.OccupationInfo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

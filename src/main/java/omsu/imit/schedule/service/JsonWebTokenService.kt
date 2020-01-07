@@ -3,11 +3,11 @@ package omsu.imit.schedule.service
 import com.google.gson.Gson
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import omsu.imit.schedule.dto.request.SignUpRequest
 import omsu.imit.schedule.jwt.AuthenticatedJwtToken
 import omsu.imit.schedule.jwt.JwtSettings
 import omsu.imit.schedule.jwt.JwtTokenService
 import omsu.imit.schedule.model.PersonalData
-import omsu.imit.schedule.requests.SignUpRequest
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority

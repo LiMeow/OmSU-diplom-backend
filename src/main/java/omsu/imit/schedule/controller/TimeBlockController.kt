@@ -1,7 +1,7 @@
 package omsu.imit.schedule.controller
 
-import omsu.imit.schedule.requests.CreateTimeBlockRequest
-import omsu.imit.schedule.requests.EditTimeBlockRequest
+import omsu.imit.schedule.dto.request.CreateTimeBlockRequest
+import omsu.imit.schedule.dto.request.EditTimeBlockRequest
 import omsu.imit.schedule.service.TimeBlockService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
