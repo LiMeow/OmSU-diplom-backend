@@ -7,18 +7,18 @@ import javax.persistence.*
 class Faculty(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        var id: Int = 0,
+        var id: Int,
 
         @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
         @JoinColumn(name = "building_id")
-        var building: Building? = null,
+        var building: Building,
 
         @Column
-        var name: String = "",
+        var name: String,
 
         @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
         @JoinColumn(name = "faculty_id")
-        var chairs: List<Chair> = ArrayList()) {
+        var chairs: List<Chair>) {
 
     constructor(building: Building, name: String) : this(0, building, name, ArrayList<Chair>())
 

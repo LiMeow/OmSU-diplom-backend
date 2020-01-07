@@ -18,8 +18,8 @@ constructor(private val disciplineService: DisciplineService) {
         return ResponseEntity.ok().body(disciplineService.createDiscipline(request))
     }
 
-    @GetMapping(value = ["/{id}"])
-    fun getDiscipline(@PathVariable("id") disciplineId: Int): ResponseEntity<*> {
+    @GetMapping(value = ["/{disciplineId}"])
+    fun getDiscipline(@PathVariable disciplineId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(disciplineService.getDiscipline(disciplineId))
     }
@@ -30,15 +30,15 @@ constructor(private val disciplineService: DisciplineService) {
         return ResponseEntity.ok().body(disciplineService.getAllDisciplines())
     }
 
-    @PutMapping(value = ["/{id}"])
-    fun editDiscipline(@PathVariable("id") disciplineId: Int,
+    @PutMapping(value = ["/{disciplineId}"])
+    fun editDiscipline(@PathVariable disciplineId: Int,
                        @Valid @RequestBody request: DisciplineRequest): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(disciplineService.editDiscipline(disciplineId, request))
     }
 
-    @DeleteMapping(value = ["/{id}"])
-    fun deleteDiscipline(@PathVariable("id") disciplineId: Int): ResponseEntity<*> {
+    @DeleteMapping(value = ["/{disciplineId}"])
+    fun deleteDiscipline(@PathVariable disciplineId: Int): ResponseEntity<*> {
         disciplineService.deleteDiscipline(disciplineId)
         return ResponseEntity.noContent().build<Any>()
     }

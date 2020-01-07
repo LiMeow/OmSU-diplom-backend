@@ -27,7 +27,7 @@ constructor(private val auditoryService: AuditoryService,
      * Return building by id
      */
     @GetMapping(value = ["/{buildingId}"])
-    fun getBuilding(@PathVariable("buildingId") buildingId: Int): ResponseEntity<*> {
+    fun getBuilding(@PathVariable buildingId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(buildingService.getBuildingById(buildingId))
     }
@@ -36,7 +36,7 @@ constructor(private val auditoryService: AuditoryService,
      * Return all auditories by buildings
      */
     @GetMapping(value = ["/{buildingId}/auditories"])
-    fun getAuditoriesByBuilding(@PathVariable("buildingId") buildingId: Int,
+    fun getAuditoriesByBuilding(@PathVariable buildingId: Int,
                                 @RequestParam(required = false, defaultValue = "0") page: Int,
                                 @RequestParam(required = false, defaultValue = "8") size: Int): ResponseEntity<*> {
 
@@ -47,7 +47,7 @@ constructor(private val auditoryService: AuditoryService,
      * Edit building information
      */
     @PutMapping(value = ["/{buildingId}"])
-    fun editBuilding(@PathVariable("buildingId") buildingId: Int,
+    fun editBuilding(@PathVariable buildingId: Int,
                      @RequestBody request: EditBuildingRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(buildingService.editBuilding(buildingId, request))
     }
@@ -56,7 +56,7 @@ constructor(private val auditoryService: AuditoryService,
      * Delete building by id
      */
     @DeleteMapping(value = ["/{buildingId}"])
-    fun deleteBuilding(@PathVariable("buildingId") buildingId: Int): ResponseEntity<*> {
+    fun deleteBuilding(@PathVariable buildingId: Int): ResponseEntity<*> {
         buildingService.deleteBuilding(buildingId)
         return ResponseEntity.noContent().build<Any>()
     }

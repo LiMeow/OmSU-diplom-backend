@@ -16,7 +16,7 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
      * Create auditory occupation
      */
     @PostMapping(value = ["/{auditoryId}/occupations"])
-    fun occupyAuditory(@PathVariable("auditoryId") auditoryId: Int,
+    fun occupyAuditory(@PathVariable auditoryId: Int,
                        @Valid @RequestBody request: OccupyAuditoryRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(auditoryOccupationService.occupyAuditory(auditoryId, request))
     }
@@ -25,8 +25,8 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
      * Return auditory with occupations by date
      */
     @GetMapping(value = ["/{auditoryId}/occupations"])
-    fun getAuditoryWithOccupationsByDate(@PathVariable("auditoryId") auditoryId: Int,
-                                        @RequestParam date: String): ResponseEntity<*> {
+    fun getAuditoryWithOccupationsByDate(@PathVariable auditoryId: Int,
+                                         @RequestParam date: String): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(auditoryOccupationService.getAuditoryWithOccupationsByDate(auditoryId, date))
     }
@@ -34,8 +34,8 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
     /**
      * Delete occupation by id
      */
-    @DeleteMapping(value = ["/occupations/{id}"])
-    fun deleteAuditoryOccupation(@PathVariable("id") occupationId: Int): ResponseEntity<*> {
+    @DeleteMapping(value = ["/occupations/{occupationId}"])
+    fun deleteAuditoryOccupation(@PathVariable occupationId: Int): ResponseEntity<*> {
         auditoryOccupationService.deleteAuditoryOccupation(occupationId)
         return ResponseEntity.noContent().build<Any>()
     }
@@ -44,7 +44,7 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
      * Delete all occupations by auditory id
      */
     @DeleteMapping(value = ["/{auditoryId}/occupations"])
-    fun deleteAllAuditoryOccupations(@PathVariable("auditoryId") auditoryId: Int): ResponseEntity<*> {
+    fun deleteAllAuditoryOccupations(@PathVariable auditoryId: Int): ResponseEntity<*> {
         auditoryOccupationService.deleteAllAuditoryOccupations(auditoryId)
         return ResponseEntity.noContent().build<Any>()
     }

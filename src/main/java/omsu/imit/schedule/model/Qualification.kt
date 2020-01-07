@@ -5,11 +5,11 @@ enum class Qualification {
     SPECIALIST("специалист"),
     MAGISTER("магистр");
 
-    var qualification: String = ""
+    var description = ""
 
     constructor() {}
 
-    constructor(qualification: String) {
-        this.qualification = qualification
+    constructor(description: String) {
+        this.description = description
     }
 }

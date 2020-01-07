@@ -34,21 +34,6 @@ constructor(private val authService: AuthService,
         return ResponseEntity.ok(userInfo);
     }
 
-    @PostMapping(path = ["/api/signup/students"])
-    fun signUpStudent(@Valid @RequestBody request: SignUpRequest,
-                      response: HttpServletResponse): ResponseEntity<*> {
-
-        val userInfo = authService.signUp(request)
-        val token = jwtTokenService.createToken(userInfo)
-        val cookie = Cookie("accessToken", token)
-
-        cookie.isHttpOnly = true
-        cookie.maxAge = (jwtTokenService.getTokenExpiredIn().toMillis() / 1000).toInt()
-        response.addCookie(cookie)
-
-        return ResponseEntity.ok(userInfo);
-    }
-
     @PostMapping(path = ["/api/signin"])
     fun signIn(@Valid @RequestBody request: SignInRequest,
                response: HttpServletResponse): ResponseEntity<*> {

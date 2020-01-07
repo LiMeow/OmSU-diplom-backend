@@ -19,7 +19,7 @@ constructor(private val activityTypeService: ActivityTypeService) {
     }
 
     @GetMapping(value = ["/{activityTypeId}"])
-    fun getActivityType(@PathVariable("activityTypeId") activityTypeId: Int): ResponseEntity<*> {
+    fun getActivityType(@PathVariable activityTypeId: Int): ResponseEntity<*> {
         return ResponseEntity.ok().body(activityTypeService.getActivityTypeById(activityTypeId))
     }
 
@@ -29,7 +29,7 @@ constructor(private val activityTypeService: ActivityTypeService) {
     }
 
     @DeleteMapping(value = ["/{activityTypeId}"])
-    fun deleteActivityType(@PathVariable("activityTypeId") activityTypeId: Int): ResponseEntity<*> {
+    fun deleteActivityType(@PathVariable activityTypeId: Int): ResponseEntity<*> {
         activityTypeService.deleteActivityType(activityTypeId)
         return ResponseEntity.noContent().build<Any>()
     }

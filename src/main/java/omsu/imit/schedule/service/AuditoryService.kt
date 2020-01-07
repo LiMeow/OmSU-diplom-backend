@@ -36,14 +36,14 @@ constructor(private val auditoryRepository: AuditoryRepository,
         if (!request.tags.isNullOrEmpty()) auditory.tags = tagRepository.findAllById(request.tags!!)
 
         auditoryRepository.save(auditory)
-        return createAuditoryInfo(auditory)
+        return toAuditoryInfo(auditory)
     }
 
     fun getAuditoryById(auditoryId: Int): AuditoryInfo {
         val auditory = auditoryRepository
                 .findById(auditoryId)
                 .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
-        return createAuditoryInfo(auditory)
+        return toAuditoryInfo(auditory)
     }
 
     fun getAllAuditoriesByBuilding(buildingId: Int, page: Int, size: Int): List<Auditory>? {
@@ -60,7 +60,7 @@ constructor(private val auditoryRepository: AuditoryRepository,
         if (!request.tags.isNullOrEmpty()) auditory.tags = tagRepository.findAllById(request.tags!!)
 
         auditoryRepository.save(auditory)
-        return createAuditoryInfo(auditory)
+        return toAuditoryInfo(auditory)
 
     }
 

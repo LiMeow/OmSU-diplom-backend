@@ -1,6 +1,7 @@
 package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.CreateGroupRequest
+import omsu.imit.schedule.dto.response.GroupInfo
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
@@ -17,7 +18,7 @@ constructor(
         private val groupRepository: GroupRepository,
         private val studyDirectionRepository: StudyDirectionRepository) : BaseService() {
 
-    fun addGroup(request: CreateGroupRequest): Group {
+    fun createGroup(request: CreateGroupRequest): GroupInfo {
         val studyDirection = studyDirectionRepository.findById(request.studyDirectionId)
                 .orElseThrow { NotFoundException(ErrorCode.STUDY_DIRECTION_NOT_EXISXTS, request.studyDirectionId.toString()) }
 
@@ -27,16 +28,17 @@ constructor(
         val group = Group(studyDirection, request.name)
         groupRepository.save(group)
 
-        return group
+        return toGroupInfo(group)
     }
 
-    fun getGroupById(groupId: Int): Group {
-        return groupRepository.findById(groupId)
+    fun getGroupById(groupId: Int): GroupInfo {
+        val group = groupRepository.findById(groupId)
                 .orElseThrow { NotFoundException(ErrorCode.GROUP_NOT_EXISTS, groupId.toString()) }
+        return toGroupInfo(group)
     }
 
-    fun getAllGroups(): MutableList<Group> {
-        return groupRepository.findAll()
+    fun getAllGroups(): List<GroupInfo> {
+        return groupRepository.findAll().asSequence().map { toGroupInfo(it) }.toList()
     }
 
     fun deleteGroupById(groupId: Int) {

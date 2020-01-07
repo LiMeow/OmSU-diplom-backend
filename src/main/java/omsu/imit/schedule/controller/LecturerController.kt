@@ -18,8 +18,8 @@ constructor(private val lecturerService: LecturerService) {
         return ResponseEntity.ok().body(lecturerService.createLecturer(request))
     }
 
-    @GetMapping(value = ["/{id}"])
-    fun getLecturer(@PathVariable("id") lectureId: Int): ResponseEntity<*> {
+    @GetMapping(value = ["/{lectureId}"])
+    fun getLecturer(@PathVariable lectureId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(lecturerService.getLecturer(lectureId))
     }
@@ -40,8 +40,8 @@ constructor(private val lecturerService: LecturerService) {
         return ResponseEntity.ok().body(lecturerService.editLecturer(lectureId, request))
     }*/
 
-    @DeleteMapping(value = ["/{id}"])
-    fun deleteLecturer(@PathVariable("id") lectureId: Int): ResponseEntity<*> {
+    @DeleteMapping(value = ["/{lectureId}"])
+    fun deleteLecturer(@PathVariable lectureId: Int): ResponseEntity<*> {
         lecturerService.deleteLecturer(lectureId)
         return ResponseEntity.noContent().build<Any>()
     }

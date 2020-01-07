@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*
 class ChairController @Autowired
 constructor(private val chairService: ChairService) {
 
-    @GetMapping(value = ["/{id}"])
-    fun getChair(@PathVariable("id") chairId: Int): ResponseEntity<*> {
+    @GetMapping(value = ["/{chairId}"])
+    fun getChair(@PathVariable chairId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(chairService.getChair(chairId))
     }
 
-    @DeleteMapping(value = ["/{id}"])
-    fun deleteChair(@PathVariable("id") chairId: Int): ResponseEntity<*> {
+    @DeleteMapping(value = ["/{chairId}"])
+    fun deleteChair(@PathVariable chairId: Int): ResponseEntity<*> {
         chairService.deleteChair(chairId)
         return ResponseEntity.noContent().build<Any>()
     }

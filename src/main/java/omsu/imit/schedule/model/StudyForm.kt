@@ -5,11 +5,11 @@ enum class StudyForm {
     PART_TIME("очно-заочная"),
     SELF_STUDY("заочная");
 
-    var studyForm: String = ""
+    var form: String = ""
 
     constructor() {}
 
     constructor(studyForm: String) {
-        this.studyForm = studyForm
+        this.form = studyForm
     }
 }

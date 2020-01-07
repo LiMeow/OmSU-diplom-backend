@@ -27,7 +27,7 @@ constructor(private val auditoryService: AuditoryService) {
      * Return auditory by id
      */
     @GetMapping(value = ["/{auditoryId}"])
-    fun getAuditory(@PathVariable("auditoryId") auditoryId: Int): ResponseEntity<*> {
+    fun getAuditory(@PathVariable auditoryId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(auditoryService.getAuditoryById(auditoryId))
     }
@@ -36,7 +36,7 @@ constructor(private val auditoryService: AuditoryService) {
      * Update auditory by id
      */
     @PutMapping(value = ["/{auditoryId}"])
-    fun editAuditory(@PathVariable("auditoryId") auditoryId: Int,
+    fun editAuditory(@PathVariable auditoryId: Int,
                      @RequestBody request: EditAuditoryRequest): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(auditoryService.editAuditory(auditoryId, request))
@@ -46,7 +46,7 @@ constructor(private val auditoryService: AuditoryService) {
      * Delete auditory by id
      */
     @DeleteMapping(value = ["/{auditoryId}"])
-    fun deleteAuditory(@PathVariable("auditoryId") auditoryId: Int): ResponseEntity<*> {
+    fun deleteAuditory(@PathVariable auditoryId: Int): ResponseEntity<*> {
         auditoryService.deleteAuditory(auditoryId)
         return ResponseEntity.noContent().build<Any>()
     }

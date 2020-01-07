@@ -1,28 +1,59 @@
 package omsu.imit.schedule.service
 
-import omsu.imit.schedule.dto.response.AuditoryInfo
-import omsu.imit.schedule.dto.response.OccupationInfo
-import omsu.imit.schedule.exception.ErrorCode
-import omsu.imit.schedule.model.Auditory
-import omsu.imit.schedule.model.AuditoryOccupation
+import omsu.imit.schedule.dto.response.*
+import omsu.imit.schedule.model.*
 import org.springframework.stereotype.Service
 
 @Service
 open class BaseService {
 
-    protected fun throwNotFound(errorCode: ErrorCode, param: String) {
+    fun toGroupInfo(group: Group): GroupInfo {
+        return GroupInfo(group.id,
+                group.name,
+                toStudyDirectionInfo(group.studyDirection))
 
     }
 
-    protected fun createAuditoryInfo(auditory: Auditory): AuditoryInfo {
+    fun toStudyDirectionInfo(studyDirection: StudyDirection): StudyDirectionInfo {
+        return StudyDirectionInfo(studyDirection.id,
+                studyDirection.faculty.name,
+                studyDirection.code,
+                studyDirection.name,
+                studyDirection.qualification.description,
+                studyDirection.studyForm.form)
+    }
+
+    fun toFacultyInfo(faculty: Faculty): FacultyInfo {
+        return FacultyInfo(
+                faculty.id,
+                toBuildingInfo(faculty.building),
+                faculty.name)
+    }
+
+    fun toBuildingInfo(building: Building): BuildingInfo {
+        return BuildingInfo(
+                building.id,
+                building.number,
+                building.address)
+    }
+
+    fun toChairsInfo(chairs: List<Chair>): List<ChairInfo> {
+        return chairs.asSequence().map { toChairInfo(it) }.toList()
+    }
+
+    fun toChairInfo(chair: Chair): ChairInfo {
+        return ChairInfo(chair.id, chair.name)
+    }
+
+    fun toAuditoryInfo(auditory: Auditory): AuditoryInfo {
         return AuditoryInfo(
                 auditory.id,
                 auditory.number,
                 auditory.tags,
-                createOccupationInfo(auditory.auditoryOccupations))
+                toOccupationInfo(auditory.auditoryOccupations))
     }
 
-    protected fun createOccupationInfo(occupation: AuditoryOccupation): OccupationInfo {
+    fun toOccupationInfo(occupation: AuditoryOccupation): OccupationInfo {
         val occupationInfo = OccupationInfo(
                 occupation.id,
                 occupation.timeBlock.timeFrom,
@@ -39,12 +70,12 @@ open class BaseService {
         return occupationInfo
     }
 
-    protected fun createOccupationInfo(occupations: List<AuditoryOccupation>?): List<OccupationInfo> {
+    fun toOccupationInfo(occupations: List<AuditoryOccupation>?): List<OccupationInfo> {
         val response: MutableList<OccupationInfo> = mutableListOf()
 
         if (occupations != null && occupations.isNotEmpty()) {
             for (occupation in occupations) {
-                response.add(createOccupationInfo(occupation))
+                response.add(toOccupationInfo(occupation))
             }
         }
         return response

@@ -25,7 +25,7 @@ constructor(private val scheduleService: ScheduleService) {
      * Get schedule by id
      */
     @GetMapping(value = ["/{scheduleId}"])
-    fun getScheduleById(@PathVariable("scheduleId") scheduleId: Int): ResponseEntity<*> {
+    fun getScheduleById(@PathVariable scheduleId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(scheduleService.getSchedule(scheduleId))
     }

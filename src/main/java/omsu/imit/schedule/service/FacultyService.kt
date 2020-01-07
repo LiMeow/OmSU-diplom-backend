@@ -1,6 +1,7 @@
 package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.CreateFacultyRequest
+import omsu.imit.schedule.dto.response.FacultyInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Building
@@ -13,8 +14,8 @@ import org.springframework.stereotype.Service
 @Service
 class FacultyService
 @Autowired constructor(private val buildingRepository: BuildingRepository,
-                       private val facultyRepository: FacultyRepository) {
-    fun createFaculty(request: CreateFacultyRequest): Faculty {
+                       private val facultyRepository: FacultyRepository) : BaseService() {
+    fun createFaculty(request: CreateFacultyRequest): FacultyInfo {
         val building: Building = buildingRepository
                 .findById(request.buildingId)
                 .orElseThrow { NotFoundException(ErrorCode.BUILDING_NOT_EXISTS, request.buildingId.toString()) }
@@ -22,16 +23,17 @@ class FacultyService
         val faculty = Faculty(building, request.name)
         facultyRepository.save(faculty)
 
-        return faculty
+        return toFacultyInfo(faculty)
     }
 
-    fun getFaculty(facultyId: Int): Faculty {
-        return facultyRepository.findById(facultyId)
+    fun getFaculty(facultyId: Int): FacultyInfo {
+        val faculty = facultyRepository.findById(facultyId)
                 .orElseThrow { NotFoundException(ErrorCode.FACULTY_NOT_EXISTS, facultyId.toString()) }
+        return toFacultyInfo(faculty)
     }
 
-    fun getAllFaculties(): List<Faculty> {
-        return facultyRepository.findAll()
+    fun getAllFaculties(): List<FacultyInfo> {
+        return facultyRepository.findAll().asSequence().map { toFacultyInfo(it) }.toList()
     }
 
     fun deleteFaculty(facultyId: Int) {
@@ -39,4 +41,5 @@ class FacultyService
             throw NotFoundException(ErrorCode.FACULTY_NOT_EXISTS, facultyId.toString())
         facultyRepository.deleteById(facultyId)
     }
+
 }

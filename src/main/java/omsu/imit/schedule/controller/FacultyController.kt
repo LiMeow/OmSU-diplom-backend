@@ -22,8 +22,8 @@ class FacultyController
     /**
      * Return faculty by id
      */
-    @GetMapping(value = ["/{id}"])
-    fun getFacultyInfo(@PathVariable("id") facultyId: Int): ResponseEntity<*> {
+    @GetMapping(value = ["/{facultyId}"])
+    fun getFacultyInfo(@PathVariable facultyId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(facultyService.getFaculty(facultyId))
     }
@@ -40,8 +40,8 @@ class FacultyController
     /**
      * Delete faculty by id
      */
-    @DeleteMapping(value = ["/{id}"])
-    fun deleteFaculty(@PathVariable("id") facultyId: Int): ResponseEntity<*> {
+    @DeleteMapping(value = ["/{facultyId}"])
+    fun deleteFaculty(@PathVariable facultyId: Int): ResponseEntity<*> {
         facultyService.deleteFaculty(facultyId)
         return ResponseEntity.noContent().build<Any>()
     }

@@ -18,33 +18,33 @@ constructor(private val timeBlockService: TimeBlockService) {
         return ResponseEntity.ok().body(timeBlockService.addTimeBlock(request))
     }
 
-    @GetMapping(value = ["/{id}"])
-    fun getTimeBlockById(@PathVariable("id") timeBlockId: Int): ResponseEntity<*> {
+    @GetMapping(value = ["/{timeBlockId}"])
+    fun getAllTimeBlocks(@PathVariable timeBlockId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(timeBlockService.getTimeBlockById(timeBlockId))
     }
 
     @GetMapping
-    fun getTimeBlockById(): ResponseEntity<*> {
+    fun getAllTimeBlocks(): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(timeBlockService.getTimeBlocks())
     }
 
-    @PutMapping(value = ["/{id}"])
-    fun editTimeBlock(@PathVariable("id") timeBlockId: Int,
+    @PutMapping(value = ["/{timeBlockId}"])
+    fun editTimeBlock(@PathVariable timeBlockId: Int,
                       @RequestBody request: EditTimeBlockRequest): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(timeBlockService.editTimeBlock(timeBlockId, request))
     }
 
-    @DeleteMapping(value = ["/{id}"])
-    fun deleteTimeBlock(@PathVariable("id") timeBlockId: Int): ResponseEntity<*> {
+    @DeleteMapping(value = ["/{timeBlockId}"])
+    fun deleteTimeBlock(@PathVariable timeBlockId: Int): ResponseEntity<*> {
         timeBlockService.deleteTimeBlock(timeBlockId)
         return ResponseEntity.noContent().build<Any>()
     }
 
     @DeleteMapping
-    fun deleteTimeBlocks(): ResponseEntity<*> {
+    fun deleteAllTimeBlocks(): ResponseEntity<*> {
         timeBlockService.deleteAllTimeBlocks()
         return ResponseEntity.noContent().build<Any>()
     }

@@ -48,7 +48,7 @@ constructor(private val auditoryRepository: AuditoryRepository,
                 request.comment)
 
         auditoryOccupationRepository.save(occupation)
-        return createOccupationInfo(occupation)
+        return toOccupationInfo(occupation)
     }
 
     fun getAuditoryWithOccupationsByDate(auditoryId: Int, date: String): AuditoryInfo {
@@ -57,7 +57,7 @@ constructor(private val auditoryRepository: AuditoryRepository,
                 .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
 
         auditory.auditoryOccupations = auditoryOccupationRepository.findByAuditoryAndDate(auditoryId, date)
-        return createAuditoryInfo(auditory)
+        return toAuditoryInfo(auditory)
     }
 
     fun deleteAuditoryOccupation(occupationId: Int) {

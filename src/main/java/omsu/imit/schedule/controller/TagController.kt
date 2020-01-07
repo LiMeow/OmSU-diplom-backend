@@ -18,8 +18,8 @@ constructor(private val tagService: TagService) {
         return ResponseEntity.ok().body(tagService.addTag(request))
     }
 
-    @GetMapping(value = ["/{id}"])
-    fun getTag(@PathVariable("id") tagId: Int): ResponseEntity<*> {
+    @GetMapping(value = ["/{tagId}"])
+    fun getTag(@PathVariable tagId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(tagService.getTagById(tagId))
     }
@@ -29,8 +29,8 @@ constructor(private val tagService: TagService) {
         return ResponseEntity.ok().body(tagService.getAllTags())
     }
 
-    @DeleteMapping(value = ["/{id}"])
-    fun deleteTag(@PathVariable("id") tagId: Int): ResponseEntity<*> {
+    @DeleteMapping(value = ["/{tagId}"])
+    fun deleteTag(@PathVariable tagId: Int): ResponseEntity<*> {
         tagService.deleteTagById(tagId)
         return ResponseEntity.noContent().build<Any>()
     }

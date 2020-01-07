@@ -13,12 +13,12 @@ class GroupsController @Autowired
 constructor(private val groupService: GroupService) {
 
     @PostMapping
-    fun addGroup(@Valid @RequestBody request: CreateGroupRequest): ResponseEntity<*> {
-        return ResponseEntity.ok().body(groupService.addGroup(request))
+    fun createGroup(@Valid @RequestBody request: CreateGroupRequest): ResponseEntity<*> {
+        return ResponseEntity.ok().body(groupService.createGroup(request))
     }
 
-    @GetMapping(value = ["/{id}"])
-    fun getGroup(@PathVariable("id") groupId: Int): ResponseEntity<*> {
+    @GetMapping(value = ["/{groupId}"])
+    fun getGroup(@PathVariable groupId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(groupService.getGroupById(groupId))
     }
@@ -30,8 +30,8 @@ constructor(private val groupService: GroupService) {
     }
 
 
-    @DeleteMapping(value = ["/{id}"])
-    fun deleteGroup(@PathVariable("id") groupId: Int): ResponseEntity<*> {
+    @DeleteMapping(value = ["/{groupId}"])
+    fun deleteGroup(@PathVariable groupId: Int): ResponseEntity<*> {
         groupService.deleteGroupById(groupId)
         return ResponseEntity.noContent().build<Any>()
     }
