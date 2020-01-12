@@ -34,6 +34,10 @@ constructor(private val tagRepository: TagRepository) {
         return tagRepository.findAll()
     }
 
+    fun getAllTagsByIds(tagsIds: List<Int>): MutableList<Tag> {
+        return tagRepository.findAllById(tagsIds)
+    }
+
     fun deleteTagById(tagId: Int) {
         if (!tagRepository.existsById(tagId))
             throw NotFoundException(ErrorCode.TAG_NOT_EXISTS, tagId.toString())

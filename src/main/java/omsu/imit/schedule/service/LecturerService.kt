@@ -7,7 +7,6 @@ import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Lecturer
 import omsu.imit.schedule.model.PersonalData
 import omsu.imit.schedule.model.UserRole
-import omsu.imit.schedule.repository.ChairRepository
 import omsu.imit.schedule.repository.LecturerRepository
 import omsu.imit.schedule.repository.PersonalDataRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,13 +17,12 @@ import java.util.*
 class LecturerService
 @Autowired
 constructor(
-        private val chairRepository: ChairRepository,
+        private val chairService: ChairService,
         private val lecturerRepository: LecturerRepository,
         private val personalDataRepository: PersonalDataRepository) {
 
     fun createLecturer(request: CreateLecturerRequest): LecturerInfo {
-        val chair = chairRepository.findById(request.charId)
-                .orElseThrow { NotFoundException(ErrorCode.CHAIR_NOT_EXISTS, request.charId.toString()) }
+        val chair = chairService.getChair(request.charId)
 
         val personalData = PersonalData(
                 request.firstName,

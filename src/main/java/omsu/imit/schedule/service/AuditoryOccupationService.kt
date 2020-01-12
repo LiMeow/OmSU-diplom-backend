@@ -6,7 +6,6 @@ import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.*
 import omsu.imit.schedule.repository.AuditoryOccupationRepository
-import omsu.imit.schedule.repository.AuditoryRepository
 import omsu.imit.schedule.repository.GroupRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service
 class AuditoryOccupationService
 @Autowired
 constructor(private val auditoryService: AuditoryService,
-            private val auditoryRepository: AuditoryRepository,
             private val auditoryOccupationRepository: AuditoryOccupationRepository,
             private val groupRepository: GroupRepository,
             private val lecturerService: LecturerService,

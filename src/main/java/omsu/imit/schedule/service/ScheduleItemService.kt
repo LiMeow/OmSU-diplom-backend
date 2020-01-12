@@ -10,15 +10,15 @@ import java.util.*
 @Service
 class ScheduleItemService
 @Autowired
-constructor(private val scheduleItemRepository: ScheduleItemRepository,
-            private val auditoryService: AuditoryService,
+constructor(private val auditoryService: AuditoryService,
             private val auditoryOccupationService: AuditoryOccupationService,
             private val activityTypeService: ActivityTypeService,
             private val disciplineService: DisciplineService,
             private val groupService: GroupService,
             private val lecturerService: LecturerService,
             private val timeBlockService: TimeBlockService,
-            private val scheduleService: ScheduleService) {
+            private val scheduleService: ScheduleService,
+            private val scheduleItemRepository: ScheduleItemRepository) {
 
     fun createScheduleItem(scheduleId: Int, request: CreateScheduleItemRequest): ScheduleItem {
         val schedule: Schedule = scheduleService.getSchedule(scheduleId)

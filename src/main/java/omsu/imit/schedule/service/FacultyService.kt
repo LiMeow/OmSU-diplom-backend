@@ -6,21 +6,18 @@ import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Building
 import omsu.imit.schedule.model.Faculty
-import omsu.imit.schedule.repository.BuildingRepository
 import omsu.imit.schedule.repository.FacultyRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class FacultyService
-@Autowired constructor(private val buildingRepository: BuildingRepository,
+@Autowired constructor(private val buildingService: BuildingService,
                        private val facultyRepository: FacultyRepository) : BaseService() {
     fun createFaculty(request: CreateFacultyRequest): FacultyInfo {
-        val building: Building = buildingRepository
-                .findById(request.buildingId)
-                .orElseThrow { NotFoundException(ErrorCode.BUILDING_NOT_EXISTS, request.buildingId.toString()) }
-
+        val building: Building = buildingService.getBuildingById(request.buildingId)
         val faculty = Faculty(building, request.name)
+
         facultyRepository.save(faculty)
 
         return toFacultyInfo(faculty)

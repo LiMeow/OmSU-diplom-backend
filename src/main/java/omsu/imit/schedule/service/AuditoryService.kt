@@ -10,7 +10,6 @@ import omsu.imit.schedule.model.Auditory
 import omsu.imit.schedule.repository.AuditoryOccupationRepository
 import omsu.imit.schedule.repository.AuditoryRepository
 import omsu.imit.schedule.repository.BuildingRepository
-import omsu.imit.schedule.repository.TagRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -21,19 +20,20 @@ import org.springframework.stereotype.Service
 class AuditoryService
 @Autowired
 constructor(private val auditoryRepository: AuditoryRepository,
+            private val buildingService: BuildingService,
             private val auditoryOccupationRepository: AuditoryOccupationRepository,
             private val buildingRepository: BuildingRepository,
-            private val tagRepository: TagRepository) : BaseService() {
+            private val tagService: TagService) : BaseService() {
 
     fun addAuditory(request: CreateAuditoryRequest): AuditoryInfo {
-        val building = buildingRepository.findById(request.buildingId)
-                .orElseThrow { NotFoundException(ErrorCode.BUILDING_NOT_EXISTS, request.buildingId.toString()) }
+        val building = buildingService.getBuildingById(request.buildingId);
 
         if (auditoryRepository.findByBuildingAndNumber(request.buildingId, request.number) != null)
             throw NotFoundException(ErrorCode.AUDITORY_ALREADY_EXISTS, request.number, request.buildingId.toString())
 
         val auditory = Auditory(building, request.number)
-        if (!request.tags.isNullOrEmpty()) auditory.tags = tagRepository.findAllById(request.tags!!)
+
+        if (!request.tags.isNullOrEmpty()) auditory.tags = tagService.getAllTagsByIds(request.tags!!)
 
         auditoryRepository.save(auditory)
         return toAuditoryInfo(auditory)
@@ -45,18 +45,20 @@ constructor(private val auditoryRepository: AuditoryRepository,
                 .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
     }
 
+    fun getAllAuditoriesByBuilding(buildingId: Int): List<Auditory>? {
+        return auditoryRepository.findAllByBuilding(buildingId, Sort.by("number"))
+    }
+
     fun getAllAuditoriesByBuilding(buildingId: Int, page: Int, size: Int): List<Auditory>? {
         val pageable: Pageable = PageRequest.of(page, size, Sort.by("number"))
         return auditoryRepository.findAllByBuilding(buildingId, pageable)
     }
 
     fun editAuditory(auditoryId: Int, request: EditAuditoryRequest): AuditoryInfo {
-        val auditory = auditoryRepository
-                .findById(auditoryId)
-                .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
+        val auditory = getAuditoryById(auditoryId)
 
         if (!request.number.isNullOrEmpty()) auditory.number = request.number!!
-        if (!request.tags.isNullOrEmpty()) auditory.tags = tagRepository.findAllById(request.tags!!)
+        if (!request.tags.isNullOrEmpty()) auditory.tags = tagService.getAllTagsByIds(request.tags!!)
 
         auditoryRepository.save(auditory)
         return toAuditoryInfo(auditory)
