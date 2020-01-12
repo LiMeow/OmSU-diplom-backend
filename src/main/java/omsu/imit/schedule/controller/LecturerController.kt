@@ -21,7 +21,7 @@ constructor(private val lecturerService: LecturerService) {
     @GetMapping(value = ["/{lectureId}"])
     fun getLecturer(@PathVariable lectureId: Int): ResponseEntity<*> {
 
-        return ResponseEntity.ok().body(lecturerService.getLecturer(lectureId))
+        return ResponseEntity.ok().body(lecturerService.getLecturerInfo(lectureId))
     }
 
     @GetMapping

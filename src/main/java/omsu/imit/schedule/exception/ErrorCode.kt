@@ -17,6 +17,7 @@ enum class ErrorCode {
     FACULTY_NOT_EXISTS("Faculty with id '%s' not exists"),
     GROUP_ALREADY_EXISTS("Group with name '%s' already exists."),
     GROUP_NOT_EXISTS("Group with id '%s' not exists."),
+    ONE_OR_MORE_GROUPS_DONT_EXIST,
     LECTURER_NOT_EXISTS("Lecturer with id '%s' not exists."),
     LOGIN_ALREADY_EXISTS("User '%s' already exists."),
     STUDY_DIRECTION_NOT_EXISXTS("Study direction with id '%s' not exists."),

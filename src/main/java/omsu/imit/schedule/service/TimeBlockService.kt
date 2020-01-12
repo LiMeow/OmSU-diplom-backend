@@ -28,6 +28,11 @@ constructor(private val timeBlockRepository: TimeBlockRepository) {
                 .orElseThrow { NotFoundException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeBlockId.toString()) }
     }
 
+    fun getTimeBlockByTime(timeFrom: String, timeTo: String): TimeBlock {
+        return timeBlockRepository.findByTime(timeFrom, timeTo)
+                ?: throw NotFoundException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeFrom, timeTo)
+    }
+
     fun getTimeBlocks(): MutableList<TimeBlock> {
         return timeBlockRepository.findAll()
     }

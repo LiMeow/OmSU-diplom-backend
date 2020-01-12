@@ -40,10 +40,9 @@ constructor(
         return createLecturerInfo(lecturer)
     }
 
-    fun getLecturer(lectureId: Int): LecturerInfo {
-        val lecturer = lecturerRepository.findById(lectureId)
+    fun getLecturer(lectureId: Int): Lecturer {
+        return lecturerRepository.findById(lectureId)
                 .orElseThrow { NotFoundException(ErrorCode.LECTURER_NOT_EXISTS, lectureId.toString()) }
-        return createLecturerInfo(lecturer)
     }
 
     fun getAllLecturers(): List<LecturerInfo> {
@@ -74,6 +73,11 @@ constructor(
             throw NotFoundException(ErrorCode.LECTURER_NOT_EXISTS, lectureId.toString())
 
         lecturerRepository.deleteById(lectureId)
+    }
+
+
+    fun getLecturerInfo(lectureId: Int): LecturerInfo {
+        return createLecturerInfo(getLecturer(lectureId))
     }
 
     private fun createLecturerInfo(lecturer: Lecturer): LecturerInfo {

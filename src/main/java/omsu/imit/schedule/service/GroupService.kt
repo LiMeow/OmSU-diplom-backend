@@ -31,10 +31,9 @@ constructor(
         return toGroupInfo(group)
     }
 
-    fun getGroupById(groupId: Int): GroupInfo {
-        val group = groupRepository.findById(groupId)
+    fun getGroupById(groupId: Int): Group {
+        return groupRepository.findById(groupId)
                 .orElseThrow { NotFoundException(ErrorCode.GROUP_NOT_EXISTS, groupId.toString()) }
-        return toGroupInfo(group)
     }
 
     fun getAllGroups(): List<GroupInfo> {
@@ -46,5 +45,9 @@ constructor(
             throw  NotFoundException(ErrorCode.GROUP_NOT_EXISTS, groupId.toString())
 
         groupRepository.deleteById(groupId)
+    }
+
+    fun getGroupInfo(groupId: Int): GroupInfo {
+        return toGroupInfo(getGroupById(groupId))
     }
 }

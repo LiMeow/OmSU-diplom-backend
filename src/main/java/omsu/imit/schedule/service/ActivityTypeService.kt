@@ -20,7 +20,7 @@ constructor(private val activityTypeRepository: ActivityTypeRepository) {
         return activityType
     }
 
-    fun getActivityTypeById(activityTypeId: Int): ActivityType? {
+    fun getActivityTypeById(activityTypeId: Int): ActivityType {
         return activityTypeRepository
                 .findById(activityTypeId)
                 .orElseThrow {

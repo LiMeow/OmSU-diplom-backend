@@ -1,6 +1,5 @@
 package omsu.imit.schedule.dto.request
 
-import omsu.imit.schedule.model.StudyForm
 import javax.validation.constraints.*
 
 data class CreateScheduleRequest(
@@ -14,11 +13,9 @@ data class CreateScheduleRequest(
         @get:Max(value = 10, message = "Semester cannot be more than 10")
         var semester: Int,
 
-        @get:NotBlank var studyForm: StudyForm,
-
         @get:NotBlank
         @get:Pattern(regexp = "([2]\\d{3}(/)[2]\\d{3})", message = "Study year must have format 2***/2***")
         var studyYear: String,
 
         @get:NotNull
-        var groupIds: List<Int>)
+        var groupId: Int)

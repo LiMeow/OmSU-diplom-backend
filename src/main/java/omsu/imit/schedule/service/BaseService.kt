@@ -58,7 +58,7 @@ open class BaseService {
                 occupation.id,
                 occupation.timeBlock.timeFrom,
                 occupation.timeBlock.timeTo,
-                occupation.date,
+                occupation.dateFrom,
                 occupation.comment!!)
 
         if (occupation.lecturer != null)

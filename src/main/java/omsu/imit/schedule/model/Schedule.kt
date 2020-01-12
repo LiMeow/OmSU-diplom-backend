@@ -17,20 +17,13 @@ class Schedule(@Id
                @Column(name = "study_year")
                var studyYear: String,
 
-               @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-               @JoinTable(name = "schedule_group",
-                       joinColumns = [JoinColumn(name = "schedule_id", referencedColumnName = "id")],
-                       inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")])
-               var groups: List<Group>?,
+               @ManyToOne(fetch = FetchType.LAZY)
+               @JoinColumn(name = "group_id")
+               var group: Group,
 
                @OneToMany(fetch = FetchType.LAZY, mappedBy = "schedule")
                var scheduleItems: List<ScheduleItem>?) {
 
-    constructor(course: Int, semester: Int, studyYear: String, groups: List<Group>?)
-            : this(0, course, semester, studyYear, groups, ArrayList())
-
-    constructor(course: Int, semester: Int, studyYear: String)
-            : this(course, semester, studyYear, ArrayList())
-
-
+    constructor(course: Int, semester: Int, studyYear: String, group: Group)
+            : this(0, course, semester, studyYear, group, ArrayList())
 }

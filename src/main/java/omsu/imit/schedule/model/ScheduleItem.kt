@@ -23,4 +23,10 @@ class ScheduleItem(@Id
                    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
                    @JoinColumn(name = "schedule_id")
                    var schedule: Schedule) {
+
+    constructor(auditoryOccupation: AuditoryOccupation,
+                discipline: Discipline,
+                activityType: ActivityType,
+                schedule: Schedule)
+            : this(0, auditoryOccupation, discipline, activityType, schedule)
 }

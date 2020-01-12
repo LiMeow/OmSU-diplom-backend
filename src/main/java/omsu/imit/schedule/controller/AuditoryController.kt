@@ -29,7 +29,7 @@ constructor(private val auditoryService: AuditoryService) {
     @GetMapping(value = ["/{auditoryId}"])
     fun getAuditory(@PathVariable auditoryId: Int): ResponseEntity<*> {
 
-        return ResponseEntity.ok().body(auditoryService.getAuditoryById(auditoryId))
+        return ResponseEntity.ok().body(auditoryService.getAuditoryInfo(auditoryId))
     }
 
     /**

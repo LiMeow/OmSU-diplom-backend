@@ -18,7 +18,18 @@ class AuditoryOccupation(@Id
                          var timeBlock: TimeBlock,
 
                          @Column
-                         var date: String,
+                         @Enumerated(EnumType.STRING)
+                         var day: Day,
+
+                         @Column(name = "date_from")
+                         var dateFrom: String,
+
+                         @Column(name = "date_to")
+                         var dateTo: String,
+
+                         @Column
+                         @Enumerated(EnumType.STRING)
+                         var interval: Interval,
 
                          @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
                          @JoinColumn(name = "lecturer_id")
@@ -31,18 +42,38 @@ class AuditoryOccupation(@Id
                          var groups: List<Group>?,
 
                          @Column
-                         var comment: String?) {
+                         var comment: String? = "") {
 
-    constructor(auditory: Auditory, timeBlock: TimeBlock, date: String, lecturer: Lecturer?, group: List<Group>?, comment: String)
-            : this(0, auditory, timeBlock, date, lecturer, group, comment)
+    constructor(auditory: Auditory,
+                timeBlock: TimeBlock,
+                day: Day,
+                dateFrom: String,
+                dateTo: String,
+                interval: Interval,
+                lecturer: Lecturer?,
+                groups: List<Group>?,
+                comment: String?)
+            : this(0, auditory, timeBlock, day, dateFrom, dateTo, interval, lecturer, groups, comment)
 
-    constructor(id: Int, auditory: Auditory, timeFrom: String, timeTo: String, date: String, lecturer: Lecturer, groupId: Int?, comment: String)
-            : this(id, auditory, TimeBlock(timeFrom, timeTo), date, lecturer, null, comment)
+//    constructor(id: Int,
+//                auditory: Auditory,
+//                timeFrom: String,
+//                timeTo: String,
+//                date: String,
+//                lecturer: Lecturer,
+//                groupId: Int?,
+//                comment: String)
+//            : this(id, auditory, TimeBlock(timeFrom, timeTo), date, lecturer, null, comment)
 
 
-    constructor(auditory: Auditory, timeFrom: String, timeTo: String, date: String, lecturer: Lecturer, comment: String)
-            : this(0, auditory, timeFrom, timeTo, date, lecturer, 0, comment)
-
+//    constructor(
+//            auditory: Auditory,
+//            timeFrom: String,
+//            timeTo: String,
+//            date: String,
+//            lecturer: Lecturer,
+//            comment: String)
+//            : this(0, auditory, timeFrom, timeTo, date, lecturer, 0, comment)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -51,7 +82,10 @@ class AuditoryOccupation(@Id
         if (id != other.id) return false
         if (auditory != other.auditory) return false
         if (timeBlock != other.timeBlock) return false
-        if (date != other.date) return false
+        if (day != other.day) return false
+        if (dateFrom != other.dateFrom) return false
+        if (dateTo != other.dateTo) return false
+        if (interval != other.interval) return false
         if (lecturer != other.lecturer) return false
         if (groups != other.groups) return false
         if (comment != other.comment) return false
@@ -63,7 +97,10 @@ class AuditoryOccupation(@Id
         var result = id
         result = 31 * result + auditory.hashCode()
         result = 31 * result + timeBlock.hashCode()
-        result = 31 * result + date.hashCode()
+        result = 31 * result + day.hashCode()
+        result = 31 * result + dateFrom.hashCode()
+        result = 31 * result + dateTo.hashCode()
+        result = 31 * result + interval.hashCode()
         result = 31 * result + (lecturer?.hashCode() ?: 0)
         result = 31 * result + (groups?.hashCode() ?: 0)
         result = 31 * result + (comment?.hashCode() ?: 0)
@@ -72,11 +109,17 @@ class AuditoryOccupation(@Id
 
     override fun toString(): String {
         return "AuditoryOccupation(" +
-                "id=$id, auditory=$auditory, " +
+                "id=$id, " +
+                "auditory=$auditory, " +
                 "timeBlock=$timeBlock, " +
-                "date='$date', " +
+                "day=$day, " +
+                "dateFrom='$dateFrom', " +
+                "dateTo='$dateTo', " +
+                "interval=$interval, " +
                 "lecturer=$lecturer, " +
-                "group=$groups, " +
+                "groups=$groups, " +
                 "comment=$comment)"
     }
+
+
 }

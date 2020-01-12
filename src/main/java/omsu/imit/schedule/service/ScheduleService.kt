@@ -16,10 +16,10 @@ constructor(private val scheduleRepository: ScheduleRepository,
             private val groupRepository: GroupRepository) {
 
     fun createSchedule(request: CreateScheduleRequest): Schedule {
-        val groups = groupRepository.findAllById(request.groupIds)
-                ?: throw NotFoundException(ErrorCode.GROUP_NOT_EXISTS, request.groupIds.toString())
+        val group = groupRepository.findById(request.groupId)
+                .orElseThrow { NotFoundException(ErrorCode.GROUP_NOT_EXISTS, request.groupId.toString()) }
 
-        val schedule = Schedule(request.course, request.semester, request.studyYear, groups)
+        val schedule = Schedule(request.course, request.semester, request.studyYear, group)
         scheduleRepository.save(schedule);
         return schedule
     }

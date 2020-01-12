@@ -2,10 +2,8 @@ package omsu.imit.schedule
 
 import omsu.imit.schedule.repository.*
 import omsu.imit.schedule.service.AuditoryOccupationService
-import org.junit.Before
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -23,16 +21,16 @@ class AuditoryOccupationServiceTests {
 
     private lateinit var auditoryOccupationService: AuditoryOccupationService
 
-    @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        this.auditoryOccupationService = AuditoryOccupationService(
-                this.auditoryRepository,
-                this.auditoryOccupationRepository,
-                this.groupRepository,
-                this.lecturerRepository,
-                this.timeBlockRepository)
-    }
+//    @Before
+//    fun setUp() {
+//        MockitoAnnotations.initMocks(this)
+//        this.auditoryOccupationService = AuditoryOccupationService(
+//                this.auditoryRepository,
+//                this.auditoryOccupationRepository,
+//                this.groupRepository,
+//                this.lecturerRepository,
+//                this.timeBlockRepository)
+//    }
 
 //    @Test
 //    fun testOccupyAuditory() {

@@ -9,7 +9,8 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/auditories")
-class AuditoryOccupationController @Autowired
+class AuditoryOccupationController
+@Autowired
 constructor(private val auditoryOccupationService: AuditoryOccupationService) {
 
     /**
@@ -21,15 +22,15 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
         return ResponseEntity.ok().body(auditoryOccupationService.occupyAuditory(auditoryId, request))
     }
 
-    /**
-     * Return auditory with occupations by date
-     */
-    @GetMapping(value = ["/{auditoryId}/occupations"])
-    fun getAuditoryWithOccupationsByDate(@PathVariable auditoryId: Int,
-                                         @RequestParam date: String): ResponseEntity<*> {
-
-        return ResponseEntity.ok().body(auditoryOccupationService.getAuditoryWithOccupationsByDate(auditoryId, date))
-    }
+//    /**
+//     * Return auditory with occupations by date
+//     */
+//    @GetMapping(value = ["/{auditoryId}/occupations"])
+//    fun getAuditoryWithOccupationsByDate(@PathVariable auditoryId: Int,
+//                                         @RequestParam date: String): ResponseEntity<*> {
+//
+//        return ResponseEntity.ok().body(auditoryOccupationService.getAuditoryWithOccupationsByDate(auditoryId, date))
+//    }
 
     /**
      * Delete occupation by id

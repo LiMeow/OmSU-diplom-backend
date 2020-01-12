@@ -11,11 +11,10 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 interface AuditoryOccupationRepository : JpaRepository<AuditoryOccupation, Int> {
 
+    /*TODO("make refactoring of method")*/
     @Query("SELECT a FROM AuditoryOccupation a " +
-            "WHERE a.auditory.id = :auditoryId " +
-            "AND a.date = :date")
-    fun findByAuditoryAndDate(@Param("auditoryId") auditoryId: Int,
-                              @Param("date") date: String): List<AuditoryOccupation>?
+            "WHERE a.auditory.id = :auditoryId ")
+    fun findByAuditoryAndDate(@Param("auditoryId") auditoryId: Int): List<AuditoryOccupation>?
 
 
     @Modifying

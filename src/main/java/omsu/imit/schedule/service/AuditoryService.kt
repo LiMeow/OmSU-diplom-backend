@@ -39,11 +39,10 @@ constructor(private val auditoryRepository: AuditoryRepository,
         return toAuditoryInfo(auditory)
     }
 
-    fun getAuditoryById(auditoryId: Int): AuditoryInfo {
-        val auditory = auditoryRepository
+    fun getAuditoryById(auditoryId: Int): Auditory {
+        return auditoryRepository
                 .findById(auditoryId)
                 .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
-        return toAuditoryInfo(auditory)
     }
 
     fun getAllAuditoriesByBuilding(buildingId: Int, page: Int, size: Int): List<Auditory>? {
@@ -66,6 +65,10 @@ constructor(private val auditoryRepository: AuditoryRepository,
 
     fun deleteAuditory(auditoryId: Int) {
         auditoryRepository.deleteById(auditoryId)
+    }
+
+    fun getAuditoryInfo(auditoryId: Int): AuditoryInfo {
+        return toAuditoryInfo(getAuditoryById(auditoryId))
     }
 
     private fun createMetaInfo(buildingId: Int, page: Int, size: Int): MetaInfo {

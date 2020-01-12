@@ -176,14 +176,6 @@ databaseChangeLog:
         path: migrations/022-create-time-blocks.sql
         relativeToChangelogFile: true
   - changeSet:
-      id: 23
-      author: lsmirnova
-      comment: create table schedule group
-      sqlFile:
-        encoding: UTF-8
-        path: migrations/023-create-table-schedule-group.sql
-        relativeToChangelogFile: true
-  - changeSet:
       id: 24
       author: lsmirnova
       comment: create study directions info

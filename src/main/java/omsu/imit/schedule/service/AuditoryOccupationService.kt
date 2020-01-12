@@ -1,14 +1,13 @@
 package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.OccupyAuditoryRequest
-import omsu.imit.schedule.dto.response.AuditoryInfo
 import omsu.imit.schedule.dto.response.OccupationInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
-import omsu.imit.schedule.model.AuditoryOccupation
-import omsu.imit.schedule.model.Group
-import omsu.imit.schedule.model.Lecturer
-import omsu.imit.schedule.repository.*
+import omsu.imit.schedule.model.*
+import omsu.imit.schedule.repository.AuditoryOccupationRepository
+import omsu.imit.schedule.repository.AuditoryRepository
+import omsu.imit.schedule.repository.GroupRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -16,49 +15,47 @@ import org.springframework.stereotype.Service
 @Service
 class AuditoryOccupationService
 @Autowired
-constructor(private val auditoryRepository: AuditoryRepository,
+constructor(private val auditoryService: AuditoryService,
+            private val auditoryRepository: AuditoryRepository,
             private val auditoryOccupationRepository: AuditoryOccupationRepository,
             private val groupRepository: GroupRepository,
-            private val lecturerRepository: LecturerRepository,
-            private val timeBlockRepository: TimeBlockRepository) : BaseService() {
+            private val lecturerService: LecturerService,
+            private val timeBlockService: TimeBlockService) : BaseService() {
 
 
     fun occupyAuditory(auditoryId: Int, request: OccupyAuditoryRequest): OccupationInfo {
-        var group: List<Group>? = null
-        var lecturer: Lecturer? = null
+        var groups: List<Group>? = null
 
-        if (request.groupIds!!.isNotEmpty()) group = groupRepository.findAllById(request.groupIds!!)
-                ?: throw NotFoundException(ErrorCode.GROUP_NOT_EXISTS, request.groupIds.toString())
+        if (request.groupIds!!.isNotEmpty())
+            groups = groupRepository.findAllById(request.groupIds!!)
+                    ?: throw NotFoundException(ErrorCode.ONE_OR_MORE_GROUPS_DONT_EXIST)
 
-        if (request.lecturerId != 0) lecturer = lecturerRepository.findById(request.lecturerId!!)
-                .orElseThrow { NotFoundException(ErrorCode.LECTURER_NOT_EXISTS, request.lecturerId.toString()) }
+        val lecturer = lecturerService.getLecturer(request.lecturerId)
+        val timeBlock = timeBlockService.getTimeBlockByTime(request.timeFrom, request.timeTo)
+        val auditory = auditoryService.getAuditoryById(auditoryId)
 
-        val timeBlock = timeBlockRepository.findByTime(request.timeFrom, request.timeTo)
-                ?: throw NotFoundException(ErrorCode.TIMEBLOCK_NOT_EXISTS, request.timeFrom, request.timeTo)
+        val occupation = occupyAuditory(auditory, timeBlock, request.day, request.dateFrom, request.dateTo, request.interval, lecturer, groups!!, request.comment)
 
-        val auditory = auditoryRepository.findById(auditoryId)
-                .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
-
-        val occupation = AuditoryOccupation(
-                auditory,
-                timeBlock,
-                request.date,
-                lecturer,
-                group!!,
-                request.comment)
-
-        auditoryOccupationRepository.save(occupation)
         return toOccupationInfo(occupation)
     }
 
-    fun getAuditoryWithOccupationsByDate(auditoryId: Int, date: String): AuditoryInfo {
-        val auditory = auditoryRepository
-                .findById(auditoryId)
-                .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
+    fun occupyAuditory(auditory: Auditory, timeBlock: TimeBlock,
+                       day: Day, dateFrom: String, dateTo: String, interval: Interval,
+                       lecturer: Lecturer, groups: List<Group>?, comment: String? = ""): AuditoryOccupation {
 
-        auditory.auditoryOccupations = auditoryOccupationRepository.findByAuditoryAndDate(auditoryId, date)
-        return toAuditoryInfo(auditory)
+        val occupation = AuditoryOccupation(auditory, timeBlock, day, dateFrom, dateTo, interval, lecturer, groups!!, comment)
+        auditoryOccupationRepository.save(occupation)
+        return occupation
     }
+
+//    fun getAuditoryWithOccupationsByDate(auditoryId: Int, date: String): AuditoryInfo {
+//        val auditory = auditoryRepository
+//                .findById(auditoryId)
+//                .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
+//
+//        auditory.auditoryOccupations = auditoryOccupationRepository.findByAuditoryAndDate(auditoryId, date)
+//        return toAuditoryInfo(auditory)
+//    }
 
     fun deleteAuditoryOccupation(occupationId: Int) {
         if (!auditoryOccupationRepository.existsById(occupationId))

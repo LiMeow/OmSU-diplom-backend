@@ -20,7 +20,7 @@ constructor(private val groupService: GroupService) {
     @GetMapping(value = ["/{groupId}"])
     fun getGroup(@PathVariable groupId: Int): ResponseEntity<*> {
 
-        return ResponseEntity.ok().body(groupService.getGroupById(groupId))
+        return ResponseEntity.ok().body(groupService.getGroupInfo(groupId))
     }
 
     @GetMapping
