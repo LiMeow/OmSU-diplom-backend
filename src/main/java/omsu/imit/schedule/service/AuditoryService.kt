@@ -2,7 +2,7 @@ package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.CreateAuditoryRequest
 import omsu.imit.schedule.dto.request.EditAuditoryRequest
-import omsu.imit.schedule.dto.response.AuditoryInfo
+import omsu.imit.schedule.dto.response.AuditoryShortInfo
 import omsu.imit.schedule.dto.response.MetaInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
@@ -25,7 +25,7 @@ constructor(private val auditoryRepository: AuditoryRepository,
             private val buildingRepository: BuildingRepository,
             private val tagService: TagService) : BaseService() {
 
-    fun addAuditory(request: CreateAuditoryRequest): AuditoryInfo {
+    fun addAuditory(request: CreateAuditoryRequest): AuditoryShortInfo {
         val building = buildingService.getBuildingById(request.buildingId);
 
         if (auditoryRepository.findByBuildingAndNumber(request.buildingId, request.number) != null)
@@ -36,7 +36,7 @@ constructor(private val auditoryRepository: AuditoryRepository,
         if (!request.tags.isNullOrEmpty()) auditory.tags = tagService.getAllTagsByIds(request.tags!!)
 
         auditoryRepository.save(auditory)
-        return toAuditoryInfo(auditory)
+        return toAuditoryShortInfo(auditory)
     }
 
     fun getAuditoryById(auditoryId: Int): Auditory {
@@ -49,19 +49,20 @@ constructor(private val auditoryRepository: AuditoryRepository,
         return auditoryRepository.findAllByBuilding(buildingId, Sort.by("number"))
     }
 
-    fun getAllAuditoriesByBuilding(buildingId: Int, page: Int, size: Int): List<Auditory>? {
+    fun getAllAuditoriesByBuilding(buildingId: Int, page: Int, size: Int): List<AuditoryShortInfo> {
+        var newSize = Int.MAX_VALUE
         val pageable: Pageable = PageRequest.of(page, size, Sort.by("number"))
-        return auditoryRepository.findAllByBuilding(buildingId, pageable)
+        return auditoryRepository.findAllByBuilding(buildingId, pageable).asSequence().map { toAuditoryShortInfo(it) }.toList()
     }
 
-    fun editAuditory(auditoryId: Int, request: EditAuditoryRequest): AuditoryInfo {
+    fun editAuditory(auditoryId: Int, request: EditAuditoryRequest): AuditoryShortInfo {
         val auditory = getAuditoryById(auditoryId)
 
         if (!request.number.isNullOrEmpty()) auditory.number = request.number!!
         if (!request.tags.isNullOrEmpty()) auditory.tags = tagService.getAllTagsByIds(request.tags!!)
 
         auditoryRepository.save(auditory)
-        return toAuditoryInfo(auditory)
+        return toAuditoryShortInfo(auditory)
 
     }
 
@@ -69,8 +70,8 @@ constructor(private val auditoryRepository: AuditoryRepository,
         auditoryRepository.deleteById(auditoryId)
     }
 
-    fun getAuditoryInfo(auditoryId: Int): AuditoryInfo {
-        return toAuditoryInfo(getAuditoryById(auditoryId))
+    fun getAuditoryInfo(auditoryId: Int): AuditoryShortInfo {
+        return toAuditoryShortInfo(getAuditoryById(auditoryId))
     }
 
     private fun createMetaInfo(buildingId: Int, page: Int, size: Int): MetaInfo {

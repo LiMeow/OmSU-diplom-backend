@@ -120,14 +120,6 @@ databaseChangeLog:
         path: migrations/015-create-table-discipline.sql
         relativeToChangelogFile: true
   - changeSet:
-      id: 16
-      author: lsmirnova
-      comment: create table 'activity type'
-      sqlFile:
-        encoding: UTF-8
-        path: migrations/016-create-table-activity-type.sql
-        relativeToChangelogFile: true
-  - changeSet:
       id: 17
       author: lsmirnova
       comment: create table 'schedule'
@@ -178,8 +170,16 @@ databaseChangeLog:
   - changeSet:
       id: 24
       author: lsmirnova
-      comment: create study directions info
+      comment: create study directions and groups info
       sqlFile:
         encoding: UTF-8
-        path: migrations/024-сreate-study-direction-info.sql
+        path: migrations/024-сreate-study-directions-and-groups.sql
+        relativeToChangelogFile: true
+  - changeSet:
+      id: 25
+      author: lsmirnova
+      comment: create disciplines
+      sqlFile:
+        encoding: UTF-8
+        path: migrations/025-create-disciplines.sql
         relativeToChangelogFile: true

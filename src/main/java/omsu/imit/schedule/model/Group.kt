@@ -22,6 +22,6 @@ class Group(@Id
                     cascade = [CascadeType.ALL])
             var schedules: List<Schedule>) {
 
-    constructor(studyDirection: StudyDirection, name: String) : this(0, studyDirection, name, ArrayList())
+    constructor(studyDirection: StudyDirection, name: String) : this(0, studyDirection, name, ArrayList<Schedule>())
 
 }

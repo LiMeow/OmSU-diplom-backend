@@ -33,7 +33,7 @@ class AuditoryOccupation(@Id
 
                          @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
                          @JoinColumn(name = "lecturer_id")
-                         var lecturer: Lecturer?,
+                         var lecturer: Lecturer,
 
                          @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
                          @JoinTable(name = "auditory_occupation_group",
@@ -50,7 +50,7 @@ class AuditoryOccupation(@Id
                 dateFrom: String,
                 dateTo: String,
                 interval: Interval,
-                lecturer: Lecturer?,
+                lecturer: Lecturer,
                 groups: List<Group>?,
                 comment: String?)
             : this(0, auditory, timeBlock, day, dateFrom, dateTo, interval, lecturer, groups, comment)

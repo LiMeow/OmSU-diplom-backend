@@ -16,8 +16,7 @@ class Faculty(
         @Column
         var name: String,
 
-        @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-        @JoinColumn(name = "faculty_id")
+        @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY)
         var chairs: List<Chair>) {
 
     constructor(building: Building, name: String) : this(0, building, name, ArrayList<Chair>())

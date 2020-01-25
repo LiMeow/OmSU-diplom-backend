@@ -6,19 +6,16 @@ import javax.persistence.*
 @Table(name = "building")
 open class Building(@Id
                     @GeneratedValue(strategy = GenerationType.IDENTITY)
-                    var id: Int = 0,
+                    var id: Int,
 
                     @Column
-                    var number: Int = 0,
+                    var number: Int,
 
                     @Column
-                    var address: String = "",
+                    var address: String,
 
-                    @OneToMany(
-                            mappedBy = "building",
-                            fetch = FetchType.LAZY,
-                            cascade = [CascadeType.ALL])
-                    var auditories: List<Auditory> = ArrayList()) {
+                    @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
+                    var auditories: List<Auditory>) {
 
     constructor(id: Int, number: Int, address: String) : this(id, number, address, ArrayList<Auditory>())
 
@@ -45,10 +42,8 @@ open class Building(@Id
     }
 
     override fun toString(): String {
-        return "Building(" +
-                "id=$id, " +
-                "number=$number, " +
-                "address='$address', " +
-                "auditories=$auditories)"
+        return "Building(id=$id, number=$number, address='$address')"
     }
+
+
 }

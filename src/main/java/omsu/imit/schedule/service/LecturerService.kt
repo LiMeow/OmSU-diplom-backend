@@ -22,7 +22,7 @@ constructor(
         private val personalDataRepository: PersonalDataRepository) {
 
     fun createLecturer(request: CreateLecturerRequest): LecturerInfo {
-        val chair = chairService.getChair(request.charId)
+        val chair = chairService.getChairById(request.charId)
 
         val personalData = PersonalData(
                 request.firstName,

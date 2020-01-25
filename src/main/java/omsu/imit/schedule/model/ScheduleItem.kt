@@ -16,8 +16,8 @@ class ScheduleItem(@Id
                    @JoinColumn(name = "discipline_id")
                    var discipline: Discipline,
 
-                   @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-                   @JoinColumn(name = "activity_type_id")
+                   @Column(name = "activity_type")
+                   @Enumerated(EnumType.STRING)
                    var activityType: ActivityType,
 
                    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])

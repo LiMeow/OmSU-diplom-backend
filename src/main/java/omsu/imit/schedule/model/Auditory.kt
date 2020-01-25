@@ -1,6 +1,5 @@
 package omsu.imit.schedule.model
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
@@ -9,8 +8,7 @@ class Auditory(@Id
                @GeneratedValue(strategy = GenerationType.IDENTITY)
                var id: Int,
 
-               @JsonIgnore
-               @ManyToOne(fetch = FetchType.LAZY)
+               @ManyToOne(fetch = FetchType.EAGER)
                @JoinColumn(name = "building_id")
                var building: Building,
 
@@ -23,7 +21,6 @@ class Auditory(@Id
                        inverseJoinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")])
                var tags: List<Tag>,
 
-               @JsonIgnore
                @OneToMany(fetch = FetchType.LAZY, mappedBy = "auditory")
                var auditoryOccupations: List<AuditoryOccupation>?) {
 

@@ -22,6 +22,7 @@ enum class ErrorCode {
     LOGIN_ALREADY_EXISTS("User '%s' already exists."),
     STUDY_DIRECTION_NOT_EXISXTS("Study direction with id '%s' not exists."),
     SCHEDULE_NOT_EXISTS("Schedule with id '%s' not exists"),
+    SCHEDULE_ITEM_NOT_EXISTS("Schedule item with id '%s' not exists"),
     TAG_ALREADY_EXISTS("Tag '%s' already exists."),
     TAG_NOT_EXISTS("Tag with id '%s' not exists."),
     TIMEBLOCK_NOT_EXISTS("TimeBlock '%s'-'%s' not exists."),

@@ -21,4 +21,12 @@ constructor(private val scheduleItemService: ScheduleItemService) {
                            @Valid @RequestBody request: CreateScheduleItemRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(scheduleItemService.createScheduleItem(scheduleId, request))
     }
+
+    /**
+     * Return schedule item by ID
+     */
+    @GetMapping(value = ["/items/{itemId}"])
+    fun getScheduleItem(@PathVariable itemId: Int): ResponseEntity<*> {
+        return ResponseEntity.ok().body(scheduleItemService.getScheduleItemInfo(itemId))
+    }
 }

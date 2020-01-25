@@ -33,6 +33,14 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
 //    }
 
     /**
+     * Return auditory occupation by ID
+     */
+    @GetMapping(value = ["/occupations/{occupationId}"])
+    fun getAuditoryWithOccupationsByDate(@PathVariable occupationId: Int): ResponseEntity<*> {
+        return ResponseEntity.ok().body(auditoryOccupationService.getOccupationInfo(occupationId))
+    }
+
+    /**
      * Delete occupation by id
      */
     @DeleteMapping(value = ["/occupations/{occupationId}"])

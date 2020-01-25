@@ -11,7 +11,6 @@ open class BaseService {
         return GroupInfo(group.id,
                 group.name,
                 toStudyDirectionInfo(group.studyDirection))
-
     }
 
     fun toStudyDirectionInfo(studyDirection: StudyDirection): StudyDirectionInfo {
@@ -53,19 +52,29 @@ open class BaseService {
                 toOccupationInfo(auditory.auditoryOccupations))
     }
 
+    fun toAuditoryShortInfo(auditory: Auditory): AuditoryShortInfo {
+        return AuditoryShortInfo(
+                auditory.id,
+                auditory.number,
+                auditory.tags)
+    }
+
     fun toOccupationInfo(occupation: AuditoryOccupation): OccupationInfo {
         val occupationInfo = OccupationInfo(
                 occupation.id,
+                occupation.day,
                 occupation.timeBlock.timeFrom,
                 occupation.timeBlock.timeTo,
                 occupation.dateFrom,
+                occupation.dateTo,
+                occupation.interval,
+                toAuditoryShortInfo(occupation.auditory),
+                occupation.lecturer.getFullName(),
                 occupation.comment!!)
 
-        if (occupation.lecturer != null)
-            occupationInfo.occupying = occupation.lecturer!!.getFullName()
 
         if (occupation.groups!!.isNotEmpty())
-            occupationInfo.group = occupation.groups!![0]
+            occupationInfo.group = occupation.groups!!.asSequence().map { toGroupInfo(it) }.toList()
 
         return occupationInfo
     }

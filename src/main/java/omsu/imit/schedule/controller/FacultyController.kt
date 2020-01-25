@@ -25,7 +25,7 @@ class FacultyController
     @GetMapping(value = ["/{facultyId}"])
     fun getFacultyInfo(@PathVariable facultyId: Int): ResponseEntity<*> {
 
-        return ResponseEntity.ok().body(facultyService.getFaculty(facultyId))
+        return ResponseEntity.ok().body(facultyService.getFacultyInfo(facultyId))
     }
 
     /**

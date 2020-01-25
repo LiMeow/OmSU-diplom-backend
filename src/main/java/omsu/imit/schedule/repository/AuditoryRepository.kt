@@ -21,7 +21,7 @@ interface AuditoryRepository : JpaRepository<Auditory, Int> {
 
     @Query(value = "SELECT a from Auditory a WHERE a.building.id = :buildingId")
     fun findAllByBuilding(@Param("buildingId") buildingId: Int,
-                          pageable: Pageable): List<Auditory>?
+                          pageable: Pageable): List<Auditory>
 
 
 }

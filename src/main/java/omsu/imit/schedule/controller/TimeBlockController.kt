@@ -19,7 +19,7 @@ constructor(private val timeBlockService: TimeBlockService) {
     }
 
     @GetMapping(value = ["/{timeBlockId}"])
-    fun getAllTimeBlocks(@PathVariable timeBlockId: Int): ResponseEntity<*> {
+    fun getTimeBlockById(@PathVariable timeBlockId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(timeBlockService.getTimeBlockById(timeBlockId))
     }

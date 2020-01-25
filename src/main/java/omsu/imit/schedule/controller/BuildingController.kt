@@ -29,7 +29,16 @@ constructor(private val auditoryService: AuditoryService,
     @GetMapping(value = ["/{buildingId}"])
     fun getBuilding(@PathVariable buildingId: Int): ResponseEntity<*> {
 
-        return ResponseEntity.ok().body(buildingService.getBuildingById(buildingId))
+        return ResponseEntity.ok().body(buildingService.getBuildingInfo(buildingId))
+    }
+
+    /**
+     * Return all buildings
+     */
+    @GetMapping
+    fun getAllBuildings(): ResponseEntity<*> {
+
+        return ResponseEntity.ok().body(buildingService.getAllBuildings())
     }
 
     /**
@@ -38,7 +47,7 @@ constructor(private val auditoryService: AuditoryService,
     @GetMapping(value = ["/{buildingId}/auditories"])
     fun getAuditoriesByBuilding(@PathVariable buildingId: Int,
                                 @RequestParam(required = false, defaultValue = "0") page: Int,
-                                @RequestParam(required = false, defaultValue = "8") size: Int): ResponseEntity<*> {
+                                @RequestParam(required = false, defaultValue = Int.MAX_VALUE.toString()) size: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(auditoryService.getAllAuditoriesByBuilding(buildingId, page, size))
     }

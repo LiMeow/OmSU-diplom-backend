@@ -46,6 +46,16 @@ constructor(private val auditoryService: AuditoryService,
         return occupation
     }
 
+    fun getOccupationById(occupationId: Int): AuditoryOccupation {
+        return auditoryOccupationRepository
+                .findById(occupationId)
+                .orElseThrow { NotFoundException(ErrorCode.AUDITORY_OCCUPATION_NOT_EXISTS, occupationId.toString()) }
+    }
+
+    fun getOccupationInfo(occupationId: Int): OccupationInfo {
+        return toOccupationInfo(getOccupationById(occupationId))
+    }
+
 //    fun getAuditoryWithOccupationsByDate(auditoryId: Int, date: String): AuditoryInfo {
 //        val auditory = auditoryRepository
 //                .findById(auditoryId)

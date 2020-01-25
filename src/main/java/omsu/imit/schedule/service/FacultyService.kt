@@ -23,10 +23,13 @@ class FacultyService
         return toFacultyInfo(faculty)
     }
 
-    fun getFaculty(facultyId: Int): FacultyInfo {
-        val faculty = facultyRepository.findById(facultyId)
+    fun getFacultyById(facultyId: Int): Faculty {
+        return facultyRepository.findById(facultyId)
                 .orElseThrow { NotFoundException(ErrorCode.FACULTY_NOT_EXISTS, facultyId.toString()) }
-        return toFacultyInfo(faculty)
+    }
+
+    fun getFacultyInfo(facultyId: Int): FacultyInfo {
+        return toFacultyInfo(getFacultyById(facultyId))
     }
 
     fun getAllFaculties(): List<FacultyInfo> {
