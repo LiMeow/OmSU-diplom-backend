@@ -20,7 +20,7 @@ constructor(private val auditoryService: AuditoryService,
      */
     @PostMapping
     fun addBuilding(@Valid @RequestBody request: CreateBuildingRequest): ResponseEntity<*> {
-        return ResponseEntity.ok().body(buildingService.addBuilding(request))
+        return ResponseEntity.ok().body(buildingService.createBuilding(request))
     }
 
     /**

@@ -1,5 +1,6 @@
 package omsu.imit.schedule.model
 
+import java.sql.Date
 import javax.persistence.*
 
 
@@ -22,10 +23,10 @@ class AuditoryOccupation(@Id
                          var day: Day,
 
                          @Column(name = "date_from")
-                         var dateFrom: String,
+                         var dateFrom: Date,
 
                          @Column(name = "date_to")
-                         var dateTo: String,
+                         var dateTo: Date,
 
                          @Column
                          @Enumerated(EnumType.STRING)
@@ -47,8 +48,8 @@ class AuditoryOccupation(@Id
     constructor(auditory: Auditory,
                 timeBlock: TimeBlock,
                 day: Day,
-                dateFrom: String,
-                dateTo: String,
+                dateFrom: Date,
+                dateTo: Date,
                 interval: Interval,
                 lecturer: Lecturer,
                 groups: List<Group>?,
@@ -110,7 +111,6 @@ class AuditoryOccupation(@Id
     override fun toString(): String {
         return "AuditoryOccupation(" +
                 "id=$id, " +
-                "auditory=$auditory, " +
                 "timeBlock=$timeBlock, " +
                 "day=$day, " +
                 "dateFrom='$dateFrom', " +

@@ -7,9 +7,7 @@ import omsu.imit.schedule.dto.response.MetaInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Auditory
-import omsu.imit.schedule.repository.AuditoryOccupationRepository
 import omsu.imit.schedule.repository.AuditoryRepository
-import omsu.imit.schedule.repository.BuildingRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -21,8 +19,6 @@ class AuditoryService
 @Autowired
 constructor(private val auditoryRepository: AuditoryRepository,
             private val buildingService: BuildingService,
-            private val auditoryOccupationRepository: AuditoryOccupationRepository,
-            private val buildingRepository: BuildingRepository,
             private val tagService: TagService) : BaseService() {
 
     fun addAuditory(request: CreateAuditoryRequest): AuditoryShortInfo {
@@ -45,12 +41,15 @@ constructor(private val auditoryRepository: AuditoryRepository,
                 .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
     }
 
+    fun getAuditoriesByTags(tags: List<String>): Any {
+        return auditoryRepository.findAllByTags(tags).asSequence().map { toAuditoryShortInfo(it) }.toList();
+    }
+
     fun getAllAuditoriesByBuilding(buildingId: Int): List<Auditory>? {
         return auditoryRepository.findAllByBuilding(buildingId, Sort.by("number"))
     }
 
     fun getAllAuditoriesByBuilding(buildingId: Int, page: Int, size: Int): List<AuditoryShortInfo> {
-        var newSize = Int.MAX_VALUE
         val pageable: Pageable = PageRequest.of(page, size, Sort.by("number"))
         return auditoryRepository.findAllByBuilding(buildingId, pageable).asSequence().map { toAuditoryShortInfo(it) }.toList()
     }

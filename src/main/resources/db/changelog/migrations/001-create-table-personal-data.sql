@@ -6,5 +6,6 @@ CREATE TABLE IF NOT EXISTS personal_data
     lastname   TEXT        NOT NULL,
     email      TEXT unique NOT NULL,
     password   TEXT DEFAULT NULL,
-    user_type  TEXT        NOT NULL
+    user_type  TEXT        NOT NULL,
+    enabled    BOOLEAN     NOT NULL
 );

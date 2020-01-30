@@ -44,9 +44,7 @@ class Chair(@Id
     override fun toString(): String {
         return "Chair(" +
                 "id=$id, " +
-                "faculty=$faculty, " +
-                "name='$name', " +
-                "lecturers=$lecturers)"
+                "name='$name')"
     }
 
 

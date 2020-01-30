@@ -27,7 +27,10 @@ open class PersonalData(@Id
 
                         @Column(name = "user_type")
                         @Enumerated(EnumType.STRING)
-                        var userRole: UserRole) {
+                        var userRole: UserRole,
+
+                        @Column
+                        var enabled: Boolean) {
 
     constructor(firstName: String,
                 patronymic: String?,
@@ -35,7 +38,7 @@ open class PersonalData(@Id
                 email: String,
                 password: String?,
                 userRole: UserRole)
-            : this(0, firstName, patronymic, lastName, email, password, userRole)
+            : this(0, firstName, patronymic, lastName, email, password, userRole, false)
 
     constructor(firstName: String,
                 patronymic: String?,

@@ -183,3 +183,19 @@ databaseChangeLog:
         encoding: UTF-8
         path: migrations/025-create-disciplines.sql
         relativeToChangelogFile: true
+  - changeSet:
+      id: 26
+      author: lsmirnova
+      comment: create schedules
+      sqlFile:
+        encoding: UTF-8
+        path: migrations/026-create-schedules.sql
+        relativeToChangelogFile: true
+  - changeSet:
+      id: 27
+      author: lsmirnova
+      comment: create lecturers
+      sqlFile:
+        encoding: UTF-8
+        path: migrations/027-create-lecturers.sql
+        relativeToChangelogFile: true

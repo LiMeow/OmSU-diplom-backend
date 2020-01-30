@@ -41,8 +41,8 @@ class AuthServiceTests {
     @Test
     fun testSignUpStudent() {
         val request = SignUpRequest("FirstName", "Patronymic", "LastName", "student@omsu.ru", "password", UserRole.STUDENT)
-        val personalData = PersonalData(0, request.firstName, request.patronymic, request.lastName, request.email, request.password, UserRole.STUDENT)
-        val response = PersonalData(personalData.id, request.firstName, request.patronymic, request.lastName, personalData.email, personalData.password, personalData.userRole)
+        val personalData = PersonalData(0, request.firstName, request.patronymic, request.lastName, request.email, request.password, UserRole.STUDENT, false)
+        val response = PersonalData(personalData.id, request.firstName, request.patronymic, request.lastName, personalData.email, personalData.password, personalData.userRole, false)
 
         `when`(passwordEncoder.encode(request.password)).thenReturn(request.password)
         `when`(personalDataRepository.save(personalData)).thenReturn(personalData)
@@ -58,7 +58,7 @@ class AuthServiceTests {
     @Test
     fun testSignUpAlreadyExistingStudent() {
         val request = SignUpRequest("FirstName", "Patronymic", "LastName", "student@omsu.ru", "password", UserRole.STUDENT)
-        val user = PersonalData(0, request.firstName, request.patronymic, request.lastName, request.email, request.password, UserRole.STUDENT)
+        val user = PersonalData(0, request.firstName, request.patronymic, request.lastName, request.email, request.password, UserRole.STUDENT, false)
 
         `when`(personalDataRepository.findByEmail(request.email)).thenReturn(Optional.of(user))
 

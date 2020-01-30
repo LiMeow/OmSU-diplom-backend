@@ -16,7 +16,7 @@ open class BuildingService @Autowired
 constructor(private val buildingRepository: BuildingRepository) : BaseService() {
 
 
-    fun addBuilding(request: CreateBuildingRequest): BuildingInfo {
+    fun createBuilding(request: CreateBuildingRequest): BuildingInfo {
         if (buildingRepository.findByNumberAndAddress(request.number, request.address) != null)
             throw CommonValidationException(ErrorCode.BUILDING_ALREADY_EXISTS, request.number.toString(), request.address);
 

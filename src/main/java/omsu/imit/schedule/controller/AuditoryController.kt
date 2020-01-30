@@ -15,26 +15,22 @@ class AuditoryController
 @Autowired
 constructor(private val auditoryService: AuditoryService) {
 
-    /**
-     * Create auditory
-     */
     @PostMapping
     fun createAuditory(@Valid @RequestBody request: CreateAuditoryRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(auditoryService.addAuditory(request))
     }
 
-    /**
-     * Return auditory by id
-     */
     @GetMapping(value = ["/{auditoryId}"])
-    fun getAuditory(@PathVariable auditoryId: Int): ResponseEntity<*> {
+    fun getAuditoryById(@PathVariable auditoryId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(auditoryService.getAuditoryInfo(auditoryId))
     }
 
-    /**
-     * Update auditory by id
-     */
+    @GetMapping()
+    fun getAuditoriesByTags(@RequestParam tags: List<String>): ResponseEntity<*> {
+        return ResponseEntity.ok().body(auditoryService.getAuditoriesByTags(tags))
+    }
+
     @PutMapping(value = ["/{auditoryId}"])
     fun editAuditory(@PathVariable auditoryId: Int,
                      @RequestBody request: EditAuditoryRequest): ResponseEntity<*> {
@@ -42,9 +38,6 @@ constructor(private val auditoryService: AuditoryService) {
         return ResponseEntity.ok().body(auditoryService.editAuditory(auditoryId, request))
     }
 
-    /**
-     * Delete auditory by id
-     */
     @DeleteMapping(value = ["/{auditoryId}"])
     fun deleteAuditory(@PathVariable auditoryId: Int): ResponseEntity<*> {
         auditoryService.deleteAuditory(auditoryId)

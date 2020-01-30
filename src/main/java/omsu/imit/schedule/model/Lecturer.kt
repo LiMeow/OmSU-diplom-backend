@@ -16,22 +16,17 @@ class Lecturer(@Id
                @JoinColumn(name = "personal_data_id", referencedColumnName = "id")
                var personalData: PersonalData,
 
-               @Column
-               var enabled: Boolean,
-
                @OneToMany(fetch = FetchType.LAZY, mappedBy = "lecturer")
                var preferences: List<LecturerPreferences>?) {
 
     constructor(id: Int,
                 chair: Chair,
-                personalData: PersonalData,
-                enabled: Boolean) :
-            this(id, chair, personalData, enabled, null)
+                personalData: PersonalData) :
+            this(id, chair, personalData, null)
 
     constructor(chair: Chair,
-                personalData: PersonalData,
-                enabled: Boolean) :
-            this(0, chair, personalData, enabled)
+                personalData: PersonalData) :
+            this(0, chair, personalData)
 
 
     fun getFullName(): String {
@@ -47,7 +42,6 @@ class Lecturer(@Id
         if (id != other.id) return false
         if (chair != other.chair) return false
         if (personalData != other.personalData) return false
-        if (enabled != other.enabled) return false
         if (preferences != other.preferences) return false
 
         return true
@@ -57,7 +51,6 @@ class Lecturer(@Id
         var result = id
         result = 31 * result + chair.hashCode()
         result = 31 * result + personalData.hashCode()
-        result = 31 * result + enabled.hashCode()
         result = 31 * result + (preferences?.hashCode() ?: 0)
         return result
     }
@@ -67,7 +60,6 @@ class Lecturer(@Id
                 "id=$id, " +
                 "chair=$chair, " +
                 "personalData=$personalData, " +
-                "enabled=$enabled, " +
                 "preferences=$preferences)"
     }
 

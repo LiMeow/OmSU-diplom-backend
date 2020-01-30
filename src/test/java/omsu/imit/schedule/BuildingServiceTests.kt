@@ -43,7 +43,7 @@ class BuildingServiceTests {
         `when`(buildingRepository.findByNumberAndAddress(request.number, request.address)).thenReturn(null)
         `when`(buildingRepository.save(building)).thenReturn(building)
 
-        assertEquals(response, buildingService.addBuilding(request))
+        assertEquals(response, buildingService.createBuilding(request))
 
         verify(buildingRepository).findByNumberAndAddress(request.number, request.address)
         verify(buildingRepository).save(building)
@@ -56,7 +56,7 @@ class BuildingServiceTests {
 
         `when`(buildingRepository.findByNumberAndAddress(request.number, request.address)).thenReturn(building)
 
-        assertThrows(CommonValidationException::class.java) { buildingService.addBuilding(request) }
+        assertThrows(CommonValidationException::class.java) { buildingService.createBuilding(request) }
         verify(buildingRepository).findByNumberAndAddress(request.number, request.address)
     }
 

@@ -19,7 +19,7 @@ class LecturerService
 constructor(
         private val chairService: ChairService,
         private val lecturerRepository: LecturerRepository,
-        private val personalDataRepository: PersonalDataRepository) {
+        private val personalDataRepository: PersonalDataRepository) : BaseService() {
 
     fun createLecturer(request: CreateLecturerRequest): LecturerInfo {
         val chair = chairService.getChairById(request.charId)
@@ -32,10 +32,10 @@ constructor(
                 UserRole.LECTURER)
         personalDataRepository.save(personalData)
 
-        val lecturer = Lecturer(chair, personalData, false)
+        val lecturer = Lecturer(chair, personalData)
         lecturerRepository.save(lecturer)
 
-        return createLecturerInfo(lecturer)
+        return toLecturerInfo(lecturer)
     }
 
     fun getLecturer(lectureId: Int): Lecturer {
@@ -48,7 +48,7 @@ constructor(
         val lecturersInfo = ArrayList<LecturerInfo>()
 
         for (lecturer in lecturers) {
-            lecturersInfo.add(createLecturerInfo(lecturer))
+            lecturersInfo.add(toLecturerInfo(lecturer))
         }
         return lecturersInfo
     }
@@ -75,14 +75,6 @@ constructor(
 
 
     fun getLecturerInfo(lectureId: Int): LecturerInfo {
-        return createLecturerInfo(getLecturer(lectureId))
-    }
-
-    private fun createLecturerInfo(lecturer: Lecturer): LecturerInfo {
-        return LecturerInfo(
-                lecturer.id,
-                lecturer.getFullName(),
-                lecturer.chair.name,
-                lecturer.enabled)
+        return toLecturerInfo(getLecturer(lectureId))
     }
 }

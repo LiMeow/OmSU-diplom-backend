@@ -40,6 +40,10 @@ constructor(
         return groupRepository.findAll().asSequence().map { toGroupInfo(it) }.toList()
     }
 
+    fun getGroupsByIds(groupIds: List<Int>): List<Group> {
+        return groupRepository.findAllById(groupIds) ?: throw NotFoundException(ErrorCode.ONE_OR_MORE_GROUPS_DONT_EXIST)
+    }
+
     fun deleteGroupById(groupId: Int) {
         if (!groupRepository.existsById(groupId))
             throw  NotFoundException(ErrorCode.GROUP_NOT_EXISTS, groupId.toString())

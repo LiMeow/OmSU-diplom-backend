@@ -23,5 +23,16 @@ interface AuditoryRepository : JpaRepository<Auditory, Int> {
     fun findAllByBuilding(@Param("buildingId") buildingId: Int,
                           pageable: Pageable): List<Auditory>
 
+    @Query(value = "select *" +
+            "from auditory " +
+            "where auditory.id IN ( " +
+            "    select auditory_id" +
+            "    from auditory_tag" +
+            "    where tag_id IN (" +
+            "        select t.id" +
+            "        from tag t" +
+            "        where t.tag in :tags));", nativeQuery = true)
+    fun findAllByTags(@Param("tags") tags: List<String>): List<Auditory>
+
 
 }

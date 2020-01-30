@@ -6,7 +6,6 @@ import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.PersonalData
-import omsu.imit.schedule.model.UserRole
 import omsu.imit.schedule.repository.PersonalDataRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -33,7 +32,6 @@ constructor(
         return personalData
     }
 
-
     fun signIn(request: SignInRequest): PersonalData {
         val user = personalDataRepository.findByEmail(request.email)
                 .orElseThrow { NotFoundException(ErrorCode.USER_NOT_EXISTS, request.email) }
@@ -42,13 +40,5 @@ constructor(
             throw CommonValidationException(ErrorCode.WRONG_PASSWORD)
 
         return user
-    }
-
-    private fun isAdminOrDispatcher(userRole: UserRole): Boolean {
-        return userRole == UserRole.DISPATCHER || userRole == UserRole.ADMIN
-    }
-
-    private fun validateName(request: SignUpRequest): Boolean {
-        return request.firstName.isNotEmpty() && request.lastName.isNotEmpty()
     }
 }

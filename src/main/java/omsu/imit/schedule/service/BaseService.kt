@@ -89,4 +89,12 @@ open class BaseService {
         }
         return response
     }
+
+    fun toLecturerInfo(lecturer: Lecturer): LecturerInfo {
+        return LecturerInfo(
+                lecturer.id,
+                lecturer.getFullName(),
+                lecturer.chair.name,
+                lecturer.personalData.enabled)
+    }
 }

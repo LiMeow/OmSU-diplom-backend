@@ -2,12 +2,14 @@ package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.CreateScheduleRequest
 import omsu.imit.schedule.dto.response.ScheduleInfo
+import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Schedule
 import omsu.imit.schedule.repository.GroupRepository
 import omsu.imit.schedule.repository.ScheduleRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,7 +23,11 @@ constructor(private val scheduleRepository: ScheduleRepository,
                 .orElseThrow { NotFoundException(ErrorCode.GROUP_NOT_EXISTS, request.groupId.toString()) }
 
         val schedule = Schedule(request.course, request.semester, request.studyYear, group)
-        scheduleRepository.save(schedule);
+        try {
+            scheduleRepository.save(schedule);
+        } catch (e: DataIntegrityViolationException) {
+            throw CommonValidationException(ErrorCode.SCHEDULE_ALREADY_EXISTS)
+        }
         return toScheduleInfo(schedule)
     }
 
