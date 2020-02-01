@@ -11,35 +11,24 @@ import javax.validation.Valid
 @RequestMapping("/api/faculties")
 class FacultyController
 @Autowired constructor(private val facultyService: FacultyService) {
-    /**
-     * Create faculty
-     */
+
     @PostMapping
     fun createFaculty(@Valid @RequestBody request: CreateFacultyRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(facultyService.createFaculty(request))
     }
 
-    /**
-     * Return faculty by id
-     */
     @GetMapping(value = ["/{facultyId}"])
     fun getFacultyInfo(@PathVariable facultyId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(facultyService.getFacultyInfo(facultyId))
     }
 
-    /**
-     * Return all faculties
-     */
     @GetMapping
     fun getAllFaculties(): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(facultyService.getAllFaculties())
     }
 
-    /**
-     * Delete faculty by id
-     */
     @DeleteMapping(value = ["/{facultyId}"])
     fun deleteFaculty(@PathVariable facultyId: Int): ResponseEntity<*> {
         facultyService.deleteFaculty(facultyId)

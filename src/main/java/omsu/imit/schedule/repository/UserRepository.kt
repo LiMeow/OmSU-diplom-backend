@@ -1,6 +1,6 @@
 package omsu.imit.schedule.repository
 
-import omsu.imit.schedule.model.PersonalData
+import omsu.imit.schedule.model.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface PersonalDataRepository : JpaRepository<PersonalData, Int> {
+interface UserRepository : JpaRepository<User, Int> {
 
-    @Query("SELECT u FROM PersonalData u WHERE u.email = :email ")
-    fun findByEmail(@Param("email") email: String): Optional<PersonalData>
+    @Query("SELECT u FROM User u WHERE u.email = :email ")
+    fun findByEmail(@Param("email") email: String): Optional<User>
 
 
 }

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS personal_data
+CREATE TABLE IF NOT EXISTS "user"
 (
     id         SERIAL PRIMARY KEY,
     firstname  TEXT        NOT NULL,

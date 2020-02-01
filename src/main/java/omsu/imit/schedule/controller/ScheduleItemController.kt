@@ -13,26 +13,17 @@ class ScheduleItemController
 @Autowired
 constructor(private val scheduleItemService: ScheduleItemService) {
 
-    /**
-     * Create schedule item
-     */
     @PostMapping(value = ["/{scheduleId}/items"])
     fun createScheduleItem(@PathVariable scheduleId: Int,
                            @Valid @RequestBody request: CreateScheduleItemRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(scheduleItemService.createScheduleItem(scheduleId, request))
     }
 
-    /**
-     * Return schedule item by ID
-     */
     @GetMapping(value = ["/items/{itemId}"])
     fun getScheduleItem(@PathVariable itemId: Int): ResponseEntity<*> {
         return ResponseEntity.ok().body(scheduleItemService.getScheduleItemInfo(itemId))
     }
 
-    /**
-     * Return schedule item by lecturer ID
-     */
     @GetMapping(value = ["/lecturers/{lecturerId}"])
     fun getScheduleByLecturer(@PathVariable lecturerId: Int): ResponseEntity<*> {
         return ResponseEntity.ok().body(scheduleItemService.getScheduleItemsByLecturer(lecturerId))

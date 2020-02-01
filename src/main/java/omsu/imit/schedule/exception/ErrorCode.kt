@@ -1,6 +1,7 @@
 package omsu.imit.schedule.exception
 
 enum class ErrorCode {
+    ACCOUNT_NOT_ACTIVATED("Account for user with email '%s' not activated"),
     ACTIVITY_TYPE_NOT_EXISTS("Activity type with id '%s' not exists."),
     ACTIVITY_TYPE_ALREADY_EXISTS("Activity type '%s' already exists."),
     AUDITORY_OCCUPATION_NOT_EXISTS("Auditory occupation with id '%s' not exists."),
@@ -27,6 +28,8 @@ enum class ErrorCode {
     SCHEDULE_ITEM_NOT_EXISTS("Schedule item with id '%s' not exists"),
     TAG_ALREADY_EXISTS("Tag '%s' already exists."),
     TAG_NOT_EXISTS("Tag with id '%s' not exists."),
+    TOKEN_NOT_FOUND("Verification token broken or expired"),
+    TOKEN_EXPIRED("Verification token expired"),
     TIMEBLOCK_NOT_EXISTS("TimeBlock '%s'-'%s' not exists."),
     TIMEBLOCK_ALREADY_EXISTS("TimeBlock '%s'-'%s' already exists."),
     USER_ALREADY_EXISTS("User with email '%s' already exists."),

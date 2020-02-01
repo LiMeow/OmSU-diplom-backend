@@ -4,33 +4,33 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
-@Table(name = "personal_data")
-open class PersonalData(@Id
-                        @GeneratedValue(strategy = GenerationType.IDENTITY)
-                        var id: Int,
+@Table(name = "`user`")
+open class User(@Id
+                @GeneratedValue(strategy = GenerationType.IDENTITY)
+                var id: Int,
 
-                        @Column(name = "firstname")
-                        var firstName: String,
+                @Column(name = "firstname")
+                var firstName: String,
 
-                        @Column
-                        var patronymic: String?,
+                @Column
+                var patronymic: String?,
 
-                        @Column(name = "lastname")
-                        var lastName: String,
+                @Column(name = "lastname")
+                var lastName: String,
 
-                        @Column(name = "email")
-                        var email: String,
+                @Column(name = "email")
+                var email: String,
 
-                        @JsonIgnore
-                        @Column(name = "password")
-                        var password: String?,
+                @JsonIgnore
+                @Column(name = "password")
+                var password: String?,
 
-                        @Column(name = "user_type")
-                        @Enumerated(EnumType.STRING)
-                        var userRole: UserRole,
+                @Column(name = "user_type")
+                @Enumerated(EnumType.STRING)
+                var userRole: UserRole,
 
-                        @Column
-                        var enabled: Boolean) {
+                @Column
+                var enabled: Boolean) {
 
     constructor(firstName: String,
                 patronymic: String?,
@@ -49,7 +49,7 @@ open class PersonalData(@Id
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is PersonalData) return false
+        if (other !is User) return false
 
         if (id != other.id) return false
         if (firstName != other.firstName) return false

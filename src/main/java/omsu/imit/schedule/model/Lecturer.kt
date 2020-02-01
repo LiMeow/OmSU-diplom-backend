@@ -13,26 +13,26 @@ class Lecturer(@Id
                var chair: Chair,
 
                @OneToOne(cascade = [CascadeType.ALL])
-               @JoinColumn(name = "personal_data_id", referencedColumnName = "id")
-               var personalData: PersonalData,
+               @JoinColumn(name = "user_id", referencedColumnName = "id")
+               var user: User,
 
                @OneToMany(fetch = FetchType.LAZY, mappedBy = "lecturer")
                var preferences: List<LecturerPreferences>?) {
 
     constructor(id: Int,
                 chair: Chair,
-                personalData: PersonalData) :
-            this(id, chair, personalData, null)
+                user: User) :
+            this(id, chair, user, null)
 
     constructor(chair: Chair,
-                personalData: PersonalData) :
-            this(0, chair, personalData)
+                user: User) :
+            this(0, chair, user)
 
 
     fun getFullName(): String {
-        return personalData.firstName[0] + "." +
-                personalData.patronymic!![0] + "." +
-                personalData.lastName;
+        return user.firstName[0] + "." +
+                user.patronymic!![0] + "." +
+                user.lastName;
     }
 
     override fun equals(other: Any?): Boolean {
@@ -41,7 +41,7 @@ class Lecturer(@Id
 
         if (id != other.id) return false
         if (chair != other.chair) return false
-        if (personalData != other.personalData) return false
+        if (user != other.user) return false
         if (preferences != other.preferences) return false
 
         return true
@@ -50,7 +50,7 @@ class Lecturer(@Id
     override fun hashCode(): Int {
         var result = id
         result = 31 * result + chair.hashCode()
-        result = 31 * result + personalData.hashCode()
+        result = 31 * result + user.hashCode()
         result = 31 * result + (preferences?.hashCode() ?: 0)
         return result
     }
@@ -59,7 +59,7 @@ class Lecturer(@Id
         return "Lecturer(" +
                 "id=$id, " +
                 "chair=$chair, " +
-                "personalData=$personalData, " +
+                "personalData=$user, " +
                 "preferences=$preferences)"
     }
 

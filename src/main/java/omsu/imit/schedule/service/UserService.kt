@@ -3,8 +3,8 @@ package omsu.imit.schedule.service
 import omsu.imit.schedule.dto.request.ChangeUserTypeRequest
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
-import omsu.imit.schedule.model.PersonalData
-import omsu.imit.schedule.repository.PersonalDataRepository
+import omsu.imit.schedule.model.User
+import omsu.imit.schedule.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
@@ -12,22 +12,31 @@ import org.springframework.stereotype.Service
 @Service
 class UserService
 @Autowired
-constructor(private val personalDataRepository: PersonalDataRepository) {
+constructor(private val userRepository: UserRepository) {
 
-    fun whoIAm(): PersonalData {
+    fun whoIAm(): User {
         val email = SecurityContextHolder.getContext().authentication.name
-        return personalDataRepository
-                .findByEmail(email)
-                .orElseThrow { NotFoundException(ErrorCode.USER_NOT_EXISTS, email) }
+        return getUserByEmail(email)
     }
 
-    fun changeUserType(userId: Int, request: ChangeUserTypeRequest): PersonalData {
-        val user = personalDataRepository.findById(userId).orElseThrow {
-            NotFoundException(ErrorCode.USER_NOT_EXISTS_BY_ID, userId.toString())
-        }
+    fun changeUserType(userId: Int, request: ChangeUserTypeRequest): User {
+        val user = getUserById(userId)
+
         user.userRole = request.userRole
-        personalDataRepository.save(user)
+        userRepository.save(user)
 
         return user
+    }
+
+    fun getUserById(id: Int): User {
+        return userRepository.findById(id).orElseThrow {
+            NotFoundException(ErrorCode.USER_NOT_EXISTS_BY_ID, id.toString())
+        }
+    }
+
+    fun getUserByEmail(email: String): User {
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow { NotFoundException(ErrorCode.USER_NOT_EXISTS, email) }
     }
 }

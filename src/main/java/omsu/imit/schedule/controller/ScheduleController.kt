@@ -13,26 +13,17 @@ class ScheduleController
 @Autowired
 constructor(private val scheduleService: ScheduleService) {
 
-    /**
-     * Create schedule
-     */
     @PostMapping
     fun createSchedule(@RequestBody @Validated request: CreateScheduleRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(scheduleService.createSchedule(request))
     }
 
-    /**
-     * Get schedule by id
-     */
     @GetMapping(value = ["/{scheduleId}"])
     fun getScheduleById(@PathVariable scheduleId: Int): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(scheduleService.getScheduleInfo(scheduleId))
     }
 
-    /**
-     * Get schedule by Study Year and Semester
-     */
     @GetMapping
     fun getScheduleByStudyYearAndSemester(
             @RequestParam(required = true, defaultValue = "20--/20--") studyYear: String,
@@ -40,9 +31,6 @@ constructor(private val scheduleService: ScheduleService) {
         return ResponseEntity.ok().body(scheduleService.getSchedulesByStudyYearAndSemester(studyYear, semester))
     }
 
-    /**
-     * Get schedule by Group ID
-     */
     @GetMapping(value = ["/groups/{groupId}"])
     fun getScheduleByGroup(@PathVariable groupId: Int): ResponseEntity<*> {
         return ResponseEntity.ok().body(scheduleService.getSchedulesByGroup(groupId))

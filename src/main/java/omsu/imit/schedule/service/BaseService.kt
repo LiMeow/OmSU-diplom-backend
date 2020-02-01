@@ -95,6 +95,6 @@ open class BaseService {
                 lecturer.id,
                 lecturer.getFullName(),
                 lecturer.chair.name,
-                lecturer.personalData.enabled)
+                lecturer.user.enabled)
     }
 }

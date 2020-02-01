@@ -2,10 +2,10 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: lsmirnova
-      comment: create table 'personal_data'
+      comment: create table 'user'
       sqlFile:
         encoding: UTF-8
-        path: migrations/001-create-table-personal-data.sql
+        path: migrations/001-create-table-user.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 2
@@ -198,4 +198,12 @@ databaseChangeLog:
       sqlFile:
         encoding: UTF-8
         path: migrations/027-create-lecturers.sql
+        relativeToChangelogFile: true
+  - changeSet:
+      id: 28
+      author: lsmirnova
+      comment: create confirmation token
+      sqlFile:
+        encoding: UTF-8
+        path: migrations/028-create-confirmation-token.sql
         relativeToChangelogFile: true

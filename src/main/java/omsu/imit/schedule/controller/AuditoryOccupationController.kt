@@ -13,9 +13,6 @@ class AuditoryOccupationController
 @Autowired
 constructor(private val auditoryOccupationService: AuditoryOccupationService) {
 
-    /**
-     * Create auditory occupation
-     */
     @PostMapping(value = ["/{auditoryId}/occupations"])
     fun occupyAuditory(@PathVariable auditoryId: Int,
                        @Valid @RequestBody request: OccupyAuditoryRequest): ResponseEntity<*> {
@@ -32,26 +29,17 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
 //        return ResponseEntity.ok().body(auditoryOccupationService.getAuditoryWithOccupationsByDate(auditoryId, date))
 //    }
 
-    /**
-     * Return auditory occupation by ID
-     */
     @GetMapping(value = ["/occupations/{occupationId}"])
     fun getAuditoryWithOccupationsByDate(@PathVariable occupationId: Int): ResponseEntity<*> {
         return ResponseEntity.ok().body(auditoryOccupationService.getOccupationInfo(occupationId))
     }
 
-    /**
-     * Delete occupation by id
-     */
     @DeleteMapping(value = ["/occupations/{occupationId}"])
     fun deleteAuditoryOccupation(@PathVariable occupationId: Int): ResponseEntity<*> {
         auditoryOccupationService.deleteAuditoryOccupation(occupationId)
         return ResponseEntity.noContent().build<Any>()
     }
 
-    /**
-     * Delete all occupations by auditory id
-     */
     @DeleteMapping(value = ["/{auditoryId}/occupations"])
     fun deleteAllAuditoryOccupations(@PathVariable auditoryId: Int): ResponseEntity<*> {
         auditoryOccupationService.deleteAllAuditoryOccupations(auditoryId)

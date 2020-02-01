@@ -31,6 +31,7 @@ constructor(private val authService: AuthService,
         cookie.maxAge = (jwtTokenService.getTokenExpiredIn().toMillis() / 1000).toInt()
         response.addCookie(cookie)
 
+        authService.sendVerificationToken(userInfo);
         return ResponseEntity.ok(userInfo);
     }
 
@@ -48,12 +49,6 @@ constructor(private val authService: AuthService,
         return ResponseEntity.ok(userInfo);
     }
 
-    @GetMapping(path = ["/api/whoiam"])
-    fun whoIAm(): ResponseEntity<*> {
-
-        return ResponseEntity.ok(userService.whoIAm());
-    }
-
     @DeleteMapping(path = ["/api/signout"])
     fun signOut(response: HttpServletResponse): ResponseEntity<*> {
         val cookie = Cookie("accessToken", "")
@@ -62,4 +57,16 @@ constructor(private val authService: AuthService,
         response.addCookie(cookie)
         return ResponseEntity.noContent().build<Any>()
     }
+
+    @GetMapping(path = ["/api/whoiam"])
+    fun whoIAm(): ResponseEntity<*> {
+
+        return ResponseEntity.ok(userService.whoIAm());
+    }
+
+    @GetMapping(path = ["/api/confirm-account"])
+    fun confirmAccount(@RequestParam token: String): ResponseEntity<*> {
+        return ResponseEntity.ok(authService.confirmAccount(token));
+    }
+
 }

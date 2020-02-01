@@ -14,6 +14,6 @@ class Student(@Id
               var group: Group?,
 
               @OneToOne(cascade = [CascadeType.ALL])
-              @JoinColumn(name = "personal_data_id", referencedColumnName = "id")
-              var personalData: PersonalData) {
+              @JoinColumn(name = "user_id", referencedColumnName = "id")
+              var user: User) {
 }

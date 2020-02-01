@@ -5,10 +5,10 @@ import omsu.imit.schedule.dto.response.LecturerInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Lecturer
-import omsu.imit.schedule.model.PersonalData
+import omsu.imit.schedule.model.User
 import omsu.imit.schedule.model.UserRole
 import omsu.imit.schedule.repository.LecturerRepository
-import omsu.imit.schedule.repository.PersonalDataRepository
+import omsu.imit.schedule.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -19,18 +19,18 @@ class LecturerService
 constructor(
         private val chairService: ChairService,
         private val lecturerRepository: LecturerRepository,
-        private val personalDataRepository: PersonalDataRepository) : BaseService() {
+        private val userRepository: UserRepository) : BaseService() {
 
     fun createLecturer(request: CreateLecturerRequest): LecturerInfo {
         val chair = chairService.getChairById(request.charId)
 
-        val personalData = PersonalData(
+        val personalData = User(
                 request.firstName,
                 request.patronymic,
                 request.lastName,
                 request.email,
                 UserRole.LECTURER)
-        personalDataRepository.save(personalData)
+        userRepository.save(personalData)
 
         val lecturer = Lecturer(chair, personalData)
         lecturerRepository.save(lecturer)
