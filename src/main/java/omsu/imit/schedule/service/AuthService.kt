@@ -11,7 +11,6 @@ import omsu.imit.schedule.repository.ConfirmationTokenRepository
 import omsu.imit.schedule.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
-import org.springframework.mail.SimpleMailMessage
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
@@ -59,15 +58,24 @@ constructor(
     fun sendVerificationToken(user: User) {
         val confirmationToken = ConfirmationToken(user, calculateTokenExpirationDate())
         confirmationTokenRepository.save(confirmationToken)
+        var subject = "Complete Registration!"
+        var verificationToken = "http://localhost:8080/api/confirm-account?token=" + confirmationToken.token
 
-        val mailMessage = SimpleMailMessage();
-        mailMessage.setTo(user.email)
-        mailMessage.subject = "Complete Registration!"
-        mailMessage.text = "To confirm your account, please click here : " +
-                "http://localhost:8080/api/confirm-account?token=" + confirmationToken.token
-
-        emailSenderService.sendEmail(mailMessage)
+        emailSenderService.sendEmail(user, subject, verificationToken)
     }
+
+//    fun sendVerificationToken(user: User) {
+//        val confirmationToken = ConfirmationToken(user, calculateTokenExpirationDate())
+//        confirmationTokenRepository.save(confirmationToken)
+//
+//        val mailMessage = SimpleMailMessage();
+//        mailMessage.setTo(user.email)
+//        mailMessage.subject = "Complete Registration!"
+//        mailMessage.text = "To confirm your account, please click here : " +
+//                "http://localhost:8080/api/confirm-account?token=" + confirmationToken.token
+//
+//        emailSenderService.sendEmail(mailMessage)
+//    }
 
     fun confirmAccount(token: String) {
         val confirmationToken = confirmationTokenRepository.findByToken(token)

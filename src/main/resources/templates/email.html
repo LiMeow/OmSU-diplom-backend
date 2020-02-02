@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+<div>
+    <!--/*@thymesVar id="mailContent" type="omsu.imit.schedule.dto.MailContentDto"*/-->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <img src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/20140108_497373597278350_2254866028051054971_n.jpg?_nc_cat=107&_nc_oc=AQlJI1gf-U7-PlW9RVILLyuWzyNdnRDBy_u5EeOPcQdXAmZImtte77GyL7rVoBi7oFY&_nc_ht=scontent-arn2-1.xx&oh=acb5e192f3be47e9074b63ff713d8c1f&oe=5EC83A09"
+                     style="
+                     max-width: 800px;
+                     width:100%;
+                     height: auto;"/>
+            </div>
+            <div class="col-sm-11 col-md-10 col-lg-9" style="
+            text-align: center;
+            max-width: 800px;">
+                <br>
+                <h2 th:text="${mailContent.name} + '!'"></h2>
+                <br>
+                <p>Вы получили это письмо, так как была получена заявка на регистрацию пользователя
+                    в сервисе
+                    <strong style="font-size: 18px; font-style: italic;">
+                        'Scheduler'
+                    </strong>
+                    ОмГУ им.Ф.М.Достоевского.
+                </p>
+                <p>Для завершения регистрации нажмите на кнопку 'Подтвердить'</p>
+                <div style="
+                background-color: gold;
+                max-width: 200px;
+                margin: auto;
+                justify-content: center;
+                height: 40px;
+                line-height: 40px;">
+                    <a th:href="${mailContent.verificationToken}"
+                       style="
+                    display: block;
+                    height: 100%;
+                    width: 100%;">
+                        Подтвердить
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>
