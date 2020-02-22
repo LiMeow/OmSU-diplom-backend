@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Repository
 interface AuditoryOccupationRepository : JpaRepository<AuditoryOccupation, Int> {
@@ -18,9 +19,11 @@ interface AuditoryOccupationRepository : JpaRepository<AuditoryOccupation, Int> 
     fun findByAuditoryAndDate(@Param("auditoryId") auditoryId: Int): List<AuditoryOccupation>?
 
     @Query("SELECT a FROM AuditoryOccupation a " +
-            "WHERE a.auditory.id = :auditoryId AND a.day =:day AND a.timeBlock.id =:timeBlockId")
+            "WHERE a.auditory.id = :auditoryId AND a.day =:day AND a.timeBlock.id =:timeBlockId AND a.dateFrom <= :dateTo AND a.dateTo >= :dateFrom")
     fun findByAuditoryDayAndTime(@Param("auditoryId") auditoryId: Int,
                                  @Param("day") day: Day,
+                                 @Param("dateFrom") dateFrom: Date,
+                                 @Param("dateTo") dateTo: Date,
                                  @Param("timeBlockId") timeBlockId: Int): List<AuditoryOccupation>
 
     @Modifying

@@ -49,12 +49,11 @@ constructor(private val auditoryService: AuditoryService,
                        lecturer: Lecturer, groups: List<Group>?, comment: String? = ""): AuditoryOccupation {
 
 
-        val occupations = auditoryOccupationRepository.findByAuditoryDayAndTime(auditoryId = auditory.id, day = day, timeBlockId = timeBlock.id).asSequence()
+        val occupations = auditoryOccupationRepository.findByAuditoryDayAndTime(auditory.id, day, dateFrom, dateTo, timeBlock.id).asSequence()
                 .filter {
-                    (it.dateFrom.before(dateTo) && it.dateTo.after(dateFrom)) &&
-                            (it.interval == Interval.EVERY_WEEK ||
-                                    (it.interval == Interval.ONLY_EVEN_WEEKS && interval == Interval.EVERY_WEEK) ||
-                                    (it.interval == Interval.ONLY_ODD_WEEKS && interval == Interval.EVERY_WEEK))
+                    it.interval == interval ||
+                            it.interval == Interval.EVERY_WEEK ||
+                            (it.interval != Interval.EVERY_WEEK && interval == Interval.EVERY_WEEK)
                 }
                 .toList()
 

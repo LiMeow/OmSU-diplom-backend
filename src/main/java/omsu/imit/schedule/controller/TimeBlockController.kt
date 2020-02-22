@@ -2,6 +2,7 @@ package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateTimeBlockRequest
 import omsu.imit.schedule.dto.request.EditTimeBlockRequest
+import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.service.TimeBlockService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -38,14 +39,14 @@ constructor(private val timeBlockService: TimeBlockService) {
     }
 
     @DeleteMapping(value = ["/{timeBlockId}"])
-    fun deleteTimeBlock(@PathVariable timeBlockId: Int): ResponseEntity<*> {
+    fun deleteTimeBlock(@PathVariable timeBlockId: Int): StatusResponse {
         timeBlockService.deleteTimeBlock(timeBlockId)
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 
     @DeleteMapping
-    fun deleteAllTimeBlocks(): ResponseEntity<*> {
+    fun deleteAllTimeBlocks(): StatusResponse {
         timeBlockService.deleteAllTimeBlocks()
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 }

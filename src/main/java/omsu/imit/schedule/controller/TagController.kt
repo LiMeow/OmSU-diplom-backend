@@ -1,6 +1,7 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateTagRequest
+import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.service.TagService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -30,8 +31,8 @@ constructor(private val tagService: TagService) {
     }
 
     @DeleteMapping(value = ["/{tagId}"])
-    fun deleteTag(@PathVariable tagId: Int): ResponseEntity<*> {
+    fun deleteTag(@PathVariable tagId: Int): StatusResponse {
         tagService.deleteTagById(tagId)
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 }

@@ -4,18 +4,18 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "building")
-open class Building(@Id
-                    @GeneratedValue(strategy = GenerationType.IDENTITY)
-                    var id: Int,
+class Building(@Id
+               @GeneratedValue(strategy = GenerationType.IDENTITY)
+               var id: Int,
 
-                    @Column
-                    var number: Int,
+               @Column
+               var number: Int,
 
-                    @Column
-                    var address: String,
+               @Column
+               var address: String,
 
-                    @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
-                    var auditories: List<Auditory>) {
+               @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
+               var auditories: List<Auditory>) {
 
     constructor(id: Int, number: Int, address: String) : this(id, number, address, ArrayList<Auditory>())
 

@@ -22,7 +22,7 @@ class Schedule(@Id
                var group: Group,
 
                @OneToMany(fetch = FetchType.LAZY, mappedBy = "schedule")
-               var scheduleItems: List<ScheduleItem>?) {
+               var scheduleItems: List<ScheduleItem>) {
 
     constructor(course: Int, semester: Int, studyYear: String, group: Group)
             : this(0, course, semester, studyYear, group, ArrayList())

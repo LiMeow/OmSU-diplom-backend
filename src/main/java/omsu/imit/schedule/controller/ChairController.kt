@@ -1,6 +1,7 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateChairRequest
+import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.service.ChairService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -28,8 +29,8 @@ constructor(private val chairService: ChairService) {
     }
 
     @DeleteMapping(value = ["/{chairId}"])
-    fun deleteChair(@PathVariable chairId: Int): ResponseEntity<*> {
+    fun deleteChair(@PathVariable chairId: Int): StatusResponse {
         chairService.deleteChair(chairId)
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 }

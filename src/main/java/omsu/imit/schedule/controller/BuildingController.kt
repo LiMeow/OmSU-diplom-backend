@@ -2,6 +2,7 @@ package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateBuildingRequest
 import omsu.imit.schedule.dto.request.EditBuildingRequest
+import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.service.AuditoryService
 import omsu.imit.schedule.service.BuildingService
 import org.springframework.beans.factory.annotation.Autowired
@@ -47,9 +48,9 @@ constructor(private val auditoryService: AuditoryService,
     }
 
     @DeleteMapping(value = ["/{buildingId}"])
-    fun deleteBuilding(@PathVariable buildingId: Int): ResponseEntity<*> {
+    fun deleteBuilding(@PathVariable buildingId: Int): StatusResponse {
         buildingService.deleteBuilding(buildingId)
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 
 }

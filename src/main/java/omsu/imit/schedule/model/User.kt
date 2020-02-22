@@ -5,32 +5,32 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "`user`")
-open class User(@Id
-                @GeneratedValue(strategy = GenerationType.IDENTITY)
-                var id: Int,
+class User(@Id
+           @GeneratedValue(strategy = GenerationType.IDENTITY)
+           var id: Int,
 
-                @Column(name = "firstname")
-                var firstName: String,
+           @Column(name = "firstname")
+           var firstName: String,
 
-                @Column
-                var patronymic: String?,
+           @Column
+           var patronymic: String?,
 
-                @Column(name = "lastname")
-                var lastName: String,
+           @Column(name = "lastname")
+           var lastName: String,
 
-                @Column(name = "email")
-                var email: String,
+           @Column(name = "email")
+           var email: String,
 
-                @JsonIgnore
-                @Column(name = "password")
-                var password: String?,
+           @JsonIgnore
+           @Column(name = "password")
+           var password: String?,
 
-                @Column(name = "user_type")
-                @Enumerated(EnumType.STRING)
-                var userRole: UserRole,
+           @Column(name = "user_type")
+           @Enumerated(EnumType.STRING)
+           var userRole: UserRole,
 
-                @Column
-                var enabled: Boolean) {
+           @Column
+           var enabled: Boolean) {
 
     constructor(firstName: String,
                 patronymic: String?,

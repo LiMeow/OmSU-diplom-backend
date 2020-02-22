@@ -1,9 +1,9 @@
 package omsu.imit.schedule.service
 
-import omsu.imit.schedule.dto.request.ChangeUserTypeRequest
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.User
+import omsu.imit.schedule.model.UserRole
 import omsu.imit.schedule.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
@@ -19,13 +19,26 @@ constructor(private val userRepository: UserRepository) {
         return getUserByEmail(email)
     }
 
-    fun changeUserType(userId: Int, request: ChangeUserTypeRequest): User {
+    fun changeUserType(userId: Int, userRole: UserRole): User {
         val user = getUserById(userId)
 
-        user.userRole = request.userRole
+        user.userRole = userRole
         userRepository.save(user)
 
         return user
+    }
+
+    fun disableAccount(userId: Int): User {
+        val user = getUserById(userId)
+
+        user.enabled = false
+        userRepository.save(user)
+
+        return user
+    }
+
+    fun deleteAccount(userId: Int) {
+        userRepository.deleteById(userId)
     }
 
     fun getUserById(id: Int): User {

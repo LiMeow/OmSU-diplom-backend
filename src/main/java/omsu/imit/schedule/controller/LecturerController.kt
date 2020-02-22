@@ -1,6 +1,7 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateLecturerRequest
+import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.service.LecturerService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -20,30 +21,25 @@ constructor(private val lecturerService: LecturerService) {
 
     @GetMapping(value = ["/{lectureId}"])
     fun getLecturer(@PathVariable lectureId: Int): ResponseEntity<*> {
-
         return ResponseEntity.ok().body(lecturerService.getLecturerInfo(lectureId))
     }
 
     @GetMapping
     fun getAllLecturers(): ResponseEntity<*> {
-
         return ResponseEntity.ok().body(lecturerService.getAllLecturers())
     }
 
-    /*@PutMapping(
-            value = ["/{id}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE],
-            consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun editLecturer(@PathVariable("id") lectureId: Int,
-                     @Valid @RequestBody request: EditLecturerRequest): ResponseEntity<*> {
-
-        return ResponseEntity.ok().body(lecturerService.editLecturer(lectureId, request))
-    }*/
+//    @PutMapping(value = ["/{id}"])
+//    fun editLecturer(@PathVariable("id") lectureId: Int,
+//                     @Valid @RequestBody request: EditLecturerRequest): ResponseEntity<*> {
+//
+//        return ResponseEntity.ok().body(lecturerService.editLecturer(lectureId, request))
+//    }
 
     @DeleteMapping(value = ["/{lectureId}"])
-    fun deleteLecturer(@PathVariable lectureId: Int): ResponseEntity<*> {
+    fun deleteLecturer(@PathVariable lectureId: Int): StatusResponse {
         lecturerService.deleteLecturer(lectureId)
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 
 }

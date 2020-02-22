@@ -1,6 +1,7 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateFacultyRequest
+import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.service.FacultyService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -30,8 +31,8 @@ class FacultyController
     }
 
     @DeleteMapping(value = ["/{facultyId}"])
-    fun deleteFaculty(@PathVariable facultyId: Int): ResponseEntity<*> {
+    fun deleteFaculty(@PathVariable facultyId: Int): StatusResponse {
         facultyService.deleteFaculty(facultyId)
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 }

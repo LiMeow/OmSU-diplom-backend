@@ -1,6 +1,7 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateGroupRequest
+import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.service.GroupService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -19,20 +20,18 @@ constructor(private val groupService: GroupService) {
 
     @GetMapping(value = ["/{groupId}"])
     fun getGroup(@PathVariable groupId: Int): ResponseEntity<*> {
-
         return ResponseEntity.ok().body(groupService.getGroupInfo(groupId))
     }
 
     @GetMapping
     fun getAllGroups(): ResponseEntity<*> {
-
         return ResponseEntity.ok().body(groupService.getAllGroups())
     }
 
 
     @DeleteMapping(value = ["/{groupId}"])
-    fun deleteGroup(@PathVariable groupId: Int): ResponseEntity<*> {
+    fun deleteGroup(@PathVariable groupId: Int): StatusResponse {
         groupService.deleteGroupById(groupId)
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 }

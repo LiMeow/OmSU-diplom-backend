@@ -1,6 +1,7 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.DisciplineRequest
+import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.service.DisciplineService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -38,9 +39,9 @@ constructor(private val disciplineService: DisciplineService) {
     }
 
     @DeleteMapping(value = ["/{disciplineId}"])
-    fun deleteDiscipline(@PathVariable disciplineId: Int): ResponseEntity<*> {
+    fun deleteDiscipline(@PathVariable disciplineId: Int): StatusResponse {
         disciplineService.deleteDiscipline(disciplineId)
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 
 }

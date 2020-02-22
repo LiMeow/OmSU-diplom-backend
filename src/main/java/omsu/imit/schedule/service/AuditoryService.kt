@@ -2,17 +2,20 @@ package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.CreateAuditoryRequest
 import omsu.imit.schedule.dto.request.EditAuditoryRequest
+import omsu.imit.schedule.dto.response.AuditoriesByBuildingInfo
 import omsu.imit.schedule.dto.response.AuditoryShortInfo
 import omsu.imit.schedule.dto.response.MetaInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Auditory
+import omsu.imit.schedule.model.Building
 import omsu.imit.schedule.repository.AuditoryRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import kotlin.math.roundToInt
 
 @Service
 class AuditoryService
@@ -49,9 +52,16 @@ constructor(private val auditoryRepository: AuditoryRepository,
         return auditoryRepository.findAllByBuilding(buildingId, Sort.by("number"))
     }
 
-    fun getAllAuditoriesByBuilding(buildingId: Int, page: Int, size: Int): List<AuditoryShortInfo> {
+    fun getAllAuditoriesByBuilding(buildingId: Int, page: Int, size: Int): AuditoriesByBuildingInfo {
+        val building: Building = buildingService.getBuildingById(buildingId);
         val pageable: Pageable = PageRequest.of(page, size, Sort.by("number"))
-        return auditoryRepository.findAllByBuilding(buildingId, pageable).asSequence().map { toAuditoryShortInfo(it) }.toList()
+
+        val auditories = auditoryRepository
+                .findAllByBuilding(buildingId, pageable)
+                .asSequence()
+                .map { toAuditoryShortInfo(it) }
+                .toList()
+        return AuditoriesByBuildingInfo(createMetaInfo(building, page, size), auditories)
     }
 
     fun editAuditory(auditoryId: Int, request: EditAuditoryRequest): AuditoryShortInfo {
@@ -73,17 +83,20 @@ constructor(private val auditoryRepository: AuditoryRepository,
         return toAuditoryShortInfo(getAuditoryById(auditoryId))
     }
 
-    private fun createMetaInfo(buildingId: Int, page: Int, size: Int): MetaInfo {
-        val total = auditoryRepository!!.count().toInt()
+    private fun createMetaInfo(building: Building, page: Int, size: Int): MetaInfo {
+        val total = auditoryRepository.countAuditoriesByBuilding(building).toInt()
+
         var next: String? = null
         var prev: String? = null
+        val first = "/auditories/building/${building.id}?page=0&size=$size"
+        val last = "/auditories/building/" + building.id + "?page=" + (total / size).toFloat().roundToInt() + "&size=" + size
 
 
         if (Math.round((total / size).toFloat()) > page) {
-            next = "/auditories/building/" + buildingId + "?page=" + (page + 1) + "&size=" + size
+            next = "/auditories/building/" + building.id + "?page=" + (page + 1) + "&size=" + size
         }
         if (page != 0) {
-            prev = "/auditories/building/" + buildingId + "?page=" + (page - 1) + "&size=" + size
+            prev = "/auditories/building/" + building.id + "?page=" + (page - 1) + "&size=" + size
         }
 
         return MetaInfo(
@@ -92,7 +105,7 @@ constructor(private val auditoryRepository: AuditoryRepository,
                 size,
                 next,
                 prev,
-                "/auditories/building/$buildingId?page=0&size=$size",
-                "/auditories/building/" + buildingId + "?page=" + Math.round((total / size).toFloat()) + "&size=" + size)
+                first,
+                last)
     }
 }

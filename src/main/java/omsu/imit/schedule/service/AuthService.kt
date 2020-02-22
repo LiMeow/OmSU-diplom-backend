@@ -64,19 +64,6 @@ constructor(
         emailSenderService.sendEmail(user, subject, verificationToken)
     }
 
-//    fun sendVerificationToken(user: User) {
-//        val confirmationToken = ConfirmationToken(user, calculateTokenExpirationDate())
-//        confirmationTokenRepository.save(confirmationToken)
-//
-//        val mailMessage = SimpleMailMessage();
-//        mailMessage.setTo(user.email)
-//        mailMessage.subject = "Complete Registration!"
-//        mailMessage.text = "To confirm your account, please click here : " +
-//                "http://localhost:8080/api/confirm-account?token=" + confirmationToken.token
-//
-//        emailSenderService.sendEmail(mailMessage)
-//    }
-
     fun confirmAccount(token: String) {
         val confirmationToken = confirmationTokenRepository.findByToken(token)
 

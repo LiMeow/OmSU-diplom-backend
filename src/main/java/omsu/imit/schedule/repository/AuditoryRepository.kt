@@ -1,6 +1,7 @@
 package omsu.imit.schedule.repository
 
 import omsu.imit.schedule.model.Auditory
+import omsu.imit.schedule.model.Building
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaRepository
@@ -22,6 +23,8 @@ interface AuditoryRepository : JpaRepository<Auditory, Int> {
     @Query(value = "SELECT a from Auditory a WHERE a.building.id = :buildingId")
     fun findAllByBuilding(@Param("buildingId") buildingId: Int,
                           pageable: Pageable): List<Auditory>
+
+    fun countAuditoriesByBuilding(building: Building): Long
 
     @Query(value = "select *" +
             "from auditory " +

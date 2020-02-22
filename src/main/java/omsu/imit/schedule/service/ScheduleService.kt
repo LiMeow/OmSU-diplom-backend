@@ -2,10 +2,13 @@ package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.CreateScheduleRequest
 import omsu.imit.schedule.dto.response.ScheduleInfo
+import omsu.imit.schedule.dto.response.ScheduleItemInfo
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
+import omsu.imit.schedule.model.Day
 import omsu.imit.schedule.model.Schedule
+import omsu.imit.schedule.model.ScheduleItem
 import omsu.imit.schedule.repository.GroupRepository
 import omsu.imit.schedule.repository.ScheduleRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,11 +57,29 @@ constructor(private val scheduleRepository: ScheduleRepository,
     }
 
     fun toScheduleInfo(schedule: Schedule): ScheduleInfo {
+        val scheduleItemInfo: MutableMap<Day, MutableMap<String, MutableList<ScheduleItemInfo>>> = mutableMapOf();
+        schedule.scheduleItems.asSequence().forEach {
+            val day = it.auditoryOccupation.day
+            val time = it.auditoryOccupation.timeBlock.timeFrom + " - " + it.auditoryOccupation.timeBlock.timeTo
+
+            val scheduleItemsByDay = scheduleItemInfo.getOrDefault(day, mutableMapOf())
+            val scheduleItems = scheduleItemsByDay.getOrDefault(time, mutableListOf())
+
+            scheduleItems.add(toScheduleItemInfo(it))
+            scheduleItemsByDay[time] = scheduleItems
+            scheduleItemInfo[day] = scheduleItemsByDay
+        }
+
         return ScheduleInfo(
                 schedule.id,
                 schedule.course,
                 schedule.semester,
                 schedule.studyYear,
-                toGroupInfo(schedule.group))
+                toGroupInfo(schedule.group),
+                scheduleItemInfo)
+    }
+
+    private fun toScheduleItemsInfo(scheduleItems: List<ScheduleItem>): List<ScheduleItemInfo> {
+        return scheduleItems.asSequence().map { toScheduleItemInfo(it) }.toList()
     }
 }

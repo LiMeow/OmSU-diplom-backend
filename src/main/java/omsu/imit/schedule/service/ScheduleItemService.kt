@@ -3,7 +3,6 @@ package omsu.imit.schedule.service
 import omsu.imit.schedule.dto.request.CreateScheduleItemRequest
 import omsu.imit.schedule.dto.response.ScheduleForLecturer
 import omsu.imit.schedule.dto.response.ScheduleItemInfo
-import omsu.imit.schedule.dto.response.ScheduleItemInfoForLecturer
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.*
@@ -57,36 +56,11 @@ constructor(private val auditoryService: AuditoryService,
         val lecturer = lecturerService.getLecturer(lecturerId);
         val scheduleItems = scheduleItemRepository.findByLecturer(lecturerId)
 
-        println(scheduleItems)
-        println(toScheduleForLecturer(lecturer, scheduleItems).toString())
         return toScheduleForLecturer(lecturer, scheduleItems)
-    }
-
-    fun toScheduleItemInfo(scheduleItem: ScheduleItem): ScheduleItemInfo {
-        return ScheduleItemInfo(scheduleItem.id,
-                toOccupationInfo(scheduleItem.auditoryOccupation),
-                scheduleItem.discipline.name,
-                scheduleItem.activityType.description)
-    }
-
-    fun toScheduleItemInfoForLecturer(scheduleItem: ScheduleItem): ScheduleItemInfoForLecturer {
-        return ScheduleItemInfoForLecturer(
-                scheduleItem.auditoryOccupation.day.name,
-                scheduleItem.auditoryOccupation.timeBlock.timeFrom,
-                scheduleItem.auditoryOccupation.timeBlock.timeTo,
-                scheduleItem.auditoryOccupation.dateFrom,
-                scheduleItem.auditoryOccupation.dateTo,
-                scheduleItem.auditoryOccupation.interval.description,
-                scheduleItem.auditoryOccupation.auditory.building.number,
-                scheduleItem.auditoryOccupation.auditory.number,
-                scheduleItem.auditoryOccupation.groups!!.asSequence().map { it.name }.toList(),
-                scheduleItem.discipline.name,
-                scheduleItem.activityType.description,
-                scheduleItem.auditoryOccupation.comment!!)
     }
 
     fun toScheduleForLecturer(lecturer: Lecturer, scheduleItems: List<ScheduleItem>): ScheduleForLecturer {
         return ScheduleForLecturer(toLecturerInfo(lecturer),
-                scheduleItems.asSequence().map { toScheduleItemInfoForLecturer(it) }.toList())
+                scheduleItems.asSequence().map { toScheduleItemInfo(it) }.toList())
     }
 }

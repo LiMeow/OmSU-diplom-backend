@@ -97,4 +97,19 @@ open class BaseService {
                 lecturer.chair.name,
                 lecturer.user.enabled)
     }
+
+    fun toScheduleItemInfo(scheduleItem: ScheduleItem): ScheduleItemInfo {
+        return ScheduleItemInfo(
+                scheduleItem.id,
+                scheduleItem.auditoryOccupation.dateFrom,
+                scheduleItem.auditoryOccupation.dateTo,
+                scheduleItem.auditoryOccupation.interval.description,
+                scheduleItem.auditoryOccupation.auditory.building.number,
+                scheduleItem.auditoryOccupation.auditory.number,
+                scheduleItem.auditoryOccupation.lecturer.getFullName(),
+                scheduleItem.auditoryOccupation.groups!!.asSequence().map { it.name }.toList(),
+                scheduleItem.discipline.name,
+                scheduleItem.activityType.description,
+                scheduleItem.auditoryOccupation.comment!!)
+    }
 }

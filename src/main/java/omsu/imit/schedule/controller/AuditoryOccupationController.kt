@@ -1,6 +1,7 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.OccupyAuditoryRequest
+import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.service.AuditoryOccupationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -35,14 +36,14 @@ constructor(private val auditoryOccupationService: AuditoryOccupationService) {
     }
 
     @DeleteMapping(value = ["/occupations/{occupationId}"])
-    fun deleteAuditoryOccupation(@PathVariable occupationId: Int): ResponseEntity<*> {
+    fun deleteAuditoryOccupation(@PathVariable occupationId: Int): StatusResponse {
         auditoryOccupationService.deleteAuditoryOccupation(occupationId)
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 
     @DeleteMapping(value = ["/{auditoryId}/occupations"])
-    fun deleteAllAuditoryOccupations(@PathVariable auditoryId: Int): ResponseEntity<*> {
+    fun deleteAllAuditoryOccupations(@PathVariable auditoryId: Int): StatusResponse {
         auditoryOccupationService.deleteAllAuditoryOccupations(auditoryId)
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 }
