@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS student
-(
-    id               SERIAL PRIMARY KEY,
-    group_id         INTEGER NOT NULL REFERENCES "group" (id) ON DELETE CASCADE,
-    user_id INTEGER NOT NULL REFERENCES "user" (id) ON DELETE CASCADE
-);

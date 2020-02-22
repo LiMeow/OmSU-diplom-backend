@@ -1,4 +1,4 @@
-INSERT INTO auditory (building_id, number)
+INSERT INTO classroom (building_id, number)
 VALUES (1, '120'),
        (1, '119'),
        (1, '242'),

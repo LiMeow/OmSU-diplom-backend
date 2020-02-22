@@ -14,8 +14,8 @@ import java.util.*
 @Service
 class ScheduleItemService
 @Autowired
-constructor(private val auditoryService: AuditoryService,
-            private val auditoryOccupationService: AuditoryOccupationService,
+constructor(private val classroomService: ClassroomService,
+            private val eventService: EventService,
             private val disciplineService: DisciplineService,
             private val groupService: GroupService,
             private val lecturerService: LecturerService,
@@ -26,17 +26,17 @@ constructor(private val auditoryService: AuditoryService,
     fun createScheduleItem(scheduleId: Int, request: CreateScheduleItemRequest): ScheduleItemInfo {
         val schedule: Schedule = scheduleService.getScheduleById(scheduleId)
         val timeBlock: TimeBlock = timeBlockService.getTimeBlockById(request.timeBlockId)
-        val auditory: Auditory = auditoryService.getAuditoryById(request.auditoryId)
+        val classroom: Classroom = classroomService.getClassroomById(request.classroomId)
         val discipline: Discipline = disciplineService.getDiscipline(request.disciplineId)
         val lecturer: Lecturer = lecturerService.getLecturer(request.lecturerId)
         val group: Group = groupService.getGroupById(request.groupId)
 
-        val auditoryOccupation = auditoryOccupationService.occupyAuditory(
-                auditory, timeBlock,
+        val event = eventService.createEvent(
+                classroom, timeBlock,
                 request.day, request.dateFrom, request.dateTo, request.interval,
                 lecturer, Collections.singletonList(group))
 
-        val scheduleItem = ScheduleItem(auditoryOccupation, discipline, request.activityType, schedule)
+        val scheduleItem = ScheduleItem(event, discipline, request.activityType, schedule)
         scheduleItemRepository.save(scheduleItem)
 
         return toScheduleItemInfo(scheduleItem)

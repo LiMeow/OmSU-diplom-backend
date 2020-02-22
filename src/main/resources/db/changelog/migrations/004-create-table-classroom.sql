@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS auditory
+CREATE TABLE IF NOT EXISTS classroom
 (
     id          SERIAL PRIMARY KEY,
     building_id INTEGER NOT NULL REFERENCES building (id) ON DELETE CASCADE,

@@ -26,10 +26,10 @@ databaseChangeLog:
   - changeSet:
       id: 4
       author: lsmirnova
-      comment: create table 'auditory'
+      comment: create table 'classroom'
       sqlFile:
         encoding: UTF-8
-        path: migrations/004-create-table-auditory.sql
+        path: migrations/004-create-table-classroom.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 5
@@ -42,10 +42,10 @@ databaseChangeLog:
   - changeSet:
       id: 6
       author: lsmirnova
-      comment: create table 'auditory tag'
+      comment: create table 'classroom tag'
       sqlFile:
         encoding: UTF-8
-        path: migrations/006-create-table-auditory-tag.sql
+        path: migrations/006-create-table-classroom-tag.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 7
@@ -96,20 +96,12 @@ databaseChangeLog:
         path: migrations/012-create-table-group.sql
         relativeToChangelogFile: true
   - changeSet:
-      id: 13
-      author: lsmirnova
-      comment: create table 'student'
-      sqlFile:
-        encoding: UTF-8
-        path: migrations/013-create-table-student.sql
-        relativeToChangelogFile: true
-  - changeSet:
       id: 14
       author: lsmirnova
-      comment: create table 'auditory occupation'
+      comment: create table 'event'
       sqlFile:
         encoding: UTF-8
-        path: migrations/014-create-table-auditory-occupetion.sql
+        path: migrations/014-create-table-event.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 15
@@ -138,26 +130,26 @@ databaseChangeLog:
   - changeSet:
       id: 19
       author: lsmirnova
-      comment: create table 'auditory occupation group'
+      comment: create table 'event group'
       sqlFile:
         encoding: UTF-8
-        path: migrations/019-create-table-auditory-occupation-group.sql
+        path: migrations/019-create-table-event-group.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 20
       author: lsmirnova
-      comment: create data for auditories
+      comment: create data for classrooms
       sqlFile:
         encoding: UTF-8
-        path: migrations/020-create-auditories-data.sql
+        path: migrations/020-create-classrooms-data.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 21
       author: lsmirnova
-      comment: create tags for auditories
+      comment: create tags for classrooms
       sqlFile:
         encoding: UTF-8
-        path: migrations/021-create-auditory-tags.sql
+        path: migrations/021-create-classroom-tags.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 22

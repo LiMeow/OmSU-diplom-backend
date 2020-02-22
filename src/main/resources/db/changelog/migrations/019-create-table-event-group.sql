@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS event_group
+(
+    event_id INTEGER REFERENCES event (id) ON DELETE CASCADE,
+    group_id INTEGER REFERENCES "group" (id) ON DELETE CASCADE
+);

@@ -8,7 +8,7 @@ VALUES ('ЛЕКЦИОННАЯ'),
        ('СПОРТЗАЛ'),
        ('ЕСТЬ БЕЛКИ В ОКНЕ');
 
-INSERT INTO auditory_tag (auditory_id, tag_id)
+INSERT INTO classroom_tag (classroom_id, tag_id)
 VALUES (9, 1),
        (9, 3),
        (9, 8),

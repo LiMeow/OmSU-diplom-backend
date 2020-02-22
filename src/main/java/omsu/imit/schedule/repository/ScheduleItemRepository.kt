@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ScheduleItemRepository : JpaRepository<ScheduleItem, Int> {
-    @Query("SELECT s FROM ScheduleItem s WHERE s.auditoryOccupation.lecturer.id = :lecturerId")
+    @Query("SELECT s FROM ScheduleItem s WHERE s.event.lecturer.id = :lecturerId")
     fun findByLecturer(@Param("lecturerId") lecturerId: Int): List<ScheduleItem>
 }

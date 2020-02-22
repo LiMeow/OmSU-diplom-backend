@@ -4,6 +4,5 @@ enum class UserRole {
     ADMIN,
     DISPATCHER,
     LECTURER,
-    STUDENT,
     USER
 }

@@ -44,47 +44,47 @@ open class BaseService {
         return ChairInfo(chair.id, chair.name)
     }
 
-    fun toAuditoryInfo(auditory: Auditory): AuditoryInfo {
-        return AuditoryInfo(
-                auditory.id,
-                auditory.number,
-                auditory.tags,
-                toOccupationInfo(auditory.auditoryOccupations))
+    fun toClassroomInfo(classroom: Classroom): ClassroomInfo {
+        return ClassroomInfo(
+                classroom.id,
+                classroom.number,
+                classroom.tags,
+                toEventInfo(classroom.events))
     }
 
-    fun toAuditoryShortInfo(auditory: Auditory): AuditoryShortInfo {
-        return AuditoryShortInfo(
-                auditory.id,
-                auditory.number,
-                auditory.tags)
+    fun toClassroomShortInfo(classroom: Classroom): ClassroomShortInfo {
+        return ClassroomShortInfo(
+                classroom.id,
+                classroom.number,
+                classroom.tags)
     }
 
-    fun toOccupationInfo(occupation: AuditoryOccupation): OccupationInfo {
-        val occupationInfo = OccupationInfo(
-                occupation.id,
-                occupation.day,
-                occupation.timeBlock.timeFrom,
-                occupation.timeBlock.timeTo,
-                occupation.dateFrom,
-                occupation.dateTo,
-                occupation.interval,
-                toAuditoryShortInfo(occupation.auditory),
-                occupation.lecturer.getFullName(),
-                occupation.comment!!)
+    fun toEventInfo(event: Event): EventInfo {
+        val eventInfo = EventInfo(
+                event.id,
+                event.day,
+                event.timeBlock.timeFrom,
+                event.timeBlock.timeTo,
+                event.dateFrom,
+                event.dateTo,
+                event.interval,
+                toClassroomShortInfo(event.classroom),
+                event.lecturer.getFullName(),
+                event.comment!!)
 
 
-        if (occupation.groups!!.isNotEmpty())
-            occupationInfo.group = occupation.groups!!.asSequence().map { toGroupInfo(it) }.toList()
+        if (event.groups!!.isNotEmpty())
+            eventInfo.group = event.groups!!.asSequence().map { toGroupInfo(it) }.toList()
 
-        return occupationInfo
+        return eventInfo
     }
 
-    fun toOccupationInfo(occupations: List<AuditoryOccupation>?): List<OccupationInfo> {
-        val response: MutableList<OccupationInfo> = mutableListOf()
+    fun toEventInfo(events: List<Event>?): List<EventInfo> {
+        val response: MutableList<EventInfo> = mutableListOf()
 
-        if (occupations != null && occupations.isNotEmpty()) {
-            for (occupation in occupations) {
-                response.add(toOccupationInfo(occupation))
+        if (events != null && events.isNotEmpty()) {
+            for (event in events) {
+                response.add(toEventInfo(event))
             }
         }
         return response
@@ -101,15 +101,15 @@ open class BaseService {
     fun toScheduleItemInfo(scheduleItem: ScheduleItem): ScheduleItemInfo {
         return ScheduleItemInfo(
                 scheduleItem.id,
-                scheduleItem.auditoryOccupation.dateFrom,
-                scheduleItem.auditoryOccupation.dateTo,
-                scheduleItem.auditoryOccupation.interval.description,
-                scheduleItem.auditoryOccupation.auditory.building.number,
-                scheduleItem.auditoryOccupation.auditory.number,
-                scheduleItem.auditoryOccupation.lecturer.getFullName(),
-                scheduleItem.auditoryOccupation.groups!!.asSequence().map { it.name }.toList(),
+                scheduleItem.event.dateFrom,
+                scheduleItem.event.dateTo,
+                scheduleItem.event.interval.description,
+                scheduleItem.event.classroom.building.number,
+                scheduleItem.event.classroom.number,
+                scheduleItem.event.lecturer.getFullName(),
+                scheduleItem.event.groups!!.asSequence().map { it.name }.toList(),
                 scheduleItem.discipline.name,
                 scheduleItem.activityType.description,
-                scheduleItem.auditoryOccupation.comment!!)
+                scheduleItem.event.comment!!)
     }
 }

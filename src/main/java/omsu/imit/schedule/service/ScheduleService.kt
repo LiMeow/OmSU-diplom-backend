@@ -59,8 +59,8 @@ constructor(private val scheduleRepository: ScheduleRepository,
     fun toScheduleInfo(schedule: Schedule): ScheduleInfo {
         val scheduleItemInfo: MutableMap<Day, MutableMap<String, MutableList<ScheduleItemInfo>>> = mutableMapOf();
         schedule.scheduleItems.asSequence().forEach {
-            val day = it.auditoryOccupation.day
-            val time = it.auditoryOccupation.timeBlock.timeFrom + " - " + it.auditoryOccupation.timeBlock.timeTo
+            val day = it.event.day
+            val time = it.event.timeBlock.timeFrom + " - " + it.event.timeBlock.timeTo
 
             val scheduleItemsByDay = scheduleItemInfo.getOrDefault(day, mutableMapOf())
             val scheduleItems = scheduleItemsByDay.getOrDefault(time, mutableListOf())

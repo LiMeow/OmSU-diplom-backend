@@ -15,11 +15,11 @@ class Building(@Id
                var address: String,
 
                @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
-               var auditories: List<Auditory>) {
+               var classrooms: List<Classroom>) {
 
-    constructor(id: Int, number: Int, address: String) : this(id, number, address, ArrayList<Auditory>())
+    constructor(id: Int, number: Int, address: String) : this(id, number, address, ArrayList<Classroom>())
 
-    constructor(number: Int, address: String) : this(0, number, address, ArrayList<Auditory>())
+    constructor(number: Int, address: String) : this(0, number, address, ArrayList<Classroom>())
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -28,7 +28,7 @@ class Building(@Id
         if (id != other.id) return false
         if (number != other.number) return false
         if (address != other.address) return false
-        if (auditories != other.auditories) return false
+        if (classrooms != other.classrooms) return false
 
         return true
     }
@@ -37,7 +37,7 @@ class Building(@Id
         var result = id
         result = 31 * result + number
         result = 31 * result + address.hashCode()
-        result = 31 * result + auditories.hashCode()
+        result = 31 * result + classrooms.hashCode()
         return result
     }
 

@@ -12,7 +12,7 @@ data class CreateScheduleItemRequest(
         @get:NotNull var dateTo: Date,
         @get:NotNull var interval: Interval,
         @get:NotNull var timeBlockId: Int,
-        @get:NotNull var auditoryId: Int,
+        @get:NotNull var classroomId: Int,
         @get:NotNull var disciplineId: Int,
         @get:NotNull var activityType: ActivityType,
         @get:NotNull var lecturerId: Int,
