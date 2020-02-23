@@ -8,8 +8,7 @@ import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Day
 import omsu.imit.schedule.model.Schedule
-import omsu.imit.schedule.model.ScheduleItem
-import omsu.imit.schedule.repository.GroupRepository
+import omsu.imit.schedule.repository.ScheduleItemRepository
 import omsu.imit.schedule.repository.ScheduleRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
@@ -19,13 +18,13 @@ import org.springframework.stereotype.Service
 class ScheduleService
 @Autowired
 constructor(private val scheduleRepository: ScheduleRepository,
-            private val groupRepository: GroupRepository) : BaseService() {
+            private val scheduleItemRepository: ScheduleItemRepository,
+            private val groupService: GroupService) : BaseService() {
 
     fun createSchedule(request: CreateScheduleRequest): ScheduleInfo {
-        val group = groupRepository.findById(request.groupId)
-                .orElseThrow { NotFoundException(ErrorCode.GROUP_NOT_EXISTS, request.groupId.toString()) }
-
+        val group = groupService.getGroupById(request.groupId)
         val schedule = Schedule(request.course, request.semester, request.studyYear, group)
+
         try {
             scheduleRepository.save(schedule);
         } catch (e: DataIntegrityViolationException) {
@@ -40,15 +39,9 @@ constructor(private val scheduleRepository: ScheduleRepository,
         }
     }
 
-    fun getSchedulesByStudyYearAndSemester(studyYear: String, semester: Int): List<ScheduleInfo> {
+    fun getSchedulesByGroup(groupId: Int, studyYear: String, semester: Int): List<ScheduleInfo> {
         return scheduleRepository
-                .findByStudyYearAndSemester(studyYear, semester)
-                .asSequence().map { toScheduleInfo(it) }.toList()
-    }
-
-    fun getSchedulesByGroup(groupId: Int): List<ScheduleInfo> {
-        return scheduleRepository
-                .findByGroup(groupId)
+                .findByGroup(groupId, studyYear, semester)
                 .asSequence().map { toScheduleInfo(it) }.toList()
     }
 
@@ -56,11 +49,11 @@ constructor(private val scheduleRepository: ScheduleRepository,
         return toScheduleInfo(getScheduleById(scheduleId))
     }
 
-    fun toScheduleInfo(schedule: Schedule): ScheduleInfo {
+    private fun toScheduleInfo(schedule: Schedule): ScheduleInfo {
         val scheduleItemInfo: MutableMap<Day, MutableMap<String, MutableList<ScheduleItemInfo>>> = mutableMapOf();
         schedule.scheduleItems.asSequence().forEach {
             val day = it.event.day
-            val time = it.event.timeBlock.timeFrom + " - " + it.event.timeBlock.timeTo
+            val time = it.event.timeBlock.timeFrom
 
             val scheduleItemsByDay = scheduleItemInfo.getOrDefault(day, mutableMapOf())
             val scheduleItems = scheduleItemsByDay.getOrDefault(time, mutableListOf())
@@ -77,9 +70,5 @@ constructor(private val scheduleRepository: ScheduleRepository,
                 schedule.studyYear,
                 toGroupInfo(schedule.group),
                 scheduleItemInfo)
-    }
-
-    private fun toScheduleItemsInfo(scheduleItems: List<ScheduleItem>): List<ScheduleItemInfo> {
-        return scheduleItems.asSequence().map { toScheduleItemInfo(it) }.toList()
     }
 }
