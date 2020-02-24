@@ -6,7 +6,6 @@ import omsu.imit.schedule.dto.response.ScheduleItemInfo
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
-import omsu.imit.schedule.model.Day
 import omsu.imit.schedule.model.Schedule
 import omsu.imit.schedule.repository.ScheduleItemRepository
 import omsu.imit.schedule.repository.ScheduleRepository
@@ -45,14 +44,20 @@ constructor(private val scheduleRepository: ScheduleRepository,
                 .asSequence().map { toScheduleInfo(it) }.toList()
     }
 
+    fun getScheduleByLecturer(lecturerId: Int, studyYear: String, semester: Int): Any {
+        return scheduleRepository
+                .findByLecturer(lecturerId, studyYear, semester)
+                .asSequence().map { toScheduleInfo(it) }.toList()
+    }
+
     fun getScheduleInfo(scheduleId: Int): ScheduleInfo {
         return toScheduleInfo(getScheduleById(scheduleId))
     }
 
     private fun toScheduleInfo(schedule: Schedule): ScheduleInfo {
-        val scheduleItemInfo: MutableMap<Day, MutableMap<String, MutableList<ScheduleItemInfo>>> = mutableMapOf();
+        val scheduleItemInfo: MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> = mutableMapOf();
         schedule.scheduleItems.asSequence().forEach {
-            val day = it.event.day
+            val day = it.event.day.description
             val time = it.event.timeBlock.timeFrom
 
             val scheduleItemsByDay = scheduleItemInfo.getOrDefault(day, mutableMapOf())
@@ -71,4 +76,5 @@ constructor(private val scheduleRepository: ScheduleRepository,
                 toGroupInfo(schedule.group),
                 scheduleItemInfo)
     }
+
 }

@@ -23,7 +23,7 @@ constructor(private val classroomService: ClassroomService,
             private val scheduleService: ScheduleService,
             private val scheduleItemRepository: ScheduleItemRepository) : BaseService() {
 
-    fun createScheduleItem(scheduleId: Int, request: CreateScheduleItemRequest): MutableMap<Day, MutableMap<String, ScheduleItemInfo>> {
+    fun createScheduleItem(scheduleId: Int, request: CreateScheduleItemRequest): MutableMap<String, MutableMap<String, ScheduleItemInfo>> {
         val schedule: Schedule = scheduleService.getScheduleById(scheduleId)
         val timeBlock: TimeBlock = timeBlockService.getTimeBlockById(request.timeBlockId)
         val classroom: Classroom = classroomService.getClassroomById(request.classroomId)
@@ -64,9 +64,9 @@ constructor(private val classroomService: ClassroomService,
                 scheduleItems.asSequence().map { toScheduleItemInfo(it) }.toList())
     }
 
-    private fun toScheduleItemFullInfo(scheduleItem: ScheduleItem): MutableMap<Day, MutableMap<String, ScheduleItemInfo>> {
-        val scheduleItemInfo: MutableMap<Day, MutableMap<String, ScheduleItemInfo>> = mutableMapOf();
-        val day = scheduleItem.event.day
+    private fun toScheduleItemFullInfo(scheduleItem: ScheduleItem): MutableMap<String, MutableMap<String, ScheduleItemInfo>> {
+        val scheduleItemInfo: MutableMap<String, MutableMap<String, ScheduleItemInfo>> = mutableMapOf();
+        val day = scheduleItem.event.day.description
         val time = scheduleItem.event.timeBlock.timeFrom
 
         scheduleItemInfo[day] = mutableMapOf(Pair(time, toScheduleItemInfo(scheduleItem)));
