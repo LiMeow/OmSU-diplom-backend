@@ -2,11 +2,14 @@ package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.CreateScheduleRequest
 import omsu.imit.schedule.dto.response.ScheduleInfo
+import omsu.imit.schedule.dto.response.ScheduleInfoForLecturer
 import omsu.imit.schedule.dto.response.ScheduleItemInfo
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
+import omsu.imit.schedule.model.Lecturer
 import omsu.imit.schedule.model.Schedule
+import omsu.imit.schedule.model.ScheduleItem
 import omsu.imit.schedule.repository.ScheduleItemRepository
 import omsu.imit.schedule.repository.ScheduleRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,9 +19,11 @@ import org.springframework.stereotype.Service
 @Service
 class ScheduleService
 @Autowired
-constructor(private val scheduleRepository: ScheduleRepository,
-            private val scheduleItemRepository: ScheduleItemRepository,
-            private val groupService: GroupService) : BaseService() {
+constructor(
+        private val groupService: GroupService,
+        private val lecturerService: LecturerService,
+        private val scheduleRepository: ScheduleRepository,
+        private val scheduleItemRepository: ScheduleItemRepository) : BaseService() {
 
     fun createSchedule(request: CreateScheduleRequest): ScheduleInfo {
         val group = groupService.getGroupById(request.groupId)
@@ -38,43 +43,56 @@ constructor(private val scheduleRepository: ScheduleRepository,
         }
     }
 
-    fun getSchedulesByGroup(groupId: Int, studyYear: String, semester: Int): List<ScheduleInfo> {
-        return scheduleRepository
-                .findByGroup(groupId, studyYear, semester)
-                .asSequence().map { toScheduleInfo(it) }.toList()
+    fun getScheduleByGroupStudyYearAndSemester(groupId: Int, studyYear: String, semester: Int): ScheduleInfo {
+        val schedule = scheduleRepository.findByGroup(groupId, studyYear, semester)
+        return toScheduleInfo(schedule)
     }
 
     fun getScheduleByLecturer(lecturerId: Int, studyYear: String, semester: Int): Any {
-        return scheduleRepository
-                .findByLecturer(lecturerId, studyYear, semester)
-                .asSequence().map { toScheduleInfo(it) }.toList()
+        val lecturer = lecturerService.getLecturer(lecturerId)
+        val scheduleItems = scheduleItemRepository.findByLecturer(lecturerId, studyYear, semester)
+        println(scheduleItems)
+        return toScheduleInfoForLecturer(lecturer, scheduleItems, studyYear, semester)
+
     }
 
-    fun getScheduleInfo(scheduleId: Int): ScheduleInfo {
+    fun getScheduleInfoById(scheduleId: Int): ScheduleInfo {
         return toScheduleInfo(getScheduleById(scheduleId))
     }
 
-    private fun toScheduleInfo(schedule: Schedule): ScheduleInfo {
-        val scheduleItemInfo: MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> = mutableMapOf();
-        schedule.scheduleItems.asSequence().forEach {
+    private fun toScheduleItemsInfo(scheduleItems: List<ScheduleItem>): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
+        val scheduleItemsInfo: MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> = mutableMapOf();
+
+        scheduleItems.asSequence().forEach {
             val day = it.event.day.description
             val time = it.event.timeBlock.timeFrom
 
-            val scheduleItemsByDay = scheduleItemInfo.getOrDefault(day, mutableMapOf())
-            val scheduleItems = scheduleItemsByDay.getOrDefault(time, mutableListOf())
+            val scheduleItemsByDay = scheduleItemsInfo.getOrDefault(day, mutableMapOf())
+            val scheduleItemsByTime = scheduleItemsByDay.getOrDefault(time, mutableListOf())
 
-            scheduleItems.add(toScheduleItemInfo(it))
-            scheduleItemsByDay[time] = scheduleItems
-            scheduleItemInfo[day] = scheduleItemsByDay
+            scheduleItemsByTime.add(toScheduleItemInfo(it))
+            scheduleItemsByDay[time] = scheduleItemsByTime
+            scheduleItemsInfo[day] = scheduleItemsByDay
         }
 
+        return scheduleItemsInfo
+    }
+
+    private fun toScheduleInfo(schedule: Schedule): ScheduleInfo {
         return ScheduleInfo(
                 schedule.id,
                 schedule.course,
                 schedule.semester,
                 schedule.studyYear,
                 toGroupInfo(schedule.group),
-                scheduleItemInfo)
+                toScheduleItemsInfo(schedule.scheduleItems))
     }
 
+    private fun toScheduleInfoForLecturer(lecturer: Lecturer, scheduleItems: List<ScheduleItem>, studyYear: String, semester: Int): ScheduleInfoForLecturer {
+        return ScheduleInfoForLecturer(
+                semester % 2,
+                studyYear,
+                toLecturerInfo(lecturer),
+                toScheduleItemsInfo(scheduleItems))
+    }
 }

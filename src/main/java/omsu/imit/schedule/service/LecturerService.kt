@@ -2,6 +2,7 @@ package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.CreateLecturerRequest
 import omsu.imit.schedule.dto.response.LecturerInfo
+import omsu.imit.schedule.dto.response.LecturerShortInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Lecturer
@@ -11,7 +12,6 @@ import omsu.imit.schedule.repository.LecturerRepository
 import omsu.imit.schedule.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class LecturerService
@@ -44,15 +44,20 @@ constructor(
     }
 
     fun getAllLecturers(): List<LecturerInfo> {
-        val lecturers: MutableList<Lecturer> = lecturerRepository.findAll()
-        val lecturersInfo = ArrayList<LecturerInfo>()
-
-        for (lecturer in lecturers) {
-            lecturersInfo.add(toLecturerInfo(lecturer))
-        }
-        return lecturersInfo
+        return lecturerRepository
+                .findAll()
+                .asSequence()
+                .map { toLecturerInfo(it) }
+                .toList();
     }
 
+    fun getLecturersByChair(chairId: Int): List<LecturerShortInfo> {
+        return lecturerRepository
+                .findAllByChairId(chairId)
+                .asSequence()
+                .map { toLecturerShortInfo(it) }
+                .toList();
+    }
     /*fun editLecturer(lectureId: Int, request: EditLecturerRequest): LecturerInfo {
         val lecturer = userRepository.findById(lectureId).orElse(null)
                 ?: throw ScheduleGeneratorException(ErrorCode.USER_NOT_EXISTS, lectureId.toString())
@@ -76,5 +81,14 @@ constructor(
 
     fun getLecturerInfo(lectureId: Int): LecturerInfo {
         return toLecturerInfo(getLecturer(lectureId))
+    }
+
+    fun toLecturerShortInfo(lecturer: Lecturer): LecturerShortInfo {
+        return LecturerShortInfo(
+                lecturer.id,
+                lecturer.user.firstName,
+                lecturer.user.patronymic,
+                lecturer.user.lastName,
+                lecturer.user.email)
     }
 }

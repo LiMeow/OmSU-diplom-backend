@@ -20,14 +20,14 @@ constructor(private val scheduleService: ScheduleService) {
 
     @GetMapping(value = ["/{scheduleId}"])
     fun getScheduleById(@PathVariable scheduleId: Int): ResponseEntity<*> {
-        return ResponseEntity.ok().body(scheduleService.getScheduleInfo(scheduleId))
+        return ResponseEntity.ok().body(scheduleService.getScheduleInfoById(scheduleId))
     }
 
     @GetMapping(value = ["/groups/{groupId}"])
     fun getScheduleByGroup(@PathVariable groupId: Int,
                            @RequestParam(required = true, defaultValue = "20--/20--") studyYear: String,
                            @RequestParam(required = true, defaultValue = "1") semester: Int): ResponseEntity<*> {
-        return ResponseEntity.ok().body(scheduleService.getSchedulesByGroup(groupId, studyYear, semester))
+        return ResponseEntity.ok().body(scheduleService.getScheduleByGroupStudyYearAndSemester(groupId, studyYear, semester))
     }
 
     @GetMapping(value = ["/lecturers/{lecturerId}"])

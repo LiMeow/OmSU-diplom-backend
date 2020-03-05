@@ -1,7 +1,6 @@
 package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.CreateScheduleItemRequest
-import omsu.imit.schedule.dto.response.ScheduleForLecturer
 import omsu.imit.schedule.dto.response.ScheduleItemInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
@@ -50,18 +49,6 @@ constructor(private val classroomService: ClassroomService,
 
     fun getScheduleItemInfo(itemId: Int): ScheduleItemInfo {
         return toScheduleItemInfo(getScheduleItemById(itemId))
-    }
-
-    fun getScheduleItemsByLecturer(lecturerId: Int): ScheduleForLecturer {
-        val lecturer = lecturerService.getLecturer(lecturerId);
-        val scheduleItems = scheduleItemRepository.findByLecturer(lecturerId)
-
-        return toScheduleForLecturer(lecturer, scheduleItems)
-    }
-
-    private fun toScheduleForLecturer(lecturer: Lecturer, scheduleItems: List<ScheduleItem>): ScheduleForLecturer {
-        return ScheduleForLecturer(toLecturerInfo(lecturer),
-                scheduleItems.asSequence().map { toScheduleItemInfo(it) }.toList())
     }
 
     private fun toScheduleItemFullInfo(scheduleItem: ScheduleItem): MutableMap<String, MutableMap<String, ScheduleItemInfo>> {

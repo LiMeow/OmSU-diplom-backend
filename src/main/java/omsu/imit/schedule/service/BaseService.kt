@@ -41,7 +41,9 @@ open class BaseService {
     }
 
     fun toChairInfo(chair: Chair): ChairInfo {
-        return ChairInfo(chair.id, chair.name)
+        return ChairInfo(chair.id,
+                chair.faculty.name,
+                chair.name)
     }
 
     fun toClassroomInfo(classroom: Classroom): ClassroomInfo {
@@ -79,7 +81,7 @@ open class BaseService {
         return eventInfo
     }
 
-    fun toEventInfo(events: List<Event>?): List<EventInfo> {
+    private fun toEventInfo(events: List<Event>?): List<EventInfo> {
         val response: MutableList<EventInfo> = mutableListOf()
 
         if (events != null && events.isNotEmpty()) {
@@ -94,8 +96,7 @@ open class BaseService {
         return LecturerInfo(
                 lecturer.id,
                 lecturer.getFullName(),
-                lecturer.chair.name,
-                lecturer.user.enabled)
+                toChairInfo(lecturer.chair))
     }
 
     fun toScheduleItemInfo(scheduleItem: ScheduleItem): ScheduleItemInfo {
