@@ -7,27 +7,27 @@ import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Group
 import omsu.imit.schedule.repository.GroupRepository
-import omsu.imit.schedule.repository.StudyDirectionRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
 class GroupService
 @Autowired
-constructor(
-        private val groupRepository: GroupRepository,
-        private val studyDirectionRepository: StudyDirectionRepository) : BaseService() {
+constructor(private val courseService: CourseService,
+            private val groupRepository: GroupRepository,
+            private val studyDirectionService: StudyDirectionService) : BaseService() {
 
     fun createGroup(request: CreateGroupRequest): GroupInfo {
-        val studyDirection = studyDirectionRepository.findById(request.studyDirectionId)
-                .orElseThrow { NotFoundException(ErrorCode.STUDY_DIRECTION_NOT_EXISXTS, request.studyDirectionId.toString()) }
+        val studyDirection = studyDirectionService.getStudyDirectionById(request.studyDirectionId)
+        val course = courseService.getCourseById(request.courseId)
+        val group = Group(studyDirection, course, request.name, request.formationYear, request.dissolutionYear)
 
-        if (groupRepository.findByNameAndDirection(request.name, request.studyDirectionId) != null)
+        try {
+            groupRepository.save(group)
+        } catch (e: DataIntegrityViolationException) {
             throw CommonValidationException(ErrorCode.GROUP_ALREADY_EXISTS, request.name)
-
-        val group = Group(studyDirection, request.name)
-        groupRepository.save(group)
-
+        }
         return toGroupInfo(group)
     }
 

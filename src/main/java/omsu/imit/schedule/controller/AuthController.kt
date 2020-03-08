@@ -19,7 +19,7 @@ constructor(private val authService: AuthService,
             private val userService: UserService,
             private val jwtTokenService: JwtTokenService) {
 
-    @PostMapping(path = ["/api/signup"])
+    @PostMapping(path = ["/signup"])
     fun signUp(@Valid @RequestBody request: SignUpRequest,
                response: HttpServletResponse): ResponseEntity<*> {
 

@@ -12,7 +12,8 @@ data class CreateEventRequest(@get:NotBlank var timeFrom: String,
                               @get:NotNull var dateFrom: Date,
                               @get:NotNull var dateTo: Date,
                               @get:NotNull var interval: Interval,
+                              @get:NotNull var required: Boolean,
                               @get:NotNull var lecturerId: Int,
                               var groupIds: List<Int>? = null,
-                              @get:NotBlank var comment: String)
+                              var comment: String? = "")
 

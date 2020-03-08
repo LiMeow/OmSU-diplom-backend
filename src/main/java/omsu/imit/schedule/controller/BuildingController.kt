@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/buildings")
+@RequestMapping("/buildings")
 class BuildingController @Autowired
 constructor(private val classroomService: ClassroomService,
             private val buildingService: BuildingService) {

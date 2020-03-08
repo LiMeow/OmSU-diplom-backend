@@ -23,7 +23,7 @@ class Event(@Id
             var day: Day,
 
             @Column(name = "date_from")
-                         var dateFrom: Date,
+            var dateFrom: Date,
 
             @Column(name = "date_to")
             var dateTo: Date,
@@ -31,6 +31,9 @@ class Event(@Id
             @Column
             @Enumerated(EnumType.STRING)
             var interval: Interval,
+
+            @Column
+            var required: Boolean,
 
             @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
             @JoinColumn(name = "lecturer_id")
@@ -51,10 +54,11 @@ class Event(@Id
                 dateFrom: Date,
                 dateTo: Date,
                 interval: Interval,
+                isRequired: Boolean,
                 lecturer: Lecturer,
                 groups: List<Group>?,
                 comment: String?)
-            : this(0, classroom, timeBlock, day, dateFrom, dateTo, interval, lecturer, groups, comment)
+            : this(0, classroom, timeBlock, day, dateFrom, dateTo, interval, isRequired, lecturer, groups, comment)
 
 
 }

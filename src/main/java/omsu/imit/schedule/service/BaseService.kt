@@ -10,7 +10,9 @@ open class BaseService {
     fun toGroupInfo(group: Group): GroupInfo {
         return GroupInfo(group.id,
                 group.name,
-                toStudyDirectionInfo(group.studyDirection))
+                toStudyDirectionInfo(group.studyDirection),
+                group.formationYear,
+                group.dissolutionYear)
     }
 
     fun toStudyDirectionInfo(studyDirection: StudyDirection): StudyDirectionInfo {
@@ -70,6 +72,7 @@ open class BaseService {
                 event.dateFrom,
                 event.dateTo,
                 event.interval,
+                event.required,
                 toClassroomShortInfo(event.classroom),
                 event.lecturer.getFullName(),
                 event.comment!!)

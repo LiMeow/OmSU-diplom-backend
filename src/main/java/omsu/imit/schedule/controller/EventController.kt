@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/classrooms")
+@RequestMapping("/classrooms")
 class EventController
 @Autowired
 constructor(private val eventService: EventService) {
@@ -31,7 +31,7 @@ constructor(private val eventService: EventService) {
 //    }
 
     @GetMapping(value = ["/events/{eventId}"])
-    fun getClassroomWithEventsByDate(@PathVariable eventId: Int): ResponseEntity<*> {
+    fun getEventById(@PathVariable eventId: Int): ResponseEntity<*> {
         return ResponseEntity.ok().body(eventService.getEventInfo(eventId))
     }
 

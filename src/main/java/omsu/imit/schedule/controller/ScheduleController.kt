@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/schedules")
+@RequestMapping("/schedules")
 class ScheduleController
 @Autowired
 constructor(private val scheduleService: ScheduleService) {

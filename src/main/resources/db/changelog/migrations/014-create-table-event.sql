@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS event
     date_from     date    NOT NULL,
     date_to       date    NOT NULL,
     interval      TEXT    NOT NULL,
+    required      BOOLEAN DEFAULT FALSE,
     lecturer_id   INTEGER DEFAULT NULL REFERENCES lecturer (id),
     comment       TEXT    DEFAULT NULL,
     UNIQUE (classroom_id, time_block_id, day, date_from, date_to, interval)

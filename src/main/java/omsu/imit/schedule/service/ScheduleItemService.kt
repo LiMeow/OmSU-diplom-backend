@@ -31,9 +31,15 @@ constructor(private val classroomService: ClassroomService,
         val group: Group = groupService.getGroupById(request.groupId)
 
         val event = eventService.createEvent(
-                classroom, timeBlock,
-                request.day, request.dateFrom, request.dateTo, request.interval,
-                lecturer, Collections.singletonList(group))
+                classroom,
+                timeBlock,
+                request.day,
+                request.dateFrom,
+                request.dateTo,
+                request.interval,
+                request.required,
+                lecturer,
+                Collections.singletonList(group))
 
         val scheduleItem = ScheduleItem(event, discipline, request.activityType, schedule)
         scheduleItemRepository.save(scheduleItem)

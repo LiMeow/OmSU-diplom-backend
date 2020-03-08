@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/timeblocks")
+@RequestMapping("/timeblocks")
 class TimeBlockController @Autowired
 constructor(private val timeBlockService: TimeBlockService) {
 

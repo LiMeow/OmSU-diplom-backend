@@ -37,6 +37,7 @@ constructor(private val classroomService: ClassroomService,
                 request.dateFrom,
                 request.dateTo,
                 request.interval,
+                request.required,
                 lecturer, groups!!,
                 request.comment)
 
@@ -44,14 +45,14 @@ constructor(private val classroomService: ClassroomService,
     }
 
     fun createEvent(classroom: Classroom, timeBlock: TimeBlock,
-                    day: Day, dateFrom: Date, dateTo: Date, interval: Interval,
+                    day: Day, dateFrom: Date, dateTo: Date, interval: Interval, isRequired: Boolean,
                     lecturer: Lecturer, groups: List<Group>?, comment: String? = ""): Event {
 
 
-        val events = eventRepository.findByClassroomDayAndTime(classroom.id, day, dateFrom, dateTo, timeBlock.id).asSequence()
+        val events = eventRepository.findByClassroomDayAndTime(classroom.id, day, dateFrom, dateTo, timeBlock.id)
+                .asSequence()
                 .filter {
-                    it.interval == interval ||
-                            it.interval == Interval.EVERY_WEEK ||
+                    it.interval == interval || it.interval == Interval.EVERY_WEEK ||
                             (it.interval != Interval.EVERY_WEEK && interval == Interval.EVERY_WEEK)
                 }
                 .toList()
@@ -61,7 +62,7 @@ constructor(private val classroomService: ClassroomService,
                     classroom.id.toString(), timeBlock.timeFrom, timeBlock.timeTo, day.name)
         }
 
-        val event = Event(classroom, timeBlock, day, dateFrom, dateTo, interval, lecturer, groups!!, comment)
+        val event = Event(classroom, timeBlock, day, dateFrom, dateTo, interval, isRequired, lecturer, groups!!, comment)
         eventRepository.save(event)
         return event
     }

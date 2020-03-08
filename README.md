@@ -45,3 +45,11 @@ Run following command from project root directory:
 ```shell script
 mvn clean install
 ```
+
+## How to run Swagger
+
+Follow the link below in your browser:
+
+```shell script
+http://localhost:8080/api/swagger-ui.html
+```
