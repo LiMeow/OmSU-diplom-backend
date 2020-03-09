@@ -19,14 +19,8 @@ class Classroom(@Id
                 @JoinTable(name = "classroom_tag",
                         joinColumns = [JoinColumn(name = "classroom_id", referencedColumnName = "id")],
                         inverseJoinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")])
-                var tags: List<Tag>,
+                var tags: List<Tag> = mutableListOf()) {
 
-                @OneToMany(fetch = FetchType.LAZY, mappedBy = "classroom")
-                var events: List<Event>?) {
-
-    constructor(id: Int, building: Building, number: String) : this(id, building, number, mutableListOf(), mutableListOf())
-
-    constructor(building: Building, number: String) : this(0, building, number, mutableListOf(), mutableListOf())
-
+    constructor(building: Building, number: String) : this(0, building, number)
 }
 

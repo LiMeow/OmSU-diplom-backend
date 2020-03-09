@@ -9,41 +9,29 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/classrooms")
+@RequestMapping("/events")
 class EventController
 @Autowired
 constructor(private val eventService: EventService) {
 
-    @PostMapping(value = ["/{classroomId}/events"])
-    fun createEvent(@PathVariable classroomId: Int,
-                    @Valid @RequestBody request: CreateEventRequest): ResponseEntity<*> {
-        return ResponseEntity.ok().body(eventService.createEvent(classroomId, request))
+    @PostMapping()
+    fun createEvent(@Valid @RequestBody request: CreateEventRequest): ResponseEntity<*> {
+        return ResponseEntity.ok().body(eventService.createEventAndGetInfo(request))
     }
 
-//    /**
-//     * Return auditory with occupations by date
-//     */
-//    @GetMapping(value = ["/{auditoryId}/occupations"])
-//    fun getAuditoryWithOccupationsByDate(@PathVariable auditoryId: Int,
-//                                         @RequestParam date: String): ResponseEntity<*> {
-//
-//        return ResponseEntity.ok().body(auditoryOccupationService.getAuditoryWithOccupationsByDate(auditoryId, date))
-//    }
-
-    @GetMapping(value = ["/events/{eventId}"])
+    @GetMapping(value = ["/{eventId}"])
     fun getEventById(@PathVariable eventId: Int): ResponseEntity<*> {
         return ResponseEntity.ok().body(eventService.getEventInfo(eventId))
     }
 
-    @DeleteMapping(value = ["/events/{eventId}"])
-    fun deleteClassroomEvent(@PathVariable eventId: Int): StatusResponse {
-        eventService.deleteEvent(eventId)
-        return StatusResponse.OK
+    @GetMapping(value = ["/{eventId}/classrooms"])
+    fun getClassroomsByEvent(@PathVariable eventId: Int): ResponseEntity<*> {
+        return ResponseEntity.ok().body(eventService.getClassroomsByEvent(eventId))
     }
 
-    @DeleteMapping(value = ["/{classroomId}/events"])
-    fun deleteAllClassroomEvents(@PathVariable classroomId: Int): StatusResponse {
-        eventService.deleteAllEvents(classroomId)
+    @DeleteMapping(value = ["/{eventId}"])
+    fun deleteClassroomEvent(@PathVariable eventId: Int): StatusResponse {
+        eventService.deleteEvent(eventId)
         return StatusResponse.OK
     }
 }

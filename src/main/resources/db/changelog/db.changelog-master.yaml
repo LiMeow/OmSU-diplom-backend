@@ -138,10 +138,10 @@ databaseChangeLog:
   - changeSet:
       id: 19
       author: lsmirnova
-      comment: create table 'event group'
+      comment: create table 'schedule_item-group'
       sqlFile:
         encoding: UTF-8
-        path: migrations/019-create-table-event-group.sql
+        path: migrations/019-create-table-schedule-item-group.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 20

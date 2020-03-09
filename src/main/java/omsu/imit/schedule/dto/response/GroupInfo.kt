@@ -7,5 +7,5 @@ class GroupInfo(var id: Int,
                 var studyDirection: StudyDirectionInfo,
                 var formationYear: String,
                 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-                var dissolutionYear: String? = "") {
+                var dissolutionYear: String = "") {
 }

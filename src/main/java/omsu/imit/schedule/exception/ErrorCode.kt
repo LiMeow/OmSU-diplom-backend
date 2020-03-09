@@ -9,7 +9,7 @@ enum class ErrorCode {
     CHAIR_NOT_EXISTS("Chair with id '%s' not exists"),
     COURSE_ALREADY_EXISTS("Course with start year '%s' already exists for faculty with id '%s'."),
     COURSE_NOT_EXISTS("Course with id '%s' not exists."),
-    CLASSROOM_ALREADY_BUSY("Classroom with id '%s' already busy for time '%s-%s' on '%s'."),
+    CLASSROOM_ALREADY_BUSY("Classroom with id '%s' already busy for timeBlock with id  '%s' on '%s'."),
     CLASSROOM_ALREADY_EXISTS("Classroom '%s' already exists in building '%s'."),
     CLASSROOM_NOT_EXISTS("Classroom with id '%s' not exists."),
     DATABASE_ERROR("Database error"),

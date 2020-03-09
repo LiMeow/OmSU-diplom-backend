@@ -24,19 +24,19 @@ class Group(@Id
             var formationYear: String,
 
             @Column(name = "dissolution_year")
-            var dissolutionYear: String? = "",
+            var dissolutionYear: String = "",
 
             @OneToMany(
                     mappedBy = "group",
                     fetch = FetchType.LAZY,
                     cascade = [CascadeType.ALL])
-            var schedules: List<Schedule>? = ArrayList()) {
+            var schedules: List<Schedule> = ArrayList()) {
 
     constructor(studyDirection: StudyDirection,
                 course: Course,
                 name: String,
                 formationYear: String,
-                dissolutionYear: String?) :
+                dissolutionYear: String) :
             this(0, studyDirection, course, name, formationYear, dissolutionYear)
 
 }

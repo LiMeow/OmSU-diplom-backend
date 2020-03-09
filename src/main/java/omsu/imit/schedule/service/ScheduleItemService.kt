@@ -4,11 +4,13 @@ import omsu.imit.schedule.dto.request.CreateScheduleItemRequest
 import omsu.imit.schedule.dto.response.ScheduleItemInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
-import omsu.imit.schedule.model.*
+import omsu.imit.schedule.model.Discipline
+import omsu.imit.schedule.model.Group
+import omsu.imit.schedule.model.Schedule
+import omsu.imit.schedule.model.ScheduleItem
 import omsu.imit.schedule.repository.ScheduleItemRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class ScheduleItemService
@@ -22,26 +24,14 @@ constructor(private val classroomService: ClassroomService,
             private val scheduleService: ScheduleService,
             private val scheduleItemRepository: ScheduleItemRepository) : BaseService() {
 
-    fun createScheduleItem(scheduleId: Int, request: CreateScheduleItemRequest): MutableMap<String, MutableMap<String, ScheduleItemInfo>> {
+    fun createScheduleItem(scheduleId: Int, request: CreateScheduleItemRequest): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
         val schedule: Schedule = scheduleService.getScheduleById(scheduleId)
-        val timeBlock: TimeBlock = timeBlockService.getTimeBlockById(request.timeBlockId)
-        val classroom: Classroom = classroomService.getClassroomById(request.classroomId)
         val discipline: Discipline = disciplineService.getDiscipline(request.disciplineId)
-        val lecturer: Lecturer = lecturerService.getLecturer(request.lecturerId)
-        val group: Group = groupService.getGroupById(request.groupId)
+        val groups: List<Group> = groupService.getGroupsByIds(request.groupIds)
 
-        val event = eventService.createEvent(
-                classroom,
-                timeBlock,
-                request.day,
-                request.dateFrom,
-                request.dateTo,
-                request.interval,
-                request.required,
-                lecturer,
-                Collections.singletonList(group))
+        val event = eventService.createEvent(request.event)
 
-        val scheduleItem = ScheduleItem(event, discipline, request.activityType, schedule)
+        val scheduleItem = ScheduleItem(event, discipline, request.activityType, groups, schedule)
         scheduleItemRepository.save(scheduleItem)
 
         return toScheduleItemFullInfo(scheduleItem)
@@ -53,16 +43,24 @@ constructor(private val classroomService: ClassroomService,
                 .orElseThrow { NotFoundException(ErrorCode.SCHEDULE_ITEM_NOT_EXISTS, itemId.toString()) }
     }
 
-    fun getScheduleItemInfo(itemId: Int): ScheduleItemInfo {
-        return toScheduleItemInfo(getScheduleItemById(itemId))
+    fun getScheduleItemInfo(itemId: Int): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
+        return toScheduleItemFullInfo(getScheduleItemById(itemId))
     }
 
-    private fun toScheduleItemFullInfo(scheduleItem: ScheduleItem): MutableMap<String, MutableMap<String, ScheduleItemInfo>> {
-        val scheduleItemInfo: MutableMap<String, MutableMap<String, ScheduleItemInfo>> = mutableMapOf();
-        val day = scheduleItem.event.day.description
-        val time = scheduleItem.event.timeBlock.timeFrom
+    private fun toScheduleItemFullInfo(scheduleItem: ScheduleItem): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
+        val scheduleItemsInfo: MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> = mutableMapOf();
 
-        scheduleItemInfo[day] = mutableMapOf(Pair(time, toScheduleItemInfo(scheduleItem)));
-        return scheduleItemInfo
+        scheduleItem.event.eventPeriods.asSequence().forEach { eventPeriod ->
+            val day = eventPeriod.day.description
+            val time = eventPeriod.timeBlock.timeFrom
+
+            val scheduleItemsByDay = scheduleItemsInfo.getOrDefault(day, mutableMapOf())
+            val scheduleItemsByTime = scheduleItemsByDay.getOrDefault(time, mutableListOf())
+
+            scheduleItemsByTime.add(toScheduleItemInfo(scheduleItem, eventPeriod))
+            scheduleItemsByDay[time] = scheduleItemsByTime
+            scheduleItemsInfo[day] = scheduleItemsByDay
+        }
+        return scheduleItemsInfo
     }
 }

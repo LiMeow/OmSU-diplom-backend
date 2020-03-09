@@ -1,15 +1,19 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.dto.request.CreateEventPeriodRequest
 import omsu.imit.schedule.dto.request.CreateEventRequest
+import omsu.imit.schedule.dto.response.ClassroomShortInfo
 import omsu.imit.schedule.dto.response.EventInfo
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
-import omsu.imit.schedule.model.*
+import omsu.imit.schedule.model.Event
+import omsu.imit.schedule.model.EventPeriod
+import omsu.imit.schedule.model.Interval
+import omsu.imit.schedule.repository.EventPeriodRepository
 import omsu.imit.schedule.repository.EventRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.sql.Date
 
 
 @Service
@@ -17,68 +21,43 @@ class EventService
 @Autowired
 constructor(private val classroomService: ClassroomService,
             private val eventRepository: EventRepository,
-            private val groupService: GroupService,
+            private val eventPeriodRepository: EventPeriodRepository,
             private val lecturerService: LecturerService,
             private val timeBlockService: TimeBlockService) : BaseService() {
 
 
-    fun createEvent(classroomId: Int, request: CreateEventRequest): EventInfo {
-        var groups: List<Group>? = null
-        if (request.groupIds!!.isNotEmpty()) groups = groupService.getGroupsByIds(request.groupIds!!)
-
+    fun createEvent(request: CreateEventRequest): Event {
         val lecturer = lecturerService.getLecturer(request.lecturerId)
-        val timeBlock = timeBlockService.getTimeBlockByTime(request.timeFrom, request.timeTo)
-        val classroom = classroomService.getClassroomById(classroomId)
 
-        val event = createEvent(
-                classroom,
-                timeBlock,
-                request.day,
-                request.dateFrom,
-                request.dateTo,
-                request.interval,
-                request.required,
-                lecturer, groups!!,
-                request.comment)
+        checkEventPeriods(request.periods)
 
-        return toEventInfo(event)
+        val event = Event(
+                lecturer,
+                request.comment,
+                request.required)
+
+        eventRepository.save(event)
+        event.eventPeriods = request.periods.asSequence().map { createEventPeriod(it, event) }.toList();
+
+        return event
     }
 
-    fun createEvent(classroom: Classroom, timeBlock: TimeBlock,
-                    day: Day, dateFrom: Date, dateTo: Date, interval: Interval, isRequired: Boolean,
-                    lecturer: Lecturer, groups: List<Group>?, comment: String? = ""): Event {
+    fun createEventAndGetInfo(request: CreateEventRequest): EventInfo {
+        return toEventInfo(createEvent(request))
+    }
 
+    fun getClassroomsByEvent(eventId: Int): List<ClassroomShortInfo> {
+        val event = getEventById(eventId)
 
-        val events = eventRepository.findByClassroomDayAndTime(classroom.id, day, dateFrom, dateTo, timeBlock.id)
+        return event.eventPeriods
                 .asSequence()
-                .filter {
-                    it.interval == interval || it.interval == Interval.EVERY_WEEK ||
-                            (it.interval != Interval.EVERY_WEEK && interval == Interval.EVERY_WEEK)
-                }
+                .map { toClassroomShortInfo(it.classroom) }
                 .toList()
-
-        if (events.isNotEmpty()) {
-            throw throw CommonValidationException(ErrorCode.CLASSROOM_ALREADY_BUSY,
-                    classroom.id.toString(), timeBlock.timeFrom, timeBlock.timeTo, day.name)
-        }
-
-        val event = Event(classroom, timeBlock, day, dateFrom, dateTo, interval, isRequired, lecturer, groups!!, comment)
-        eventRepository.save(event)
-        return event
     }
 
     fun getEventInfo(eventId: Int): EventInfo {
         return toEventInfo(getEventById(eventId))
     }
-
-//    fun getAuditoryWithOccupationsByDate(auditoryId: Int, date: String): AuditoryInfo {
-//        val auditory = auditoryRepository
-//                .findById(auditoryId)
-//                .orElseThrow { NotFoundException(ErrorCode.AUDITORY_NOT_EXISTS, auditoryId.toString()) }
-//
-//        auditory.auditoryOccupations = auditoryOccupationRepository.findByAuditoryAndDate(auditoryId, date)
-//        return toAuditoryInfo(auditory)
-//    }
 
     fun deleteEvent(eventId: Int) {
         if (!eventRepository.existsById(eventId))
@@ -87,13 +66,50 @@ constructor(private val classroomService: ClassroomService,
         eventRepository.deleteById(eventId)
     }
 
-    fun deleteAllEvents(eventId: Int) {
-        eventRepository.deleteAllByClassroom(eventId)
-    }
-
     private fun getEventById(eventId: Int): Event {
         return eventRepository
                 .findById(eventId)
                 .orElseThrow { NotFoundException(ErrorCode.EVENT_NOT_EXISTS, eventId.toString()) }
+    }
+
+    private fun createEventPeriod(request: CreateEventPeriodRequest, event: Event): EventPeriod {
+        val timeBlock = timeBlockService.getTimeBlockById(request.timeBlockId)
+        val classroom = classroomService.getClassroomById(request.classroomId)
+
+        val eventPeriod = EventPeriod(
+                event,
+                classroom,
+                timeBlock,
+                request.day,
+                request.dateFrom,
+                request.dateTo,
+                request.interval)
+
+        eventPeriodRepository.save(eventPeriod);
+        return eventPeriod
+    }
+
+    private fun checkEventPeriods(eventPeriods: List<CreateEventPeriodRequest>) {
+        eventPeriods.forEach { eventPeriod ->
+
+            val existingPeriods = eventPeriodRepository
+                    .findByClassroomDayAndTime(
+                            eventPeriod.classroomId,
+                            eventPeriod.day,
+                            eventPeriod.dateFrom,
+                            eventPeriod.dateTo,
+                            eventPeriod.timeBlockId)
+                    .asSequence()
+                    .filter {
+                        it.interval == eventPeriod.interval || it.interval == Interval.EVERY_WEEK ||
+                                (it.interval != Interval.EVERY_WEEK && eventPeriod.interval == Interval.EVERY_WEEK)
+                    }
+                    .toList()
+
+            if (existingPeriods.isNotEmpty()) {
+                throw throw CommonValidationException(ErrorCode.CLASSROOM_ALREADY_BUSY,
+                        eventPeriod.classroomId.toString(), eventPeriod.timeBlockId.toString(), eventPeriod.day.name)
+            }
+        }
     }
 }

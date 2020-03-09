@@ -7,4 +7,4 @@ data class CreateGroupRequest(@get: NotNull var studyDirectionId: Int,
                               @get: NotNull var courseId: Int,
                               @get: NotBlank var name: String,
                               @get: NotBlank var formationYear: String,
-                              var dissolutionYear: String? = "")
+                              var dissolutionYear: String = "")

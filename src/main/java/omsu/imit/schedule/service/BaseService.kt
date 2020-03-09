@@ -7,30 +7,6 @@ import org.springframework.stereotype.Service
 @Service
 open class BaseService {
 
-    fun toGroupInfo(group: Group): GroupInfo {
-        return GroupInfo(group.id,
-                group.name,
-                toStudyDirectionInfo(group.studyDirection),
-                group.formationYear,
-                group.dissolutionYear)
-    }
-
-    fun toStudyDirectionInfo(studyDirection: StudyDirection): StudyDirectionInfo {
-        return StudyDirectionInfo(studyDirection.id,
-                studyDirection.faculty.name,
-                studyDirection.code,
-                studyDirection.name,
-                studyDirection.qualification.description,
-                studyDirection.studyForm.form)
-    }
-
-    fun toFacultyInfo(faculty: Faculty): FacultyInfo {
-        return FacultyInfo(
-                faculty.id,
-                toBuildingInfo(faculty.building),
-                faculty.name)
-    }
-
     fun toBuildingInfo(building: Building): BuildingInfo {
         return BuildingInfo(
                 building.id,
@@ -52,47 +28,55 @@ open class BaseService {
         return ClassroomInfo(
                 classroom.id,
                 classroom.number,
-                classroom.tags,
-                toEventInfo(classroom.events))
+                classroom.tags)
     }
 
     fun toClassroomShortInfo(classroom: Classroom): ClassroomShortInfo {
         return ClassroomShortInfo(
                 classroom.id,
-                classroom.number,
-                classroom.tags)
+                classroom.building.number,
+                classroom.number)
+    }
+
+    fun toEventPeriodInfo(period: EventPeriod): EventPeriodInfo {
+        return EventPeriodInfo(
+                period.id,
+                toClassroomShortInfo(period.classroom),
+                period.timeBlock,
+                period.day,
+                period.dateFrom,
+                period.dateTo,
+                period.interval)
     }
 
     fun toEventInfo(event: Event): EventInfo {
         val eventInfo = EventInfo(
                 event.id,
-                event.day,
-                event.timeBlock.timeFrom,
-                event.timeBlock.timeTo,
-                event.dateFrom,
-                event.dateTo,
-                event.interval,
-                event.required,
-                toClassroomShortInfo(event.classroom),
                 event.lecturer.getFullName(),
-                event.comment!!)
-
-
-        if (event.groups!!.isNotEmpty())
-            eventInfo.group = event.groups!!.asSequence().map { toGroupInfo(it) }.toList()
+                event.comment,
+                event.required,
+                event.eventPeriods.asSequence().map { toEventPeriodInfo(it) }.toList())
 
         return eventInfo
     }
 
-    private fun toEventInfo(events: List<Event>?): List<EventInfo> {
-        val response: MutableList<EventInfo> = mutableListOf()
+    fun toFacultyInfo(faculty: Faculty): FacultyInfo {
+        return FacultyInfo(
+                faculty.id,
+                toBuildingInfo(faculty.building),
+                faculty.name)
+    }
 
-        if (events != null && events.isNotEmpty()) {
-            for (event in events) {
-                response.add(toEventInfo(event))
-            }
-        }
-        return response
+    fun toGroupInfo(group: Group): GroupInfo {
+        return GroupInfo(group.id,
+                group.name,
+                toStudyDirectionInfo(group.studyDirection),
+                group.formationYear,
+                group.dissolutionYear)
+    }
+
+    fun toGroupShortInfo(group: Group): GroupShortInfo {
+        return GroupShortInfo(group.id, group.name)
     }
 
     fun toLecturerInfo(lecturer: Lecturer): LecturerInfo {
@@ -102,18 +86,37 @@ open class BaseService {
                 toChairInfo(lecturer.chair))
     }
 
-    fun toScheduleItemInfo(scheduleItem: ScheduleItem): ScheduleItemInfo {
+    fun toLecturerShortInfo(lecturer: Lecturer): LecturerShortInfo {
+        return LecturerShortInfo(
+                lecturer.id,
+                lecturer.user.firstName,
+                lecturer.user.patronymic,
+                lecturer.user.lastName,
+                lecturer.user.email)
+    }
+
+    fun toScheduleItemInfo(scheduleItem: ScheduleItem, eventPeriod: EventPeriod): ScheduleItemInfo {
         return ScheduleItemInfo(
                 scheduleItem.id,
-                scheduleItem.event.dateFrom,
-                scheduleItem.event.dateTo,
-                scheduleItem.event.interval.description,
-                scheduleItem.event.classroom.building.number,
-                scheduleItem.event.classroom.number,
-                scheduleItem.event.lecturer.getFullName(),
-                scheduleItem.event.groups!!.asSequence().map { it.name }.toList(),
+                eventPeriod.dateFrom,
+                eventPeriod.dateTo,
+                eventPeriod.timeBlock,
+                eventPeriod.interval,
+                eventPeriod.classroom.building.number,
+                eventPeriod.classroom.number,
+                toLecturerShortInfo(scheduleItem.event.lecturer),
+                scheduleItem.groups.asSequence().map { toGroupShortInfo(it) }.toList(),
                 scheduleItem.discipline.name,
-                scheduleItem.activityType.description,
-                scheduleItem.event.comment!!)
+                scheduleItem.activityType,
+                scheduleItem.event.comment)
+    }
+
+    fun toStudyDirectionInfo(studyDirection: StudyDirection): StudyDirectionInfo {
+        return StudyDirectionInfo(studyDirection.id,
+                studyDirection.faculty.name,
+                studyDirection.code,
+                studyDirection.name,
+                studyDirection.qualification.description,
+                studyDirection.studyForm.form)
     }
 }
