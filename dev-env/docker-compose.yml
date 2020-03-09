@@ -3,7 +3,7 @@ version: "3.3"
 services:
 
   nginx:
-    container_name: "dimploma_nginx"
+    container_name: "diploma_nginx"
     build:
       context: "."
       dockerfile: "./nginx/Dockerfile"

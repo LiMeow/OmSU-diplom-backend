@@ -1,4 +1,5 @@
-DOCKER_CONTAINER_NAME = diploma_db
+DOCKER_DB_CONTAINER_NAME = diploma_db
+DOCKER_NGING_CONTAINER_NAME = doploma_nginx
 
 DB_PASSWORD = password
 DB_USER = admin
@@ -27,16 +28,15 @@ install_db_and_nginx_docker:
 	cd ./dev-env;sudo docker-compose up -d --build;cd ..
 
 start_db_and_nginx_docker:
-	sudo docker start diploma_db;sudo docker start dimploma_nginx
+	sudo docker start ${DOCKER_DB_CONTAINER_NAME};sudo docker start ${DOCKER_NGINX_CONTAINER_NAME}
 
 stop_db_and_nginx_docker:
-	sudo docker stop diploma_db; sudo docker stop dimploma_nginx
+	sudo docker stop ${DOCKER_DB_CONTAINER_NAME}; sudo docker stop ${DOCKER_NGINX_CONTAINER_NAME}
 
 remove_db_and_nginx_docker:
 	cd ./dev-env;sudo docker-compose down --rmi all;cd ..
 
-restart_db_and_nginx_docker: shutdown_db_and_nginx_docker start_db_and_nginx_docker
+restart_db_and_nginx_docker: stop_db_and_nginx_docker start_db_and_nginx_docker
 
 connect_to_psql_docker:
-	sudo docker exec -it ${DOCKER_CONTAINER_NAME} psql ${DB_NAME} -U ${DB_USER}
-
+	sudo docker exec -it ${DOCKER_DB_CONTAINER_NAME} psql ${DB_NAME} -U ${DB_USER}
