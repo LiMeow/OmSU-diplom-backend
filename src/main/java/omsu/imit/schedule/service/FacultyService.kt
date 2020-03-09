@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service
 class FacultyService
 @Autowired constructor(private val buildingService: BuildingService,
                        private val facultyRepository: FacultyRepository) : BaseService() {
+
     fun createFaculty(request: CreateFacultyRequest): FacultyInfo {
         val building: Building = buildingService.getBuildingById(request.buildingId)
         val faculty = Faculty(building, request.name)
