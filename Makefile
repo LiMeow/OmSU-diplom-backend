@@ -1,5 +1,5 @@
 DOCKER_DB_CONTAINER_NAME = diploma_db
-DOCKER_NGING_CONTAINER_NAME = doploma_nginx
+DOCKER_NGINX_CONTAINER_NAME = diploma_nginx
 
 DB_PASSWORD = password
 DB_USER = admin
