@@ -6,7 +6,6 @@ import omsu.imit.schedule.model.User
 import omsu.imit.schedule.model.UserRole
 import omsu.imit.schedule.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,12 +13,7 @@ class UserService
 @Autowired
 constructor(private val userRepository: UserRepository) {
 
-    fun whoIAm(): User {
-        val email = SecurityContextHolder.getContext().authentication.name
-        return getUserByEmail(email)
-    }
-
-    fun changeUserType(userId: Int, userRole: UserRole): User {
+    fun changeUserRole(userId: Int, userRole: UserRole): User {
         val user = getUserById(userId)
 
         user.userRole = userRole
@@ -38,12 +32,15 @@ constructor(private val userRepository: UserRepository) {
     }
 
     fun deleteAccount(userId: Int) {
+        if (!userRepository.existsById(userId))
+            throw NotFoundException(ErrorCode.USER_WITH_ID_NOT_EXISTS, userId.toString())
+
         userRepository.deleteById(userId)
     }
 
     fun getUserById(id: Int): User {
         return userRepository.findById(id).orElseThrow {
-            NotFoundException(ErrorCode.USER_NOT_EXISTS_BY_ID, id.toString())
+            NotFoundException(ErrorCode.USER_WITH_ID_NOT_EXISTS, id.toString())
         }
     }
 

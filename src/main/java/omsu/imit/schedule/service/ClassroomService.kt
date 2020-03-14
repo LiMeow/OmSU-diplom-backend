@@ -46,11 +46,11 @@ constructor(private val classroomRepository: ClassroomRepository,
         return classroomRepository.findAllByTags(tags).asSequence().map { toClassroomShortInfo(it) }.toList();
     }
 
-    fun getAllClassroomssByBuilding(buildingId: Int): List<Classroom>? {
+    fun getAllClassroomsByBuilding(buildingId: Int): List<Classroom>? {
         return classroomRepository.findAllByBuilding(buildingId, Sort.by("number"))
     }
 
-    fun getAllClassroomssByBuilding(buildingId: Int, page: Int, size: Int): ClassroomsByBuildingInfo {
+    fun getAllClassroomsByBuilding(buildingId: Int, page: Int, size: Int): ClassroomsByBuildingInfo {
         val building: Building = buildingService.getBuildingById(buildingId);
         val pageable: Pageable = PageRequest.of(page, size, Sort.by("number"))
 

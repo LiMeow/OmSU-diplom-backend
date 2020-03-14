@@ -38,7 +38,7 @@ constructor(private val classroomService: ClassroomService,
                                 @RequestParam(required = false, defaultValue = "0") page: Int,
                                 @RequestParam(required = false, defaultValue = Int.MAX_VALUE.toString()) size: Int): ResponseEntity<*> {
 
-        return ResponseEntity.ok().body(classroomService.getAllClassroomssByBuilding(buildingId, page, size))
+        return ResponseEntity.ok().body(classroomService.getAllClassroomsByBuilding(buildingId, page, size))
     }
 
     @PutMapping(value = ["/{buildingId}"])

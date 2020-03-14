@@ -32,11 +32,11 @@ enum class ErrorCode {
     TAG_NOT_EXISTS("Tag with id '%s' not exists."),
     TOKEN_NOT_FOUND("Verification token broken or expired"),
     TOKEN_EXPIRED("Verification token expired"),
-    TIMEBLOCK_NOT_EXISTS("TimeBlock '%s'-'%s' not exists."),
+    TIMEBLOCK_NOT_EXISTS("TimeBlock with id '%s' not exists."),
     TIMEBLOCK_ALREADY_EXISTS("TimeBlock '%s'-'%s' already exists."),
     USER_ALREADY_EXISTS("User with email '%s' already exists."),
     USER_NOT_EXISTS("User with email '%s' not exists."),
-    USER_NOT_EXISTS_BY_ID("User with id '%s' not exists."),
+    USER_WITH_ID_NOT_EXISTS("User with id '%s' not exists."),
     WRONG_PASSWORD("Wrong password."),
     WRONG_URL("Wrong URL");
 

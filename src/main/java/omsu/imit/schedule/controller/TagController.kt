@@ -16,7 +16,7 @@ constructor(private val tagService: TagService) {
 
     @PostMapping
     fun addTag(@Valid @RequestBody request: CreateTagRequest): ResponseEntity<*> {
-        return ResponseEntity.ok().body(tagService.addTag(request))
+        return ResponseEntity.ok().body(tagService.createTag(request))
     }
 
     @GetMapping(value = ["/{tagId}"])

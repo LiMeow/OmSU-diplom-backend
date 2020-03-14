@@ -7,6 +7,7 @@ import omsu.imit.schedule.service.AuthService
 import omsu.imit.schedule.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
@@ -60,8 +61,8 @@ constructor(private val authService: AuthService,
 
     @GetMapping(path = ["/api/whoiam"])
     fun whoIAm(): ResponseEntity<*> {
-
-        return ResponseEntity.ok(userService.whoIAm());
+        val email = SecurityContextHolder.getContext().authentication.name;
+        return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
     @GetMapping(path = ["/api/confirm-account"])
