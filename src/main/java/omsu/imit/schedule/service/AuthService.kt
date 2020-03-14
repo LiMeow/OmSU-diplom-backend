@@ -58,8 +58,8 @@ constructor(
     fun sendVerificationToken(user: User) {
         val confirmationToken = ConfirmationToken(user, calculateTokenExpirationDate())
         confirmationTokenRepository.save(confirmationToken)
-        var subject = "Complete Registration!"
-        var verificationToken = "http://localhost:8080/api/confirm-account?token=" + confirmationToken.token
+        val subject = "Complete Registration!"
+        val verificationToken = "http://localhost:8080/api/confirm-account?token=" + confirmationToken.token
 
         emailSenderService.sendEmail(user, subject, verificationToken)
     }

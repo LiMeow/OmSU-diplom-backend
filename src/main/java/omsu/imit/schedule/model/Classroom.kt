@@ -22,5 +22,26 @@ class Classroom(@Id
                 var tags: List<Tag> = mutableListOf()) {
 
     constructor(building: Building, number: String) : this(0, building, number)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Classroom) return false
+
+        if (id != other.id) return false
+        if (building != other.building) return false
+        if (number != other.number) return false
+        if (tags != other.tags) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + building.hashCode()
+        result = 31 * result + number.hashCode()
+        result = 31 * result + tags.hashCode()
+        return result
+    }
+
 }
 

@@ -22,6 +22,7 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 class TagServiceTests : BaseTests() {
+
     @MockK
     lateinit var tagRepository: TagRepository
 

@@ -13,12 +13,36 @@ open class BaseTests {
         return Chair(getFaculty(), "КАФЕДРА КОМПЬЮТЕРНОЙ МАТЕМАТИКИ И ПРОГРАММИРОВАНИЯ")
     }
 
+    fun getClassroom(): Classroom {
+        return Classroom(getBuilding(), "214")
+    }
+
+    fun getClassroomWithTags(): Classroom {
+        return Classroom(0, getBuilding(), "214", getTags())
+    }
+
     fun getFaculty(): Faculty {
         return Faculty(getBuilding(), "ИНСТИТУТ МАТЕМАТИКИ И ИНФОРМАЦИОННЫХ ТЕХНОЛОГИЙ")
     }
 
+    fun getStudyDirection(): StudyDirection {
+        return StudyDirection(
+                1,
+                getFaculty(),
+                "01.03.02",
+                "Прикладная математика и информатика",
+                Qualification.BACHELOR,
+                StudyForm.FULL_TIME)
+    }
+
     fun getTag(): Tag {
         return Tag("tag")
+    }
+
+    fun getTags(): MutableList<Tag> {
+        val tag1 = Tag(1, "tag1")
+        val tag2 = Tag(2, "tag2")
+        return mutableListOf(tag1, tag2)
     }
 
     fun getTimeBlock(): TimeBlock {

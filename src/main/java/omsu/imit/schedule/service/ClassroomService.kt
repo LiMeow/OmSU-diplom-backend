@@ -5,12 +5,14 @@ import omsu.imit.schedule.dto.request.EditClassroomRequest
 import omsu.imit.schedule.dto.response.ClassroomShortInfo
 import omsu.imit.schedule.dto.response.ClassroomsByBuildingInfo
 import omsu.imit.schedule.dto.response.MetaInfo
+import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Building
 import omsu.imit.schedule.model.Classroom
 import omsu.imit.schedule.repository.ClassroomRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -20,19 +22,23 @@ import kotlin.math.roundToInt
 @Service
 class ClassroomService
 @Autowired
-constructor(private val classroomRepository: ClassroomRepository,
-            private val buildingService: BuildingService,
+constructor(private val buildingService: BuildingService,
+            private val classroomRepository: ClassroomRepository,
             private val tagService: TagService) : BaseService() {
 
     fun createClassroom(request: CreateClassroomRequest): ClassroomShortInfo {
         val building = buildingService.getBuildingById(request.buildingId);
-        if (classroomRepository.findByBuildingAndNumber(request.buildingId, request.number) != null)
-            throw NotFoundException(ErrorCode.CLASSROOM_ALREADY_EXISTS, request.number, request.buildingId.toString())
-
         val classroom = Classroom(building, request.number)
-        if (!request.tags.isNullOrEmpty()) classroom.tags = tagService.getAllTagsByIds(request.tags!!)
 
-        classroomRepository.save(classroom)
+        if (!request.tags.isNullOrEmpty())
+            classroom.tags = tagService.getAllTagsByIds(request.tags!!)
+
+        try {
+            classroomRepository.save(classroom)
+        } catch (e: DataIntegrityViolationException) {
+            throw CommonValidationException(ErrorCode.CLASSROOM_ALREADY_EXISTS, request.number, request.buildingId.toString())
+        }
+
         return toClassroomShortInfo(classroom)
     }
 
@@ -42,12 +48,8 @@ constructor(private val classroomRepository: ClassroomRepository,
                 .orElseThrow { NotFoundException(ErrorCode.CLASSROOM_NOT_EXISTS, classroomId.toString()) }
     }
 
-    fun getClassroomsByTags(tags: List<String>): Any {
+    fun getClassroomsByTags(tags: List<String>): List<ClassroomShortInfo> {
         return classroomRepository.findAllByTags(tags).asSequence().map { toClassroomShortInfo(it) }.toList();
-    }
-
-    fun getAllClassroomsByBuilding(buildingId: Int): List<Classroom>? {
-        return classroomRepository.findAllByBuilding(buildingId, Sort.by("number"))
     }
 
     fun getAllClassroomsByBuilding(buildingId: Int, page: Int, size: Int): ClassroomsByBuildingInfo {
