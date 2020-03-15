@@ -24,7 +24,7 @@ class Group(@Id
             var formationYear: String,
 
             @Column(name = "dissolution_year")
-            var dissolutionYear: String = "",
+            var dissolutionYear: String? = "",
 
             @OneToMany(
                     mappedBy = "group",
