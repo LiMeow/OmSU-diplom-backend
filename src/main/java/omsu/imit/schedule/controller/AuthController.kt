@@ -36,7 +36,7 @@ constructor(private val authService: AuthService,
         return ResponseEntity.ok(userInfo);
     }
 
-    @PostMapping(path = ["/api/signin"])
+    @PostMapping(path = ["/signin"])
     fun signIn(@Valid @RequestBody request: SignInRequest,
                response: HttpServletResponse): ResponseEntity<*> {
 
@@ -50,7 +50,7 @@ constructor(private val authService: AuthService,
         return ResponseEntity.ok(userInfo);
     }
 
-    @DeleteMapping(path = ["/api/signout"])
+    @DeleteMapping(path = ["/signout"])
     fun signOut(response: HttpServletResponse): ResponseEntity<*> {
         val cookie = Cookie("accessToken", "")
         cookie.isHttpOnly = true
@@ -59,13 +59,13 @@ constructor(private val authService: AuthService,
         return ResponseEntity.noContent().build<Any>()
     }
 
-    @GetMapping(path = ["/api/whoiam"])
+    @GetMapping(path = ["/whoiam"])
     fun whoIAm(): ResponseEntity<*> {
         val email = SecurityContextHolder.getContext().authentication.name;
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
-    @GetMapping(path = ["/api/confirm-account"])
+    @GetMapping(path = ["/confirm-account"])
     fun confirmAccount(@RequestParam token: String): ResponseEntity<*> {
         return ResponseEntity.ok(authService.confirmAccount(token));
     }
