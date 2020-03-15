@@ -112,7 +112,8 @@ open class BaseService {
     }
 
     fun toStudyDirectionInfo(studyDirection: StudyDirection): StudyDirectionInfo {
-        return StudyDirectionInfo(studyDirection.id,
+        return StudyDirectionInfo(
+                studyDirection.id,
                 studyDirection.faculty.name,
                 studyDirection.code,
                 studyDirection.name,

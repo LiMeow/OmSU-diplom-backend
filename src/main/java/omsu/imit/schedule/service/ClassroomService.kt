@@ -76,6 +76,9 @@ constructor(private val buildingService: BuildingService,
     }
 
     fun deleteClassroom(classroomId: Int) {
+        if (!classroomRepository.existsById(classroomId))
+            throw NotFoundException(ErrorCode.CLASSROOM_NOT_EXISTS, classroomId.toString())
+
         classroomRepository.deleteById(classroomId)
     }
 
@@ -86,27 +89,28 @@ constructor(private val buildingService: BuildingService,
     private fun createMetaInfo(building: Building, page: Int, size: Int): MetaInfo {
         val baseUrl = "api/buildings/"
         val total = classroomRepository.countClassroomssByBuilding(building).toInt()
+        val lastPageNumber = ((total / size) - 1).toFloat().roundToInt()
 
-        var next: String? = null
-        var prev: String? = null
-        val first = baseUrl + "${building.id}/classrooms?page=0&size=$size"
-        val last = baseUrl + building.id + "?page=" + (total / size).toFloat().roundToInt() + "&size=" + size
+        var nextPage: String? = null
+        var prevPage: String? = null
+        val firstPage = "${baseUrl}${building.id}/classrooms?page=0&size=${size}"
+        val lastPage = "${baseUrl}${building.id}?page=${lastPageNumber}&size=${size}"
 
 
-        if (Math.round((total / size).toFloat()) > page) {
-            next = baseUrl + building.id + "/classrooms?page=" + (page + 1) + "&size=" + size
+        if (lastPageNumber > page) {
+            nextPage = "${baseUrl}${building.id}/classrooms?page=${page + 1}&size=${size}"
         }
         if (page != 0) {
-            prev = baseUrl + building.id + "/classrooms?page=" + (page - 1) + "&size=" + size
+            prevPage = "${baseUrl}${building.id}/classrooms?page=${page - 1}&size=${size}"
         }
 
         return MetaInfo(
                 total,
                 page,
                 size,
-                next,
-                prev,
-                first,
-                last)
+                nextPage,
+                prevPage,
+                firstPage,
+                lastPage)
     }
 }

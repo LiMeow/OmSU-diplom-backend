@@ -1,6 +1,8 @@
 package omsu.imit.schedule
 
 import omsu.imit.schedule.dto.response.BuildingInfo
+import omsu.imit.schedule.dto.response.GroupInfo
+import omsu.imit.schedule.dto.response.StudyDirectionInfo
 import omsu.imit.schedule.model.*
 
 open class BaseTests {
@@ -20,6 +22,15 @@ open class BaseTests {
     fun getClassroomWithTags(): Classroom {
         return Classroom(0, getBuilding(), "214", getTags())
     }
+
+    fun getCourse(): Course {
+        return Course(getFaculty(), "2016", "2020")
+    }
+
+    fun getGroup(): Group {
+        return Group(getStudyDirection(), getCourse(), "МПБ-604-О", "2016", "2020")
+    }
+
 
     fun getFaculty(): Faculty {
         return Faculty(getBuilding(), "ИНСТИТУТ МАТЕМАТИКИ И ИНФОРМАЦИОННЫХ ТЕХНОЛОГИЙ")
@@ -62,5 +73,23 @@ open class BaseTests {
 
     fun getBuildingInfo(building: Building): BuildingInfo {
         return BuildingInfo(building.id, building.number, building.address)
+    }
+
+    fun getGroupInfo(group: Group): GroupInfo {
+        return GroupInfo(group.id,
+                group.name,
+                getStudyDirectionInfo(group.studyDirection),
+                group.formationYear,
+                group.dissolutionYear)
+    }
+
+    fun getStudyDirectionInfo(studyDirection: StudyDirection): StudyDirectionInfo {
+        return StudyDirectionInfo(
+                studyDirection.id,
+                studyDirection.faculty.name,
+                studyDirection.code,
+                studyDirection.name,
+                studyDirection.qualification.description,
+                studyDirection.studyForm.form)
     }
 }

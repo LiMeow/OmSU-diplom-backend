@@ -37,8 +37,9 @@ constructor(private val courseRepository: CourseRepository,
         return toCourseInfo(getCourseById(courseId))
     }
 
-    fun toCourseInfo(course: Course): CourseInfo {
-        return CourseInfo(course.id,
+    private fun toCourseInfo(course: Course): CourseInfo {
+        return CourseInfo(
+                course.id,
                 course.faculty.name,
                 course.startYear,
                 course.finishYear,

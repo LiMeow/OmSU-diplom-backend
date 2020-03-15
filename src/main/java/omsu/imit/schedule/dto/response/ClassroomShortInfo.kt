@@ -14,4 +14,20 @@ class ClassroomShortInfo(var id: Int,
 
         return true
     }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + buildingNumber
+        result = 31 * result + classroomNumber.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "ClassroomShortInfo(" +
+                "id=$id, " +
+                "buildingNumber=$buildingNumber, " +
+                "classroomNumber='$classroomNumber')"
+    }
+
+
 }

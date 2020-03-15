@@ -15,3 +15,5 @@ hs_err_pid*
 .idea/
 target/
 *.iml
+/test.1.log.gz
+/test.2.log.gz
