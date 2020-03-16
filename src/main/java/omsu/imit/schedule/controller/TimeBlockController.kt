@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/timeblocks")
+@RequestMapping("/timeblocks")
 class TimeBlockController @Autowired
 constructor(private val timeBlockService: TimeBlockService) {
 
     @PostMapping
     fun addTimeBlock(@Valid @RequestBody request: CreateTimeBlockRequest): ResponseEntity<*> {
-        return ResponseEntity.ok().body(timeBlockService.addTimeBlock(request))
+        return ResponseEntity.ok().body(timeBlockService.createTimeBlock(request))
     }
 
     @GetMapping(value = ["/{timeBlockId}"])
@@ -28,7 +28,7 @@ constructor(private val timeBlockService: TimeBlockService) {
     @GetMapping
     fun getAllTimeBlocks(): ResponseEntity<*> {
 
-        return ResponseEntity.ok().body(timeBlockService.getTimeBlocks())
+        return ResponseEntity.ok().body(timeBlockService.getAllTimeBlocks())
     }
 
     @PutMapping(value = ["/{timeBlockId}"])

@@ -7,6 +7,7 @@ import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Tag
 import omsu.imit.schedule.repository.TagRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,13 +15,14 @@ open class TagService
 @Autowired
 constructor(private val tagRepository: TagRepository) {
 
-    fun addTag(request: CreateTagRequest): Tag {
-        if (tagRepository.findByTag(request.tag) != null)
-            throw CommonValidationException(ErrorCode.TAG_ALREADY_EXISTS, request.tag)
-
+    fun createTag(request: CreateTagRequest): Tag {
         val tag = Tag(request.tag)
-        tagRepository.save(tag)
 
+        try {
+            tagRepository.save(tag)
+        } catch (e: DataIntegrityViolationException) {
+            throw CommonValidationException(ErrorCode.TAG_ALREADY_EXISTS, request.tag)
+        }
         return tag
     }
 

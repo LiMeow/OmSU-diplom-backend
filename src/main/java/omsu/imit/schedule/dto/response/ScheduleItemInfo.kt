@@ -1,32 +1,20 @@
 package omsu.imit.schedule.dto.response
 
+import omsu.imit.schedule.model.ActivityType
+import omsu.imit.schedule.model.Interval
+import omsu.imit.schedule.model.TimeBlock
 import java.util.*
 
 class ScheduleItemInfo(
         var id: Int,
         var dateFrom: Date,
         var dateTo: Date,
-        var interval: String,
+        var timeBlock: TimeBlock,
+        var interval: Interval,
         var buildingNumber: Int,
-        var classroom: String,
-        var lecturer: String,
-        var groups: List<String>,
+        var classroomNumber: String,
+        var lecturer: LecturerShortInfo,
+        var groups: List<GroupShortInfo>,
         var discipline: String,
-        var activity: String,
-        var comment: String) {
-
-    override fun toString(): String {
-        return "ScheduleItemInfo(" +
-                "id=$id, " +
-                "dateFrom=$dateFrom, " +
-                "dateTo=$dateTo, " +
-                "interval='$interval', " +
-                "buildingNumber=$buildingNumber, " +
-                "classroom='$classroom', " +
-                "lecturer='$lecturer', " +
-                "groups=$groups, " +
-                "discipline='$discipline', " +
-                "activity='$activity', " +
-                "comment='$comment')"
-    }
-}
+        var activity: ActivityType,
+        var comment: String)

@@ -58,18 +58,6 @@ constructor(
                 .map { toLecturerShortInfo(it) }
                 .toList();
     }
-    /*fun editLecturer(lectureId: Int, request: EditLecturerRequest): LecturerInfo {
-        val lecturer = userRepository.findById(lectureId).orElse(null)
-                ?: throw ScheduleGeneratorException(ErrorCode.USER_NOT_EXISTS, lectureId.toString())
-
-        if (!request.firstName.isNullOrEmpty()) lecturer.firstName = request.firstName!!
-        if (!request.patronymic.isNullOrEmpty()) lecturer.patronymic = request.patronymic!!
-        if (!request.lastName.isNullOrEmpty()) lecturer.lastName = request.lastName!!
-        else throw ScheduleGeneratorException(ErrorCode.EMPTY_REQUEST_BODY)
-
-        userRepository.save(lecturer)
-        return createLecturerInfo(lecturer)
-    }*/
 
     fun deleteLecturer(lectureId: Int) {
         if (!lecturerRepository.existsById(lectureId))
@@ -78,17 +66,7 @@ constructor(
         lecturerRepository.deleteById(lectureId)
     }
 
-
     fun getLecturerInfo(lectureId: Int): LecturerInfo {
         return toLecturerInfo(getLecturer(lectureId))
-    }
-
-    fun toLecturerShortInfo(lecturer: Lecturer): LecturerShortInfo {
-        return LecturerShortInfo(
-                lecturer.id,
-                lecturer.user.firstName,
-                lecturer.user.patronymic,
-                lecturer.user.lastName,
-                lecturer.user.email)
     }
 }

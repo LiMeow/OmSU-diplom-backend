@@ -19,14 +19,29 @@ class Classroom(@Id
                 @JoinTable(name = "classroom_tag",
                         joinColumns = [JoinColumn(name = "classroom_id", referencedColumnName = "id")],
                         inverseJoinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")])
-                var tags: List<Tag>,
+                var tags: List<Tag> = mutableListOf()) {
 
-                @OneToMany(fetch = FetchType.LAZY, mappedBy = "classroom")
-                var events: List<Event>?) {
+    constructor(building: Building, number: String) : this(0, building, number)
 
-    constructor(id: Int, building: Building, number: String) : this(id, building, number, mutableListOf(), mutableListOf())
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Classroom) return false
 
-    constructor(building: Building, number: String) : this(0, building, number, mutableListOf(), mutableListOf())
+        if (id != other.id) return false
+        if (building != other.building) return false
+        if (number != other.number) return false
+        if (tags != other.tags) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + building.hashCode()
+        result = 31 * result + number.hashCode()
+        result = 31 * result + tags.hashCode()
+        return result
+    }
 
 }
 

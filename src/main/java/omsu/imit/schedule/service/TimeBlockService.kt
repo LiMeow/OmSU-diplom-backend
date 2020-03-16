@@ -2,11 +2,13 @@ package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.CreateTimeBlockRequest
 import omsu.imit.schedule.dto.request.EditTimeBlockRequest
+import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.TimeBlock
 import omsu.imit.schedule.repository.TimeBlockRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,11 +16,14 @@ class TimeBlockService
 @Autowired
 constructor(private val timeBlockRepository: TimeBlockRepository) {
 
-    fun addTimeBlock(request: CreateTimeBlockRequest): TimeBlock {
+    fun createTimeBlock(request: CreateTimeBlockRequest): TimeBlock {
 
         val timeBlock = TimeBlock(request.timeFrom, request.timeTo)
-        timeBlockRepository.save(timeBlock)
-
+        try {
+            timeBlockRepository.save(timeBlock)
+        } catch (e: DataIntegrityViolationException) {
+            throw CommonValidationException(ErrorCode.TIMEBLOCK_ALREADY_EXISTS, request.timeFrom, request.timeTo)
+        }
         return timeBlock
     }
 
@@ -28,12 +33,7 @@ constructor(private val timeBlockRepository: TimeBlockRepository) {
                 .orElseThrow { NotFoundException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeBlockId.toString()) }
     }
 
-    fun getTimeBlockByTime(timeFrom: String, timeTo: String): TimeBlock {
-        return timeBlockRepository.findByTime(timeFrom, timeTo)
-                ?: throw NotFoundException(ErrorCode.TIMEBLOCK_NOT_EXISTS, timeFrom, timeTo)
-    }
-
-    fun getTimeBlocks(): MutableList<TimeBlock> {
+    fun getAllTimeBlocks(): MutableList<TimeBlock> {
         return timeBlockRepository.findAll()
     }
 

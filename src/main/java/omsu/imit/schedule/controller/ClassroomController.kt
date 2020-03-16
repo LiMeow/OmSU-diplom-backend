@@ -7,11 +7,12 @@ import omsu.imit.schedule.service.ClassroomService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.sql.Date
 
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/classrooms")
+@RequestMapping("/classrooms")
 class ClassroomController
 @Autowired
 constructor(private val classroomService: ClassroomService) {
@@ -27,7 +28,14 @@ constructor(private val classroomService: ClassroomService) {
         return ResponseEntity.ok().body(classroomService.getClassroomInfo(classroomId))
     }
 
-    @GetMapping()
+    @GetMapping(value = ["/{classroomId}/events"])
+    fun getClassroomWithEventsByDate(@PathVariable classroomId: Int,
+                                     @RequestParam date: Date): ResponseEntity<*> {
+
+        return ResponseEntity.ok().body(classroomService.getClassroomWithEventsByDate(classroomId, date))
+    }
+
+    @GetMapping
     fun getClassroomsByTags(@RequestParam tags: List<String>): ResponseEntity<*> {
         return ResponseEntity.ok().body(classroomService.getClassroomsByTags(tags))
     }

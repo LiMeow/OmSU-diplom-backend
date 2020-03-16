@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/chairs")
+@RequestMapping("/chairs")
 class ChairController @Autowired
 constructor(private val chairService: ChairService,
             private val lecturerService: LecturerService) {

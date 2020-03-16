@@ -90,10 +90,18 @@ databaseChangeLog:
   - changeSet:
       id: 12
       author: lsmirnova
+      comment: create table 'course'
+      sqlFile:
+        encoding: UTF-8
+        path: migrations/012-create-table-course.sql
+        relativeToChangelogFile: true
+  - changeSet:
+      id: 13
+      author: lsmirnova
       comment: create table 'group'
       sqlFile:
         encoding: UTF-8
-        path: migrations/012-create-table-group.sql
+        path: migrations/013-create-table-group.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 14
@@ -130,10 +138,10 @@ databaseChangeLog:
   - changeSet:
       id: 19
       author: lsmirnova
-      comment: create table 'event group'
+      comment: create table 'schedule_item-group'
       sqlFile:
         encoding: UTF-8
-        path: migrations/019-create-table-event-group.sql
+        path: migrations/019-create-table-schedule-item-group.sql
         relativeToChangelogFile: true
   - changeSet:
       id: 20

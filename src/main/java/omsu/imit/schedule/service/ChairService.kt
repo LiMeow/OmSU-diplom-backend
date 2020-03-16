@@ -15,7 +15,7 @@ class ChairService
 constructor(private val chairRepository: ChairRepository,
             private val facultyService: FacultyService) : BaseService() {
 
-    fun createChair(request: CreateChairRequest): Any {
+    fun createChair(request: CreateChairRequest): ChairInfo {
         val faculty = facultyService.getFacultyById(request.facultyId)
         val chair = Chair(faculty, request.name)
 

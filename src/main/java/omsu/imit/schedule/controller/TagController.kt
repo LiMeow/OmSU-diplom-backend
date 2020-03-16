@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/classrooms/tags")
+@RequestMapping("/classrooms/tags")
 class TagController
 @Autowired
 constructor(private val tagService: TagService) {
 
     @PostMapping
     fun addTag(@Valid @RequestBody request: CreateTagRequest): ResponseEntity<*> {
-        return ResponseEntity.ok().body(tagService.addTag(request))
+        return ResponseEntity.ok().body(tagService.createTag(request))
     }
 
     @GetMapping(value = ["/{tagId}"])

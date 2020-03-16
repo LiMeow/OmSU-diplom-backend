@@ -1,5 +1,11 @@
-package omsu.imit.schedule.servicetests
+package omsu.imit.schedule
 
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import io.mockk.verify
 import omsu.imit.schedule.dto.request.DisciplineRequest
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.NotFoundException
@@ -10,27 +16,21 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
-import org.mockito.MockitoAnnotations
-import org.mockito.junit.MockitoJUnitRunner
+import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockKExtension::class)
 class DisciplineServiceTests {
 
-    @Mock
+    @MockK
     lateinit var disciplineRepository: DisciplineRepository
 
     private lateinit var disciplineService: DisciplineService
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        this.disciplineService = DisciplineService(
-                this.disciplineRepository)
+        MockKAnnotations.init(this)
+        this.disciplineService = DisciplineService(this.disciplineRepository)
     }
 
     @Test
@@ -38,13 +38,13 @@ class DisciplineServiceTests {
         val request = DisciplineRequest("discipline")
         val discipline = Discipline(0, request.name)
 
-        `when`(disciplineRepository.findByDisciplineName(discipline.name)).thenReturn(null)
-        `when`(disciplineRepository.save(discipline)).thenReturn(discipline)
+        every { disciplineRepository.findByDisciplineName(discipline.name) } returns (null)
+        every { disciplineRepository.save(discipline) } returns discipline
 
         assertEquals(discipline, disciplineService.createDiscipline(request))
 
-        verify(disciplineRepository).findByDisciplineName(discipline.name)
-        verify(disciplineRepository).save(discipline)
+        verify { disciplineRepository.findByDisciplineName(discipline.name) }
+        verify { disciplineRepository.save(discipline) }
     }
 
     @Test
@@ -52,28 +52,29 @@ class DisciplineServiceTests {
         val request = DisciplineRequest("discipline")
         val discipline = Discipline(1, request.name)
 
-        `when`(disciplineRepository.findByDisciplineName(discipline.name)).thenReturn(discipline)
+        every { disciplineRepository.findByDisciplineName(discipline.name) } returns discipline
 
         assertThrows(CommonValidationException::class.java) { disciplineService.createDiscipline(request) }
-        verify(disciplineRepository).findByDisciplineName(discipline.name)
+        verify { disciplineRepository.findByDisciplineName(discipline.name) }
     }
 
     @Test
     fun testGetDisciplineById() {
         val discipline = Discipline(1, "discipline")
 
-        `when`(disciplineRepository.findById(discipline.id)).thenReturn(Optional.of(discipline))
+        every { disciplineRepository.findById(discipline.id) } returns Optional.of(discipline)
+
         assertEquals(discipline, disciplineService.getDiscipline(discipline.id))
-        verify(disciplineRepository).findById(discipline.id)
+        verify { disciplineRepository.findById(discipline.id) }
     }
 
     @Test
     fun testGetNonExistingDisciplineById() {
 
-        `when`(disciplineRepository.findById(1)).thenReturn(Optional.empty())
+        every { disciplineRepository.findById(1) } returns Optional.empty()
 
         assertThrows(NotFoundException::class.java) { disciplineService.getDiscipline(1) }
-        verify(disciplineRepository).findById(1)
+        verify { disciplineRepository.findById(1) }
     }
 
     @Test
@@ -83,9 +84,10 @@ class DisciplineServiceTests {
         val discipline3 = Discipline(3, "discipline3")
         val response = listOf(discipline1, discipline2, discipline3)
 
-        `when`(disciplineRepository.findAll()).thenReturn(response)
+        every { disciplineRepository.findAll() } returns response
+
         assertEquals(response, disciplineService.getAllDisciplines())
-        verify(disciplineRepository).findAll()
+        verify { disciplineRepository.findAll() }
     }
 
     @Test
@@ -94,43 +96,45 @@ class DisciplineServiceTests {
         val discipline = Discipline(1, "discipline")
         val updatedDiscipline = Discipline(1, "updatedDiscipline")
 
-        `when`(disciplineRepository.findById(discipline.id)).thenReturn(Optional.of(discipline))
-        `when`(disciplineRepository.save(updatedDiscipline)).thenReturn(updatedDiscipline)
+        every { disciplineRepository.findById(discipline.id) } returns Optional.of(discipline)
+        every { disciplineRepository.save(updatedDiscipline) } returns updatedDiscipline
 
         assertEquals(discipline, disciplineService.editDiscipline(discipline.id, request))
 
-        verify(disciplineRepository).findById(discipline.id)
-        verify(disciplineRepository).save(updatedDiscipline)
+        verify { disciplineRepository.findById(discipline.id) }
+        verify { disciplineRepository.save(updatedDiscipline) }
     }
 
     @Test
     fun testEditNonExistingDiscipline() {
         val request = DisciplineRequest("updatedDiscipline")
 
-        `when`(disciplineRepository.findById(1)).thenReturn(Optional.empty())
+        every { disciplineRepository.findById(1) } returns Optional.empty()
 
         assertThrows(NotFoundException::class.java) { disciplineService.editDiscipline(1, request) }
-        verify(disciplineRepository).findById(1)
+        verify { disciplineRepository.findById(1) }
     }
 
     @Test
     fun testDeleteDiscipline() {
         val discipline = Discipline(1, "discipline")
 
-        `when`(disciplineRepository.existsById(discipline.id)).thenReturn(true)
+        every { disciplineRepository.existsById(discipline.id) } returns true
+        every { disciplineRepository.deleteById(discipline.id) } returns mockk()
+
         disciplineService.deleteDiscipline(discipline.id)
 
-        verify(disciplineRepository).existsById(discipline.id)
-        verify(disciplineRepository).deleteById(discipline.id)
+        verify { disciplineRepository.existsById(discipline.id) }
+        verify { disciplineRepository.deleteById(discipline.id) }
     }
 
     @Test
     fun testDeleteNonExistingDiscipline() {
 
-        `when`(disciplineRepository.existsById(1)).thenReturn(false)
+        every { disciplineRepository.existsById(1) } returns false
 
         assertThrows(NotFoundException::class.java) { disciplineService.deleteDiscipline(1) }
-        verify(disciplineRepository).existsById(1)
+        verify { disciplineRepository.existsById(1) }
     }
 
 }

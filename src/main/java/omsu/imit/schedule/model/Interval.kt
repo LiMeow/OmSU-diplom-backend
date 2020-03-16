@@ -1,15 +1,9 @@
 package omsu.imit.schedule.model
 
 enum class Interval {
-    ONLY_EVEN_WEEKS("Только чётные недели"),
-    ONLY_ODD_WEEKS("Только нечётные недели"),
-    EVERY_WEEK("Каждуюю неделю");
+    EACH_EVEN_WEEK,
+    EACH_ODD_WEEK,
+    EVERY_WEEK,
+    NONE;
 
-    var description = ""
-
-    constructor() {}
-
-    constructor(description: String) {
-        this.description = description
-    }
 }

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 class UserController
 @Autowired
 constructor(private val userService: UserService) {
@@ -16,7 +16,7 @@ constructor(private val userService: UserService) {
     @PutMapping(value = ["/{userId}/change-role"])
     fun changeUserRole(@PathVariable userId: Int,
                        @RequestParam userRole: UserRole): ResponseEntity<*> {
-        return ResponseEntity.ok().body(userService.changeUserType(userId, userRole))
+        return ResponseEntity.ok().body(userService.changeUserRole(userId, userRole))
     }
 
     @PutMapping(value = ["/{userId}/disable"])
@@ -24,7 +24,7 @@ constructor(private val userService: UserService) {
         return ResponseEntity.ok().body(userService.disableAccount(userId))
     }
 
-    @DeleteMapping(value = ["/userId"])
+    @DeleteMapping(value = ["/{userId}"])
     fun deleteAccount(@PathVariable userId: Int): StatusResponse {
         userService.deleteAccount(userId)
         return StatusResponse.OK

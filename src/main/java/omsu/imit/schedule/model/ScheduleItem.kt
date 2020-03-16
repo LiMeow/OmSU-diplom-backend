@@ -20,6 +20,12 @@ class ScheduleItem(@Id
                    @Enumerated(EnumType.STRING)
                    var activityType: ActivityType,
 
+                   @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+                   @JoinTable(name = "schedule_item_group",
+                           joinColumns = [JoinColumn(name = "schedule_item_id", referencedColumnName = "id")],
+                           inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")])
+                   var groups: List<Group>,
+
                    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
                    @JoinColumn(name = "schedule_id")
                    var schedule: Schedule) {
@@ -27,6 +33,7 @@ class ScheduleItem(@Id
     constructor(event: Event,
                 discipline: Discipline,
                 activityType: ActivityType,
+                groups: List<Group>,
                 schedule: Schedule)
-            : this(0, event, discipline, activityType, schedule)
+            : this(0, event, discipline, activityType, groups, schedule)
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/schedules")
+@RequestMapping("/schedules")
 class ScheduleItemController
 @Autowired
 constructor(private val scheduleItemService: ScheduleItemService) {
@@ -19,10 +19,10 @@ constructor(private val scheduleItemService: ScheduleItemService) {
         return ResponseEntity.ok().body(scheduleItemService.createScheduleItem(scheduleId, request))
     }
 
-//    @GetMapping(value = ["/items/{itemId}"])
-//    fun getScheduleItem(@PathVariable itemId: Int): ResponseEntity<*> {
-//        return ResponseEntity.ok().body(scheduleItemService.getScheduleItemInfo(itemId))
-//    }
+    @GetMapping(value = ["/items/{itemId}"])
+    fun getScheduleItem(@PathVariable itemId: Int): ResponseEntity<*> {
+        return ResponseEntity.ok().body(scheduleItemService.getScheduleItemInfo(itemId))
+    }
 
 //    @GetMapping(value = ["/lecturers/{lecturerId}"])
 //    fun getScheduleByLecturer(@PathVariable lecturerId: Int): ResponseEntity<*> {

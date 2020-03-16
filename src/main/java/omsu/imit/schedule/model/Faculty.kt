@@ -17,9 +17,9 @@ class Faculty(
         var name: String,
 
         @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY)
-        var chairs: List<Chair>) {
+        var chairs: List<Chair> = ArrayList()) {
 
-    constructor(building: Building, name: String) : this(0, building, name, ArrayList<Chair>())
+    constructor(building: Building, name: String) : this(0, building, name)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

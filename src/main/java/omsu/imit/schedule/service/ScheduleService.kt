@@ -63,16 +63,18 @@ constructor(
     private fun toScheduleItemsInfo(scheduleItems: List<ScheduleItem>): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
         val scheduleItemsInfo: MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> = mutableMapOf();
 
-        scheduleItems.asSequence().forEach {
-            val day = it.event.day.description
-            val time = it.event.timeBlock.timeFrom
+        scheduleItems.asSequence().forEach { scheduleItem ->
+            scheduleItem.event.eventPeriods.asSequence().forEach { eventPeriod ->
+                val day = eventPeriod.day.description
+                val time = eventPeriod.timeBlock.timeFrom
 
-            val scheduleItemsByDay = scheduleItemsInfo.getOrDefault(day, mutableMapOf())
-            val scheduleItemsByTime = scheduleItemsByDay.getOrDefault(time, mutableListOf())
+                val scheduleItemsByDay = scheduleItemsInfo.getOrDefault(day, mutableMapOf())
+                val scheduleItemsByTime = scheduleItemsByDay.getOrDefault(time, mutableListOf())
 
-            scheduleItemsByTime.add(toScheduleItemInfo(it))
-            scheduleItemsByDay[time] = scheduleItemsByTime
-            scheduleItemsInfo[day] = scheduleItemsByDay
+                scheduleItemsByTime.add(toScheduleItemInfo(scheduleItem, eventPeriod))
+                scheduleItemsByDay[time] = scheduleItemsByTime
+                scheduleItemsInfo[day] = scheduleItemsByDay
+            }
         }
 
         return scheduleItemsInfo

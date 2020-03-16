@@ -7,6 +7,7 @@ import omsu.imit.schedule.service.AuthService
 import omsu.imit.schedule.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
@@ -19,7 +20,7 @@ constructor(private val authService: AuthService,
             private val userService: UserService,
             private val jwtTokenService: JwtTokenService) {
 
-    @PostMapping(path = ["/api/signup"])
+    @PostMapping(path = ["/signup"])
     fun signUp(@Valid @RequestBody request: SignUpRequest,
                response: HttpServletResponse): ResponseEntity<*> {
 
@@ -35,7 +36,7 @@ constructor(private val authService: AuthService,
         return ResponseEntity.ok(userInfo);
     }
 
-    @PostMapping(path = ["/api/signin"])
+    @PostMapping(path = ["/signin"])
     fun signIn(@Valid @RequestBody request: SignInRequest,
                response: HttpServletResponse): ResponseEntity<*> {
 
@@ -49,7 +50,7 @@ constructor(private val authService: AuthService,
         return ResponseEntity.ok(userInfo);
     }
 
-    @DeleteMapping(path = ["/api/signout"])
+    @DeleteMapping(path = ["/signout"])
     fun signOut(response: HttpServletResponse): ResponseEntity<*> {
         val cookie = Cookie("accessToken", "")
         cookie.isHttpOnly = true
@@ -58,13 +59,13 @@ constructor(private val authService: AuthService,
         return ResponseEntity.noContent().build<Any>()
     }
 
-    @GetMapping(path = ["/api/whoiam"])
+    @GetMapping(path = ["/whoiam"])
     fun whoIAm(): ResponseEntity<*> {
-
-        return ResponseEntity.ok(userService.whoIAm());
+        val email = SecurityContextHolder.getContext().authentication.name;
+        return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
-    @GetMapping(path = ["/api/confirm-account"])
+    @GetMapping(path = ["/confirm-account"])
     fun confirmAccount(@RequestParam token: String): ResponseEntity<*> {
         return ResponseEntity.ok(authService.confirmAccount(token));
     }

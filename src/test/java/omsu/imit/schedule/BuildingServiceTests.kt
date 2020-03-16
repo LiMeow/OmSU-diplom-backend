@@ -1,5 +1,11 @@
 package omsu.imit.schedule
 
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import io.mockk.verify
 import omsu.imit.schedule.dto.request.CreateBuildingRequest
 import omsu.imit.schedule.dto.request.EditBuildingRequest
 import omsu.imit.schedule.exception.CommonValidationException
@@ -11,128 +17,152 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
-import org.mockito.MockitoAnnotations
-import org.mockito.junit.MockitoJUnitRunner
+import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
 
 
-@RunWith(MockitoJUnitRunner::class)
-class BuildingServiceTests {
-    @Mock
+@ExtendWith(MockKExtension::class)
+class BuildingServiceTests : BaseTests() {
+    @MockK
     lateinit var buildingRepository: BuildingRepository
 
     private lateinit var buildingService: BuildingService
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        this.buildingService = BuildingService(
-                this.buildingRepository)
+        MockKAnnotations.init(this)
+        this.buildingService = BuildingService(this.buildingRepository)
     }
 
     @Test
-    fun testAddBuilding() {
-        val request = CreateBuildingRequest(1, " пр. Мира, 55-а")
-        val building = Building(0, request.number, request.address)
-        val response = Building(building.id, building.number, building.address)
+    fun testCreateBuilding() {
+        val building = getBuilding()
+        val request = CreateBuildingRequest(building.number, building.address)
+        val response = getBuildingInfo(building)
 
-        `when`(buildingRepository.findByNumberAndAddress(request.number, request.address)).thenReturn(null)
-        `when`(buildingRepository.save(building)).thenReturn(building)
+        every { buildingRepository.findByNumberAndAddress(request.number, request.address) } returns (null)
+        every { buildingRepository.save(building) } returns building
 
         assertEquals(response, buildingService.createBuilding(request))
 
-        verify(buildingRepository).findByNumberAndAddress(request.number, request.address)
-        verify(buildingRepository).save(building)
+        verify { buildingRepository.findByNumberAndAddress(request.number, request.address) }
+        verify { buildingRepository.save(building) }
     }
 
     @Test
-    fun testAddAlreadyExistingBuilding() {
-        val request = CreateBuildingRequest(1, " пр. Мира, 55-а")
-        val building = Building(0, request.number, request.address)
+    fun testCreateAlreadyExistingBuilding() {
+        val building = getBuilding()
+        val request = CreateBuildingRequest(building.number, building.address)
 
-        `when`(buildingRepository.findByNumberAndAddress(request.number, request.address)).thenReturn(building)
+        every { buildingRepository.findByNumberAndAddress(request.number, request.address) } returns building
 
         assertThrows(CommonValidationException::class.java) { buildingService.createBuilding(request) }
-        verify(buildingRepository).findByNumberAndAddress(request.number, request.address)
+
+        verify { buildingRepository.findByNumberAndAddress(request.number, request.address) }
     }
 
     @Test
     fun testGetBuildingById() {
-        val building = Building(1, 1, "пр. Мира, 55-а")
-        val response = Building(building.id, building.number, building.address)
+        val building = getBuilding()
 
-        `when`(buildingRepository.findById(building.id)).thenReturn(Optional.of(building))
-        assertEquals(response, buildingService.getBuildingById(1))
+        every { buildingRepository.findById(building.id) } returns Optional.of(building)
+        assertEquals(building, buildingService.getBuildingById(building.id))
 
-        verify(buildingRepository).findById(1)
+        verify { buildingRepository.findById(building.id) }
     }
 
     @Test
     fun testGetNonExistingBuildingById() {
-
-        `when`(buildingRepository.findById(1)).thenReturn(Optional.empty())
+        every { buildingRepository.findById(1) } returns Optional.empty()
 
         assertThrows(NotFoundException::class.java) { buildingService.getBuildingById(1) }
-        verify(buildingRepository).findById(1)
+        verify { buildingRepository.findById(1) }
+    }
+
+    @Test
+    fun testGetAllBuildings() {
+        val building1 = Building(1, 1, "пр. Мира, 55-а")
+        val building2 = Building(2, 2, "пр. Мира, 55")
+        val buildings = listOf(building1, building2)
+        val response = buildings.asSequence().map { getBuildingInfo(it) }.toList()
+
+        every { buildingRepository.findAll() } returns buildings
+        assertEquals(response, buildingService.getAllBuildings())
+
+        verify { buildingRepository.findAll() }
     }
 
     @Test
     fun testEditBuilding() {
-        val request = EditBuildingRequest(2, "пр. Мира, 55")
-        val building = Building(1, 1, "пр. Мира, 55-а")
-        val updatedBuilding = Building(1, request.number!!, request.address!!)
-        val response = Building(building.id, updatedBuilding.number, updatedBuilding.address)
+        val building = getBuilding()
+        val updatedBuilding = Building(building.id, 2, "пр. Мира, 55")
 
-        `when`(buildingRepository.findById(building.id)).thenReturn(Optional.of(building))
-        `when`(buildingRepository.save(updatedBuilding)).thenReturn(updatedBuilding)
+        val request = EditBuildingRequest(updatedBuilding.number, updatedBuilding.address)
+        val response = getBuildingInfo(updatedBuilding)
+
+
+        every { buildingRepository.findById(building.id) } returns Optional.of(building)
+        every { buildingRepository.save(updatedBuilding) } returns updatedBuilding
 
         assertEquals(response, buildingService.editBuilding(building.id, request))
 
-        verify(buildingRepository).findById(building.id)
-        verify(buildingRepository).save(updatedBuilding)
+        verify { buildingRepository.findById(building.id) }
+        verify { buildingRepository.save(updatedBuilding) }
     }
 
     @Test
     fun testEditNonExistingBuilding() {
+        val buildingId = 1;
         val request = EditBuildingRequest(2, "пр. Мира, 55")
 
-        `when`(buildingRepository.findById(2)).thenReturn(Optional.empty())
+        every { buildingRepository.findById(buildingId) } returns Optional.empty()
 
-        assertThrows(NotFoundException::class.java) { buildingService.editBuilding(2, request) }
-        verify(buildingRepository).findById(2)
+        assertThrows(NotFoundException::class.java) { buildingService.editBuilding(buildingId, request) }
+        verify { buildingRepository.findById(1) }
     }
 
     @Test
     fun testEditBuildingByEmptyRequest() {
+        val building = getBuilding()
         val request = EditBuildingRequest()
-        val building = Building(1, 1, "пр. Мира, 55-а")
+        val response = getBuildingInfo(building)
 
-        `when`(buildingRepository.findById(building.id)).thenReturn(Optional.of(building))
+        every { buildingRepository.findById(building.id) } returns Optional.of(building)
+        every { buildingRepository.save(building) } returns building
 
-        assertEquals(building, buildingService.editBuilding(building.id, request))
-        verify(buildingRepository).findById(building.id)
+        assertEquals(response, buildingService.editBuilding(building.id, request))
+        verify { buildingRepository.findById(building.id) }
     }
 
     @Test
     fun testDeleteBuilding() {
+        val id = 1;
 
-        `when`(buildingRepository.existsById(1)).thenReturn(true)
-        buildingService.deleteBuilding(1)
+        every { buildingRepository.existsById(id) } returns true
+        every { buildingRepository.deleteById(id) } returns mockk()
 
-        verify(buildingRepository).existsById(1)
-        verify(buildingRepository).deleteById(1)
+        buildingService.deleteBuilding(id)
+
+        verify { buildingRepository.existsById(id) }
+        verify { buildingRepository.deleteById(id) }
     }
 
     @Test
     fun testDeleteNonExistingBuilding() {
-
-        `when`(buildingRepository.existsById(1)).thenReturn(false)
+        every { buildingRepository.existsById(1) } returns false
 
         assertThrows(NotFoundException::class.java) { buildingService.deleteBuilding(1) }
-        verify(buildingRepository).existsById(1)
+        verify { buildingRepository.existsById(1) }
+    }
+
+    @Test
+    fun testGetBuildingInfo() {
+        val building = getBuilding()
+        val response = getBuildingInfo(building)
+
+        every { buildingRepository.findById(building.id) } returns Optional.of(building)
+        assertEquals(response, buildingService.getBuildingInfo(building.id))
+
+        verify { buildingRepository.findById(building.id) }
     }
 }
