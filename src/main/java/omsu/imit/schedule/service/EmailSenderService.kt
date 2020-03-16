@@ -16,9 +16,9 @@ constructor(private val javaMailSender: JavaMailSender,
 
     @Async
     open fun sendEmail(user: User, subject: String, verifyToken: String) {
-        var mimeMessage = javaMailSender.createMimeMessage()
-        var helper = MimeMessageHelper(mimeMessage, false, "UTF-8")
-        var mailContent = mailContentBuilder.build(MailContentDto(user, verifyToken))
+        val mimeMessage = javaMailSender.createMimeMessage()
+        val helper = MimeMessageHelper(mimeMessage, false, "UTF-8")
+        val mailContent = mailContentBuilder.build(MailContentDto(user, verifyToken))
 
         helper.setTo(user.email)
         helper.setSubject(subject)

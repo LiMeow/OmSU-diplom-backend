@@ -38,7 +38,7 @@ open class BaseService {
                 classroom.number)
     }
 
-    fun toEventPeriodInfo(period: EventPeriod): EventPeriodInfo {
+    private fun toEventPeriodInfo(period: EventPeriod): EventPeriodInfo {
         return EventPeriodInfo(
                 period.id,
                 toClassroomShortInfo(period.classroom),
@@ -49,15 +49,33 @@ open class BaseService {
                 period.interval)
     }
 
+    fun toEventPeriodShortInfo(period: EventPeriod): EventPeriodInfo {
+        return EventPeriodInfo(
+                period.id,
+                null,
+                period.timeBlock,
+                period.day,
+                period.dateFrom,
+                period.dateTo,
+                period.interval)
+    }
+
     fun toEventInfo(event: Event): EventInfo {
-        val eventInfo = EventInfo(
+        return EventInfo(
                 event.id,
                 event.lecturer.getFullName(),
                 event.comment,
                 event.required,
-                event.eventPeriods.asSequence().map { toEventPeriodInfo(it) }.toList())
+                event.eventPeriods.asSequence().map { toEventPeriodInfo(it) }.toMutableList())
+    }
 
-        return eventInfo
+    fun toEventShortInfo(event: Event): EventInfo {
+        return EventInfo(
+                event.id,
+                event.lecturer.getFullName(),
+                event.comment,
+                event.required,
+                mutableListOf())
     }
 
     fun toFacultyInfo(faculty: Faculty): FacultyInfo {
@@ -75,7 +93,7 @@ open class BaseService {
                 group.dissolutionYear)
     }
 
-    fun toGroupShortInfo(group: Group): GroupShortInfo {
+    private fun toGroupShortInfo(group: Group): GroupShortInfo {
         return GroupShortInfo(group.id, group.name)
     }
 

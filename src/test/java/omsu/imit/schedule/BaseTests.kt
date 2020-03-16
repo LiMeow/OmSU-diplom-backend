@@ -28,7 +28,12 @@ open class BaseTests {
     }
 
     fun getGroup(): Group {
-        return Group(getStudyDirection(), getCourse(), "МПБ-604-О", "2016", "2020")
+        return Group(
+                getStudyDirection(),
+                getCourse(),
+                "МПБ-604-О",
+                "2016",
+                "2020")
     }
 
 

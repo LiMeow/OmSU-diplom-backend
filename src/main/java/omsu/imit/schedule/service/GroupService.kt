@@ -40,8 +40,8 @@ constructor(private val courseService: CourseService,
         return groupRepository.findAll().asSequence().map { toGroupInfo(it) }.toList()
     }
 
-    fun getGroupsByIds(groupIds: List<Int>): List<Group> {
-        return groupRepository.findAllById(groupIds) ?: throw NotFoundException(ErrorCode.ONE_OR_MORE_GROUPS_DONT_EXIST)
+    fun getGroupsByIds(groupsIds: List<Int>): List<Group> {
+        return groupRepository.findAllById(groupsIds)
     }
 
     fun deleteGroupById(groupId: Int) {

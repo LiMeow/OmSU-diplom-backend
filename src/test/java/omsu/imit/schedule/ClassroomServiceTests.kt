@@ -17,6 +17,7 @@ import omsu.imit.schedule.model.Building
 import omsu.imit.schedule.model.Classroom
 import omsu.imit.schedule.model.Tag
 import omsu.imit.schedule.repository.ClassroomRepository
+import omsu.imit.schedule.repository.EventPeriodRepository
 import omsu.imit.schedule.service.BuildingService
 import omsu.imit.schedule.service.ClassroomService
 import omsu.imit.schedule.service.TagService
@@ -41,6 +42,9 @@ class ClassroomServiceTests : BaseTests() {
     lateinit var classroomRepository: ClassroomRepository
 
     @MockK
+    lateinit var eventPeriodRepository: EventPeriodRepository
+
+    @MockK
     lateinit var tagService: TagService
 
     private lateinit var classroomService: ClassroomService
@@ -51,6 +55,7 @@ class ClassroomServiceTests : BaseTests() {
         this.classroomService = ClassroomService(
                 this.buildingService,
                 this.classroomRepository,
+                this.eventPeriodRepository,
                 this.tagService)
     }
 

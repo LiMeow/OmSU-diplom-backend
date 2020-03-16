@@ -22,4 +22,15 @@ interface EventPeriodRepository : JpaRepository<EventPeriod, Int> {
                                   @Param("dateFrom") dateFrom: Date,
                                   @Param("dateTo") dateTo: Date,
                                   @Param("timeBlockId") timeBlockId: Int): List<EventPeriod>
+
+
+    @Query("SELECT e FROM EventPeriod e " +
+            "WHERE e.classroom.id = :classroomId " +
+            "AND e.day =:day " +
+            "AND e.dateFrom <= :date " +
+            "AND e.dateTo >= :date"
+    )
+    fun findAllByClassroomDayAndDate(@Param("classroomId") classroomId: Int,
+                                     @Param("day") day: Day,
+                                     @Param("date") date: Date): List<EventPeriod>
 }

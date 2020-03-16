@@ -2,21 +2,25 @@ package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.request.CreateClassroomRequest
 import omsu.imit.schedule.dto.request.EditClassroomRequest
-import omsu.imit.schedule.dto.response.ClassroomShortInfo
-import omsu.imit.schedule.dto.response.ClassroomsByBuildingInfo
-import omsu.imit.schedule.dto.response.MetaInfo
+import omsu.imit.schedule.dto.response.*
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Building
 import omsu.imit.schedule.model.Classroom
+import omsu.imit.schedule.model.Day
+import omsu.imit.schedule.model.EventPeriod
 import omsu.imit.schedule.repository.ClassroomRepository
+import omsu.imit.schedule.repository.EventPeriodRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 import kotlin.math.roundToInt
 
 @Service
@@ -24,6 +28,7 @@ class ClassroomService
 @Autowired
 constructor(private val buildingService: BuildingService,
             private val classroomRepository: ClassroomRepository,
+            private val eventPeriodRepository: EventPeriodRepository,
             private val tagService: TagService) : BaseService() {
 
     fun createClassroom(request: CreateClassroomRequest): ClassroomShortInfo {
@@ -62,6 +67,16 @@ constructor(private val buildingService: BuildingService,
                 .map { toClassroomShortInfo(it) }
                 .toList()
         return ClassroomsByBuildingInfo(createMetaInfo(building, page, size), classrooms)
+    }
+
+    fun getClassroomWithEventsByDate(classroomId: Int, searchDate: Date): ClassroomInfoByDate {
+        val classroom = getClassroomById(classroomId)
+        val date = LocalDate.parse(searchDate.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val day = Day.valueOf(date.dayOfWeek.toString())
+        val events = eventPeriodRepository.findAllByClassroomDayAndDate(classroomId, day, searchDate)
+        val response = createClassroomInfoByDate(searchDate, classroom, events)
+        println(response)
+        return response
     }
 
     fun editClassroom(classroomId: Int, request: EditClassroomRequest): ClassroomShortInfo {
@@ -112,5 +127,22 @@ constructor(private val buildingService: BuildingService,
                 prevPage,
                 firstPage,
                 lastPage)
+    }
+
+    private fun createClassroomInfoByDate(date: Date, classroom: Classroom, eventPeriods: List<EventPeriod>): ClassroomInfoByDate {
+        val events: MutableMap<Int, EventInfo> = mutableMapOf()
+
+        eventPeriods.asSequence().forEach { eventPeriod ->
+            if (!events.containsKey(eventPeriod.event.id)) {
+                events[eventPeriod.event.id] = toEventShortInfo(eventPeriod.event)
+            }
+            events[eventPeriod.event.id]!!.eventPeriods.add(toEventPeriodShortInfo(eventPeriod))
+        }
+
+        println(events.values)
+        return ClassroomInfoByDate(
+                date,
+                toClassroomShortInfo(classroom),
+                events.values)
     }
 }
