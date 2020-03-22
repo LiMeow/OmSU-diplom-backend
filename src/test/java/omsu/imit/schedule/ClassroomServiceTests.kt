@@ -8,6 +8,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import omsu.imit.schedule.dto.request.CreateClassroomRequest
 import omsu.imit.schedule.dto.request.EditClassroomRequest
+import omsu.imit.schedule.dto.response.ClassroomInfo
 import omsu.imit.schedule.dto.response.ClassroomShortInfo
 import omsu.imit.schedule.dto.response.ClassroomsByBuildingInfo
 import omsu.imit.schedule.dto.response.MetaInfo
@@ -262,7 +263,7 @@ class ClassroomServiceTests : BaseTests() {
     @Test
     fun testGetClassroomInfo() {
         val classroom = getClassroom()
-        val response = getClassroomShortInfo(classroom)
+        val response = getClassroomInfo(classroom)
 
         every { classroomRepository.findById(classroom.id) } returns Optional.of(classroom)
 
@@ -276,6 +277,14 @@ class ClassroomServiceTests : BaseTests() {
                 classroom.id,
                 classroom.building.number,
                 classroom.number)
+    }
+
+    private fun getClassroomInfo(classroom: Classroom): ClassroomInfo {
+        return ClassroomInfo(
+                classroom.id,
+                classroom.building.number,
+                classroom.number,
+                listOf())
     }
 
     private fun getMetaInfo(building: Building,

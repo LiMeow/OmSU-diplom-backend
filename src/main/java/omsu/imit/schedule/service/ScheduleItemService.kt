@@ -1,5 +1,6 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.dto.request.CreateEventPeriodRequest
 import omsu.imit.schedule.dto.request.CreateScheduleItemRequest
 import omsu.imit.schedule.dto.response.ScheduleItemInfo
 import omsu.imit.schedule.exception.ErrorCode
@@ -29,6 +30,7 @@ constructor(private val classroomService: ClassroomService,
         val discipline: Discipline = disciplineService.getDiscipline(request.disciplineId)
         val groups: List<Group> = groupService.getGroupsByIds(request.groupIds)
 
+        validatePeriodsDates(schedule, request.event.periods)
         val event = eventService.createEvent(request.event)
 
         val scheduleItem = ScheduleItem(event, discipline, request.activityType, groups, schedule)
@@ -62,5 +64,17 @@ constructor(private val classroomService: ClassroomService,
             scheduleItemsInfo[day] = scheduleItemsByDay
         }
         return scheduleItemsInfo
+    }
+
+    private fun validatePeriodsDates(schedule: Schedule, periods: List<CreateEventPeriodRequest>) {
+        val startYear = schedule.studyYear.split("/")[0]
+        val finishYear = schedule.studyYear.split("/")[1]
+        val semester = schedule.semester % 2
+
+//        periods.asSequence().forEach { period ->
+//            if (period.dateFrom.year < startYear.toInt() ||
+//                    period.dateTo.year > finishYear.toInt() ||
+//                    period.)
+//        }
     }
 }

@@ -1,11 +1,23 @@
 package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.response.*
+import omsu.imit.schedule.exception.CommonValidationException
+import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.model.*
 import org.springframework.stereotype.Service
 
 @Service
 open class BaseService {
+
+    fun validateDate(date: String) {
+        if (!date.matches(Regex(pattern = "^\\s?|\\d{4}\$")))
+            throw CommonValidationException(ErrorCode.BAD_REQUEST, "Wrong date")
+    }
+
+    fun validateStudyYear(studyYear: String) {
+        if (!studyYear.matches(Regex(pattern = "^2\\d{3}/2\\d{3}\$")))
+            throw CommonValidationException(ErrorCode.BAD_REQUEST, "Study year must have format 2***/2***")
+    }
 
     fun toBuildingInfo(building: Building): BuildingInfo {
         return BuildingInfo(
@@ -27,6 +39,7 @@ open class BaseService {
     fun toClassroomInfo(classroom: Classroom): ClassroomInfo {
         return ClassroomInfo(
                 classroom.id,
+                classroom.building.number,
                 classroom.number,
                 classroom.tags)
     }
@@ -113,8 +126,8 @@ open class BaseService {
                 lecturer.user.email)
     }
 
-    fun toScheduleItemInfo(scheduleItem: ScheduleItem, eventPeriod: EventPeriod): ScheduleItemInfo {
-        return ScheduleItemInfo(
+    fun toScheduleItemInfo(scheduleItem: ScheduleItem, eventPeriod: EventPeriod, forGroup: Boolean = false): ScheduleItemInfo {
+        val scheduleInfo = ScheduleItemInfo(
                 scheduleItem.id,
                 eventPeriod.dateFrom,
                 eventPeriod.dateTo,
@@ -123,10 +136,13 @@ open class BaseService {
                 eventPeriod.classroom.building.number,
                 eventPeriod.classroom.number,
                 toLecturerShortInfo(scheduleItem.event.lecturer),
-                scheduleItem.groups.asSequence().map { toGroupShortInfo(it) }.toList(),
                 scheduleItem.discipline.name,
                 scheduleItem.activityType,
                 scheduleItem.event.comment)
+        if (!forGroup)
+            scheduleInfo.groups = scheduleItem.groups.asSequence().map { toGroupShortInfo(it) }.toList()
+
+        return scheduleInfo
     }
 
     fun toStudyDirectionInfo(studyDirection: StudyDirection): StudyDirectionInfo {

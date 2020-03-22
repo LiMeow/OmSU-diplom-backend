@@ -44,14 +44,16 @@ constructor(
     }
 
     fun getScheduleByGroupStudyYearAndSemester(groupId: Int, studyYear: String, semester: Int): ScheduleInfo {
+        validateStudyYear(studyYear)
+
         val schedule = scheduleRepository.findByGroup(groupId, studyYear, semester)
-        return toScheduleInfo(schedule)
+                .orElseThrow { NotFoundException(ErrorCode.SCHEDULE_NOT_FOUND, groupId.toString(), studyYear, semester.toString()) }
+        return toScheduleInfo(schedule, true)
     }
 
     fun getScheduleByLecturer(lecturerId: Int, studyYear: String, semester: Int): Any {
         val lecturer = lecturerService.getLecturer(lecturerId)
         val scheduleItems = scheduleItemRepository.findByLecturer(lecturerId, studyYear, semester)
-        println(scheduleItems)
         return toScheduleInfoForLecturer(lecturer, scheduleItems, studyYear, semester)
 
     }
@@ -60,7 +62,7 @@ constructor(
         return toScheduleInfo(getScheduleById(scheduleId))
     }
 
-    private fun toScheduleItemsInfo(scheduleItems: List<ScheduleItem>): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
+    private fun toScheduleItemsInfo(scheduleItems: List<ScheduleItem>, forGroup: Boolean = false): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
         val scheduleItemsInfo: MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> = mutableMapOf();
 
         scheduleItems.asSequence().forEach { scheduleItem ->
@@ -71,7 +73,7 @@ constructor(
                 val scheduleItemsByDay = scheduleItemsInfo.getOrDefault(day, mutableMapOf())
                 val scheduleItemsByTime = scheduleItemsByDay.getOrDefault(time, mutableListOf())
 
-                scheduleItemsByTime.add(toScheduleItemInfo(scheduleItem, eventPeriod))
+                scheduleItemsByTime.add(toScheduleItemInfo(scheduleItem, eventPeriod, forGroup))
                 scheduleItemsByDay[time] = scheduleItemsByTime
                 scheduleItemsInfo[day] = scheduleItemsByDay
             }
@@ -80,14 +82,14 @@ constructor(
         return scheduleItemsInfo
     }
 
-    private fun toScheduleInfo(schedule: Schedule): ScheduleInfo {
+    private fun toScheduleInfo(schedule: Schedule, forGroup: Boolean = false): ScheduleInfo {
         return ScheduleInfo(
                 schedule.id,
                 schedule.course,
                 schedule.semester,
                 schedule.studyYear,
                 toGroupInfo(schedule.group),
-                toScheduleItemsInfo(schedule.scheduleItems))
+                toScheduleItemsInfo(schedule.scheduleItems, forGroup))
     }
 
     private fun toScheduleInfoForLecturer(lecturer: Lecturer, scheduleItems: List<ScheduleItem>, studyYear: String, semester: Int): ScheduleInfoForLecturer {

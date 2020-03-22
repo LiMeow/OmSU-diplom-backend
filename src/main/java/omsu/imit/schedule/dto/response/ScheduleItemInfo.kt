@@ -1,5 +1,6 @@
 package omsu.imit.schedule.dto.response
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import omsu.imit.schedule.model.ActivityType
 import omsu.imit.schedule.model.Interval
 import omsu.imit.schedule.model.TimeBlock
@@ -14,7 +15,8 @@ class ScheduleItemInfo(
         var buildingNumber: Int,
         var classroomNumber: String,
         var lecturer: LecturerShortInfo,
-        var groups: List<GroupShortInfo>,
         var discipline: String,
         var activity: ActivityType,
-        var comment: String)
+        var comment: String,
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
+        var groups: List<GroupShortInfo> = listOf())
