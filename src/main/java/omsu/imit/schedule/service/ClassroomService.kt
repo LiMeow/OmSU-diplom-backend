@@ -139,7 +139,7 @@ constructor(private val buildingService: BuildingService,
 
         return ClassroomInfoByDate(
                 date,
-                toClassroomShortInfo(classroom),
+                toClassroomInfo(classroom),
                 events.values)
     }
 }

@@ -4,7 +4,7 @@ import java.util.*
 
 class ClassroomInfoByDate(
         var date: Date,
-        var classroom: ClassroomShortInfo,
+        var classroom: ClassroomInfo,
         var events: MutableCollection<EventInfo>) {
 
     override fun toString(): String {
