@@ -76,7 +76,7 @@ open class BaseService {
     fun toEventInfo(event: Event): EventInfo {
         return EventInfo(
                 event.id,
-                event.lecturer.getFullName(),
+                toLecturerShortInfo(event.lecturer),
                 event.comment,
                 event.required,
                 event.eventPeriods.asSequence().map { toEventPeriodInfo(it) }.toMutableList())
@@ -85,7 +85,7 @@ open class BaseService {
     fun toEventShortInfo(event: Event): EventInfo {
         return EventInfo(
                 event.id,
-                event.lecturer.getFullName(),
+                toLecturerShortInfo(event.lecturer),
                 event.comment,
                 event.required,
                 mutableListOf())
