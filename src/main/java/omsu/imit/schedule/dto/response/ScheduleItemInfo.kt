@@ -14,9 +14,10 @@ class ScheduleItemInfo(
         var interval: Interval,
         var buildingNumber: Int,
         var classroomNumber: String,
-        var lecturer: LecturerShortInfo,
         var discipline: String,
         var activity: ActivityType,
         var comment: String,
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        var lecturer: LecturerShortInfo? = null,
         @JsonInclude(JsonInclude.Include.NON_EMPTY)
         var groups: List<GroupShortInfo> = listOf())

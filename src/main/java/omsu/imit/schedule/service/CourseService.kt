@@ -17,9 +17,6 @@ constructor(private val courseRepository: CourseRepository,
             private val facultyService: FacultyService) : BaseService() {
 
     fun createCourse(facultyId: Int, startYear: String, finishYear: String): CourseInfo {
-        validateDate(startYear);
-        validateDate(finishYear)
-
         val faculty = facultyService.getFacultyById(facultyId)
         val course = Course(faculty, startYear, finishYear)
 

@@ -44,8 +44,6 @@ constructor(
     }
 
     fun getScheduleByGroupStudyYearAndSemester(groupId: Int, studyYear: String, semester: Int): ScheduleInfo {
-        validateStudyYear(studyYear)
-
         val schedule = scheduleRepository.findByGroup(groupId, studyYear, semester)
                 .orElseThrow { NotFoundException(ErrorCode.SCHEDULE_NOT_FOUND, groupId.toString(), studyYear, semester.toString()) }
         return toScheduleInfo(schedule, true)
@@ -58,13 +56,12 @@ constructor(
 
     }
 
-    fun getScheduleInfoById(scheduleId: Int): ScheduleInfo {
-        return toScheduleInfo(getScheduleById(scheduleId))
-    }
+    private fun toScheduleItemsInfo(
+            scheduleItems: List<ScheduleItem>,
+            forGroup: Boolean = false,
+            forLecturer: Boolean = false): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
 
-    private fun toScheduleItemsInfo(scheduleItems: List<ScheduleItem>, forGroup: Boolean = false): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
         val scheduleItemsInfo: MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> = mutableMapOf();
-
         scheduleItems.asSequence().forEach { scheduleItem ->
             scheduleItem.event.eventPeriods.asSequence().forEach { eventPeriod ->
                 val day = eventPeriod.day.description
@@ -73,7 +70,7 @@ constructor(
                 val scheduleItemsByDay = scheduleItemsInfo.getOrDefault(day, mutableMapOf())
                 val scheduleItemsByTime = scheduleItemsByDay.getOrDefault(time, mutableListOf())
 
-                scheduleItemsByTime.add(toScheduleItemInfo(scheduleItem, eventPeriod, forGroup))
+                scheduleItemsByTime.add(toScheduleItemInfo(scheduleItem, eventPeriod, forGroup, forLecturer))
                 scheduleItemsByDay[time] = scheduleItemsByTime
                 scheduleItemsInfo[day] = scheduleItemsByDay
             }
@@ -97,6 +94,6 @@ constructor(
                 semester % 2,
                 studyYear,
                 toLecturerInfo(lecturer),
-                toScheduleItemsInfo(scheduleItems))
+                toScheduleItemsInfo(scheduleItems, forGroup = false, forLecturer = true))
     }
 }

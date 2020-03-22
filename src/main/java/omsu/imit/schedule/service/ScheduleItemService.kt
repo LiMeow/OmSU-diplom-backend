@@ -13,6 +13,8 @@ import omsu.imit.schedule.model.ScheduleItem
 import omsu.imit.schedule.repository.ScheduleItemRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Service
 class ScheduleItemService
@@ -77,11 +79,15 @@ constructor(private val classroomService: ClassroomService,
         val semesterMonths = listOf(secondSemesterMonths, firstSemesterMonths)
 
         periods.asSequence().forEach { period ->
-            if (period.dateFrom.year < startYear.toInt() ||
-                    period.dateTo.year > finishYear.toInt() ||
-                    !semesterMonths[semester].containsAll(listOf(period.dateFrom.month, period.dateTo.month)))
+            val dateFrom = LocalDate.parse(period.dateFrom.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            val dateTo = LocalDate.parse(period.dateTo.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+            if (dateFrom.year < startYear.toInt() ||
+                    dateTo.year > finishYear.toInt() ||
+                    !semesterMonths[semester].containsAll<Number>(listOf(dateFrom.month.value, dateTo.month.value))) {
                 throw CommonValidationException(ErrorCode.BAD_REQUEST,
                         "The dates of one of the periods don't correspond to the semester of the schedule")
+            }
         }
     }
 }
