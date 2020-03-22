@@ -3,6 +3,7 @@ package omsu.imit.schedule.service
 import omsu.imit.schedule.dto.request.CreateEventPeriodRequest
 import omsu.imit.schedule.dto.request.CreateScheduleItemRequest
 import omsu.imit.schedule.dto.response.ScheduleItemInfo
+import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Discipline
@@ -69,12 +70,18 @@ constructor(private val classroomService: ClassroomService,
     private fun validatePeriodsDates(schedule: Schedule, periods: List<CreateEventPeriodRequest>) {
         val startYear = schedule.studyYear.split("/")[0]
         val finishYear = schedule.studyYear.split("/")[1]
-        val semester = schedule.semester % 2
+        val semester = schedule.semester % 2 // 1( 09-01) or 2(02-06)
 
-//        periods.asSequence().forEach { period ->
-//            if (period.dateFrom.year < startYear.toInt() ||
-//                    period.dateTo.year > finishYear.toInt() ||
-//                    period.)
-//        }
+        val firstSemesterMonths = listOf(9, 10, 11, 12, 1)
+        val secondSemesterMonths = listOf(2, 3, 4, 5, 6, 7)
+        val semesterMonths = listOf(secondSemesterMonths, firstSemesterMonths)
+
+        periods.asSequence().forEach { period ->
+            if (period.dateFrom.year < startYear.toInt() ||
+                    period.dateTo.year > finishYear.toInt() ||
+                    !semesterMonths[semester].containsAll(listOf(period.dateFrom.month, period.dateTo.month)))
+                throw CommonValidationException(ErrorCode.BAD_REQUEST,
+                        "The dates of one of the periods don't correspond to the semester of the schedule")
+        }
     }
 }
