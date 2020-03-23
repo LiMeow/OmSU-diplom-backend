@@ -1,6 +1,3 @@
-INSERT INTO schedule (course, semester, study_year, group_id)
-VALUES (4, 7, '2019/2020', 1),
-       (4, 8, '2019/2020', 1),
-       (4, 7, '2019/2020', 2),
-       (4, 8, '2019/2020', 2),
-       (4, 7, '2019/2020', 3);
+INSERT INTO schedule (course_id, semester, study_year)
+VALUES (1, 7, '2019/2020'),
+       (1, 8, '2019/2020');

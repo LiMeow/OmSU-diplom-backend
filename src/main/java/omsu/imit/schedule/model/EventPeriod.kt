@@ -9,15 +9,15 @@ class EventPeriod(@Id
                   @GeneratedValue(strategy = GenerationType.IDENTITY)
                   var id: Int,
 
-                  @ManyToOne(fetch = FetchType.EAGER)
+                  @ManyToOne(fetch = FetchType.LAZY)
                   @JoinColumn(name = "event_id")
                   var event: Event,
 
-                  @ManyToOne(fetch = FetchType.EAGER)
+                  @ManyToOne(fetch = FetchType.LAZY)
                   @JoinColumn(name = "classroom_id")
                   var classroom: Classroom,
 
-                  @ManyToOne(fetch = FetchType.EAGER)
+                  @ManyToOne(fetch = FetchType.LAZY)
                   @JoinColumn(name = "time_block_id")
                   var timeBlock: TimeBlock,
 
@@ -43,4 +43,6 @@ class EventPeriod(@Id
                 dateTo: Date,
                 interval: Interval)
             : this(0, event, classroom, timeBlock, day, dateFrom, dateTo, interval)
+
+
 }

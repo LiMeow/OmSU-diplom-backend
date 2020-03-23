@@ -9,7 +9,7 @@ class Course(@Id
              @GeneratedValue(strategy = GenerationType.IDENTITY)
              var id: Int,
 
-             @ManyToOne(fetch = FetchType.EAGER)
+             @ManyToOne(fetch = FetchType.LAZY)
              @JoinColumn(name = "faculty_id")
              var faculty: Faculty,
 

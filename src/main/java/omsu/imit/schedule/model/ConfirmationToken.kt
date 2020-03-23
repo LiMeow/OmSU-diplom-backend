@@ -12,7 +12,7 @@ class ConfirmationToken(@Id
                         @Column
                         var token: String,
 
-                        @OneToOne(fetch = FetchType.EAGER)
+                        @OneToOne(fetch = FetchType.LAZY)
                         @JoinColumn(nullable = false, name = "user_id")
                         var user: User,
 

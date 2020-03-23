@@ -26,7 +26,7 @@ constructor(private val scheduleService: ScheduleService) {
                            @Pattern(regexp = "^2\\d{3}/2\\d{3}\$", message = "Study year must have format 2***/2***")
                            studyYear: String,
                            @RequestParam(required = true, defaultValue = "1") semester: Int): ResponseEntity<*> {
-        return ResponseEntity.ok().body(scheduleService.getScheduleByGroupStudyYearAndSemester(groupId, studyYear, semester))
+        return ResponseEntity.ok().body(scheduleService.getScheduleByGroup(groupId, studyYear, semester))
     }
 
     @GetMapping(value = ["/lecturers/{lecturerId}"])
@@ -36,5 +36,14 @@ constructor(private val scheduleService: ScheduleService) {
                               studyYear: String,
                               @RequestParam(required = true, defaultValue = "1") semester: Int): ResponseEntity<*> {
         return ResponseEntity.ok().body(scheduleService.getScheduleByLecturer(lecturerId, studyYear, semester))
+    }
+
+    @GetMapping(value = ["/courses/{courseId}"])
+    fun getScheduleByCourse(@PathVariable courseId: Int,
+                            @RequestParam(required = true, defaultValue = "20--/20--")
+                            @Pattern(regexp = "^2\\d{3}/2\\d{3}\$", message = "Study year must have format 2***/2***")
+                            studyYear: String,
+                            @RequestParam(required = true, defaultValue = "1") semester: Int): ResponseEntity<*> {
+        return ResponseEntity.ok().body(scheduleService.getScheduleByCourse(courseId, studyYear, semester))
     }
 }

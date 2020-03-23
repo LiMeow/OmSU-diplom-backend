@@ -36,4 +36,15 @@ class ScheduleItem(@Id
                 groups: List<Group>,
                 schedule: Schedule)
             : this(0, event, discipline, activityType, groups, schedule)
+
+    override fun toString(): String {
+        return "ScheduleItem(" +
+                "id=$id, " +
+                "event=$event, " +
+                "discipline=${discipline.name}, " +
+                "activityType=${activityType.name}, " +
+                "groups=$groups)"
+    }
+
+
 }

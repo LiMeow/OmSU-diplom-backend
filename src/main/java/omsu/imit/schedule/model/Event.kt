@@ -27,5 +27,14 @@ class Event(@Id
                 required: Boolean)
             : this(0, lecturer, comment, required)
 
+    override fun toString(): String {
+        return "Event(" +
+                "id=$id, " +
+                "lecturer=${lecturer.getFullName()}, " +
+                "comment='$comment'," +
+                "required=$required, " +
+                "eventPeriods=$eventPeriods)"
+    }
+
 
 }

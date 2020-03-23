@@ -24,13 +24,7 @@ class Group(@Id
             var formationYear: String,
 
             @Column(name = "dissolution_year")
-            var dissolutionYear: String? = null,
-
-            @OneToMany(
-                    mappedBy = "group",
-                    fetch = FetchType.LAZY,
-                    cascade = [CascadeType.ALL])
-            var schedules: List<Schedule> = ArrayList()) {
+            var dissolutionYear: String? = null) {
 
     constructor(studyDirection: StudyDirection,
                 course: Course,
@@ -55,7 +49,6 @@ class Group(@Id
         if (name != other.name) return false
         if (formationYear != other.formationYear) return false
         if (dissolutionYear != other.dissolutionYear) return false
-        if (schedules != other.schedules) return false
 
         return true
     }
@@ -67,8 +60,16 @@ class Group(@Id
         result = 31 * result + name.hashCode()
         result = 31 * result + formationYear.hashCode()
         result = 31 * result + (dissolutionYear?.hashCode() ?: 0)
-        result = 31 * result + schedules.hashCode()
         return result
+    }
+
+    override fun toString(): String {
+        return "Group(" +
+                "id=$id, " +
+                "studyDirection=$studyDirection, " +
+                "name='$name', " +
+                "formationYear='$formationYear', " +
+                "dissolutionYear=$dissolutionYear)"
     }
 
 
