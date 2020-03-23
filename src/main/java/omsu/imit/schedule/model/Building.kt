@@ -15,11 +15,9 @@ class Building(@Id
                var address: String,
 
                @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
-               var classrooms: List<Classroom>) {
+               var classrooms: List<Classroom> = listOf()) {
 
-    constructor(id: Int, number: Int, address: String) : this(id, number, address, ArrayList<Classroom>())
-
-    constructor(number: Int, address: String) : this(0, number, address, ArrayList<Classroom>())
+    constructor(number: Int, address: String) : this(0, number, address)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

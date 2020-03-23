@@ -11,6 +11,7 @@ interface ScheduleItemRepository : JpaRepository<ScheduleItem, Int> {
     @Query("SELECT s FROM ScheduleItem s WHERE s.event.lecturer.id = :lecturerId")
     fun findByLecturer(@Param("lecturerId") lecturerId: Int): List<ScheduleItem>
 
+
     @Query(value = "SELECT (schedule_item.*) FROM schedule " +
             "JOIN schedule_item ON schedule.id = schedule_item.schedule_id " +
             "JOIN event ON schedule_item.event_id = event.id " +
@@ -18,4 +19,12 @@ interface ScheduleItemRepository : JpaRepository<ScheduleItem, Int> {
             "AND study_year = :studyYear " +
             "AND semester%2 = :semester", nativeQuery = true)
     fun findByLecturer(lecturerId: Int, studyYear: String, semester: Int): List<ScheduleItem>
+
+    @Query(value = "SELECT (schedule_item.*) FROM schedule " +
+            "JOIN schedule_item ON schedule.id = schedule_item.schedule_id  " +
+            "JOIN schedule_item_group AS sg ON sg.schedule_item_id = schedule_item.id " +
+            "WHERE sg.group_id = :groupId " +
+            "AND schedule.study_year = :studyYear " +
+            "AND schedule.semester = :semester", nativeQuery = true)
+    fun findByGroup(groupId: Int, studyYear: String, semester: Int): List<ScheduleItem>
 }
