@@ -37,12 +37,4 @@ constructor(private val courseRepository: CourseRepository,
         return toCourseInfo(getCourseById(courseId))
     }
 
-    private fun toCourseInfo(course: Course): CourseInfo {
-        return CourseInfo(
-                course.id,
-                course.faculty.name,
-                course.startYear,
-                course.finishYear,
-                course.groups?.asSequence()?.map { toGroupInfo(it) }?.toList())
-    }
 }

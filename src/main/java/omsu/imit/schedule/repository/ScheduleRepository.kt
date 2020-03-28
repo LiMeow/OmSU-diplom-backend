@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ScheduleRepository : JpaRepository<Schedule, Int> {
-
-    @Query("SELECT s FROM Schedule s WHERE s.group.id = :groupId AND s.studyYear = :studyYear AND  s.semester = :semester")
-    fun findByGroup(groupId: Int, studyYear: String, semester: Int): Schedule
+    @Query("SELECT s FROM Schedule s " +
+            "WHERE s.course.id = :courseId  " +
+            "AND s.studyYear = :studyYear " +
+            "AND s.semester = :semester")
+    fun findByCourse(courseId: Int, studyYear: String, semester: Int): List<Schedule>
 }

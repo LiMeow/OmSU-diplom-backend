@@ -1,6 +1,7 @@
 package omsu.imit.schedule
 
 import omsu.imit.schedule.dto.response.BuildingInfo
+import omsu.imit.schedule.dto.response.ChairInfo
 import omsu.imit.schedule.dto.response.GroupInfo
 import omsu.imit.schedule.dto.response.StudyDirectionInfo
 import omsu.imit.schedule.model.*
@@ -36,9 +37,12 @@ open class BaseTests {
                 "2020")
     }
 
-
     fun getFaculty(): Faculty {
         return Faculty(getBuilding(), "ИНСТИТУТ МАТЕМАТИКИ И ИНФОРМАЦИОННЫХ ТЕХНОЛОГИЙ")
+    }
+
+    fun getLecturer(): Lecturer {
+        return Lecturer(getChair(), getLecturerPersonalData())
     }
 
     fun getStudyDirection(): StudyDirection {
@@ -76,8 +80,23 @@ open class BaseTests {
                 enabled)
     }
 
+    fun getLecturerPersonalData(): User {
+        return User(0,
+                "FirstName",
+                "Patronymic",
+                "LastName",
+                "example@gmail.com",
+                null,
+                UserRole.LECTURER,
+                false)
+    }
+
     fun getBuildingInfo(building: Building): BuildingInfo {
         return BuildingInfo(building.id, building.number, building.address)
+    }
+
+    fun getChairInfo(chair: Chair): ChairInfo {
+        return ChairInfo(chair.id, chair.faculty.name, chair.name)
     }
 
     fun getGroupInfo(group: Group): GroupInfo {

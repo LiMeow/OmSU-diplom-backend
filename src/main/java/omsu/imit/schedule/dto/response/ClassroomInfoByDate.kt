@@ -4,13 +4,13 @@ import java.util.*
 
 class ClassroomInfoByDate(
         var date: Date,
-        var classRoom: ClassroomShortInfo,
+        var classroom: ClassroomInfo,
         var events: MutableCollection<EventInfo>) {
 
     override fun toString(): String {
         return "ClassroomInfoByDate(" +
                 "date=$date, " +
-                "classRoom=$classRoom, " +
+                "classRoom=$classroom, " +
                 "events=$events)"
     }
 }

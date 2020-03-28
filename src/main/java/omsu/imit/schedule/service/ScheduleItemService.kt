@@ -1,7 +1,9 @@
 package omsu.imit.schedule.service
 
+import omsu.imit.schedule.dto.request.CreateEventPeriodRequest
 import omsu.imit.schedule.dto.request.CreateScheduleItemRequest
 import omsu.imit.schedule.dto.response.ScheduleItemInfo
+import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Discipline
@@ -11,6 +13,8 @@ import omsu.imit.schedule.model.ScheduleItem
 import omsu.imit.schedule.repository.ScheduleItemRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Service
 class ScheduleItemService
@@ -29,6 +33,7 @@ constructor(private val classroomService: ClassroomService,
         val discipline: Discipline = disciplineService.getDiscipline(request.disciplineId)
         val groups: List<Group> = groupService.getGroupsByIds(request.groupIds)
 
+        validatePeriodsDates(schedule, request.event.periods)
         val event = eventService.createEvent(request.event)
 
         val scheduleItem = ScheduleItem(event, discipline, request.activityType, groups, schedule)
@@ -62,5 +67,27 @@ constructor(private val classroomService: ClassroomService,
             scheduleItemsInfo[day] = scheduleItemsByDay
         }
         return scheduleItemsInfo
+    }
+
+    private fun validatePeriodsDates(schedule: Schedule, periods: List<CreateEventPeriodRequest>) {
+        val startYear = schedule.studyYear.split("/")[0]
+        val finishYear = schedule.studyYear.split("/")[1]
+        val semester = schedule.semester % 2 // 1( 09-01) or 2(02-06)
+
+        val firstSemesterMonths = listOf(9, 10, 11, 12, 1)
+        val secondSemesterMonths = listOf(2, 3, 4, 5, 6, 7)
+        val semesterMonths = listOf(secondSemesterMonths, firstSemesterMonths)
+
+        periods.asSequence().forEach { period ->
+            val dateFrom = LocalDate.parse(period.dateFrom.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            val dateTo = LocalDate.parse(period.dateTo.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+            if (dateFrom.year < startYear.toInt() ||
+                    dateTo.year > finishYear.toInt() ||
+                    !semesterMonths[semester].containsAll<Number>(listOf(dateFrom.month.value, dateTo.month.value))) {
+                throw CommonValidationException(ErrorCode.BAD_REQUEST,
+                        "The dates of one of the periods don't correspond to the semester of the schedule")
+            }
+        }
     }
 }

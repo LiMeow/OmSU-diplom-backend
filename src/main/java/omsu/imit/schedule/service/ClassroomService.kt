@@ -74,9 +74,7 @@ constructor(private val buildingService: BuildingService,
         val date = LocalDate.parse(searchDate.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val day = Day.valueOf(date.dayOfWeek.toString())
         val events = eventPeriodRepository.findAllByClassroomDayAndDate(classroomId, day, searchDate)
-        val response = createClassroomInfoByDate(searchDate, classroom, events)
-        println(response)
-        return response
+        return createClassroomInfoByDate(searchDate, classroom, events)
     }
 
     fun editClassroom(classroomId: Int, request: EditClassroomRequest): ClassroomShortInfo {
@@ -97,8 +95,8 @@ constructor(private val buildingService: BuildingService,
         classroomRepository.deleteById(classroomId)
     }
 
-    fun getClassroomInfo(classroomId: Int): ClassroomShortInfo {
-        return toClassroomShortInfo(getClassroomById(classroomId))
+    fun getClassroomInfo(classroomId: Int): ClassroomInfo {
+        return toClassroomInfo(getClassroomById(classroomId))
     }
 
     private fun createMetaInfo(building: Building, page: Int, size: Int): MetaInfo {
@@ -139,10 +137,9 @@ constructor(private val buildingService: BuildingService,
             events[eventPeriod.event.id]!!.eventPeriods.add(toEventPeriodShortInfo(eventPeriod))
         }
 
-        println(events.values)
         return ClassroomInfoByDate(
                 date,
-                toClassroomShortInfo(classroom),
+                toClassroomInfo(classroom),
                 events.values)
     }
 }

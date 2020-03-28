@@ -7,7 +7,10 @@ VALUES (1, '01.03.02', 'Прикладная математика и инфор�
        (2, '12.03.04', 'Биотехнические системы и технологии', 'BACHELOR', 'FULL_TIME');
 
 INSERT INTO course (faculty_id, start_year, finish_year)
-VALUES (1, 2016, 2020);
+VALUES (1, '2016', '2020'),
+       (1, '2017', '2021'),
+       (1, '2018', '2022'),
+       (1, '2019', '2023');
 
 
 INSERT INTO "group" (study_direction_id, course_id, name, formation_year)

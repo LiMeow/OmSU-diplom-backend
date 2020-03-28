@@ -4,9 +4,7 @@ import javax.validation.constraints.*
 
 data class CreateScheduleRequest(
         @get:NotNull
-        @get:Min(value = 1, message = "Course cannot be less than 1")
-        @get:Max(value = 5, message = "Course cannot be more than 5")
-        var course: Int,
+        var courseId: Int,
 
         @get:NotNull
         @get:Min(value = 1, message = "Semester cannot be less than 1")
@@ -14,7 +12,7 @@ data class CreateScheduleRequest(
         var semester: Int,
 
         @get:NotBlank
-        @get:Pattern(regexp = "([2]\\d{3}(/)[2]\\d{3})", message = "Study year must have format 2***/2***")
+        @get:Pattern(regexp = "^2\\d{3}\\/2\\d{3}\$", message = "Study year must have format 2***/2***")
         var studyYear: String,
 
         @get:NotNull

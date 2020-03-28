@@ -27,6 +27,7 @@ open class BaseService {
     fun toClassroomInfo(classroom: Classroom): ClassroomInfo {
         return ClassroomInfo(
                 classroom.id,
+                classroom.building.number,
                 classroom.number,
                 classroom.tags)
     }
@@ -36,6 +37,15 @@ open class BaseService {
                 classroom.id,
                 classroom.building.number,
                 classroom.number)
+    }
+
+    fun toCourseInfo(course: Course): CourseInfo {
+        return CourseInfo(
+                course.id,
+                course.faculty.name,
+                course.startYear,
+                course.finishYear,
+                course.groups?.asSequence()?.map { toGroupInfo(it) }?.toList())
     }
 
     private fun toEventPeriodInfo(period: EventPeriod): EventPeriodInfo {
@@ -63,7 +73,7 @@ open class BaseService {
     fun toEventInfo(event: Event): EventInfo {
         return EventInfo(
                 event.id,
-                event.lecturer.getFullName(),
+                toLecturerShortInfo(event.lecturer),
                 event.comment,
                 event.required,
                 event.eventPeriods.asSequence().map { toEventPeriodInfo(it) }.toMutableList())
@@ -72,7 +82,7 @@ open class BaseService {
     fun toEventShortInfo(event: Event): EventInfo {
         return EventInfo(
                 event.id,
-                event.lecturer.getFullName(),
+                toLecturerShortInfo(event.lecturer),
                 event.comment,
                 event.required,
                 mutableListOf())
@@ -113,8 +123,12 @@ open class BaseService {
                 lecturer.user.email)
     }
 
-    fun toScheduleItemInfo(scheduleItem: ScheduleItem, eventPeriod: EventPeriod): ScheduleItemInfo {
-        return ScheduleItemInfo(
+    fun toScheduleItemInfo(
+            scheduleItem: ScheduleItem,
+            eventPeriod: EventPeriod,
+            forGroup: Boolean = false,
+            forLecturer: Boolean = false): ScheduleItemInfo {
+        val scheduleInfo = ScheduleItemInfo(
                 scheduleItem.id,
                 eventPeriod.dateFrom,
                 eventPeriod.dateTo,
@@ -122,11 +136,15 @@ open class BaseService {
                 eventPeriod.interval,
                 eventPeriod.classroom.building.number,
                 eventPeriod.classroom.number,
-                toLecturerShortInfo(scheduleItem.event.lecturer),
-                scheduleItem.groups.asSequence().map { toGroupShortInfo(it) }.toList(),
                 scheduleItem.discipline.name,
                 scheduleItem.activityType,
                 scheduleItem.event.comment)
+        if (!forGroup)
+            scheduleInfo.groups = scheduleItem.groups.asSequence().map { toGroupShortInfo(it) }.toList()
+
+        if (!forLecturer)
+            scheduleInfo.lecturer = toLecturerShortInfo(scheduleItem.event.lecturer)
+        return scheduleInfo
     }
 
     fun toStudyDirectionInfo(studyDirection: StudyDirection): StudyDirectionInfo {

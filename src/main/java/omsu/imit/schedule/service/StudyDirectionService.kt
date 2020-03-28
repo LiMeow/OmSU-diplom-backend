@@ -14,6 +14,6 @@ constructor(private val studyDirectionRepository: StudyDirectionRepository) : Ba
 
     fun getStudyDirectionById(studyDirectionId: Int): StudyDirection {
         return studyDirectionRepository.findById(studyDirectionId)
-                .orElseThrow { NotFoundException(ErrorCode.STUDY_DIRECTION_NOT_EXISXTS, studyDirectionId.toString()) }
+                .orElseThrow { NotFoundException(ErrorCode.STUDY_DIRECTION_NOT_EXISTS, studyDirectionId.toString()) }
     }
 }

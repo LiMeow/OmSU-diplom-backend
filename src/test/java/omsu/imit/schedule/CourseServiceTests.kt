@@ -46,7 +46,7 @@ class CourseServiceTests : BaseTests() {
         every { facultyService.getFacultyById(faculty.id) } returns faculty
         every { courseRepository.save(course) } returns course
 
-        assertEquals(response, courseService.createCourse(faculty.id, course.startYear, course.finishYear))
+        assertEquals(response, courseService.createCourse(faculty.id, course.startYear.toString(), course.finishYear.toString()))
 
         verify { facultyService.getFacultyById(faculty.id) }
         verify { courseRepository.save(course) }

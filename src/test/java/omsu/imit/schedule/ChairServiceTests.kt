@@ -7,7 +7,6 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
 import omsu.imit.schedule.dto.request.CreateChairRequest
-import omsu.imit.schedule.dto.response.ChairInfo
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Chair
 import omsu.imit.schedule.repository.ChairRepository
@@ -117,9 +116,5 @@ class ChairServiceTests : BaseTests() {
 
         assertEquals(response, chairService.getChairInfo(chair.id))
         verify { chairRepository.findById(chair.id) }
-    }
-
-    private fun getChairInfo(chair: Chair): ChairInfo {
-        return ChairInfo(chair.id, chair.faculty.name, chair.name)
     }
 }

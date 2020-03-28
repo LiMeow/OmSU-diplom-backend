@@ -9,7 +9,7 @@ class Faculty(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Int,
 
-        @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+        @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
         @JoinColumn(name = "building_id")
         var building: Building,
 
@@ -17,7 +17,7 @@ class Faculty(
         var name: String,
 
         @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY)
-        var chairs: List<Chair> = ArrayList()) {
+        var chairs: List<Chair> = listOf()) {
 
     constructor(building: Building, name: String) : this(0, building, name)
 

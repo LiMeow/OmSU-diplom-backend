@@ -1,7 +1,7 @@
 package omsu.imit.schedule.dto.response
 
 class EventInfo(var id: Int,
-                var lecturer: String,
+                var lecturer: LecturerShortInfo,
                 var comment: String,
                 var required: Boolean,
                 var eventPeriods: MutableList<EventPeriodInfo> = mutableListOf()) {
