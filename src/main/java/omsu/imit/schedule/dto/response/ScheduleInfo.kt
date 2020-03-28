@@ -2,9 +2,7 @@ package omsu.imit.schedule.dto.response
 
 class ScheduleInfo(
         var id: Int,
-        var course: Int,
+        var course: CourseInfo,
         var semester: Int,
-        var studyYear: String,
-        var group: GroupInfo,
-        var scheduleItems: MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>>) {
-}
+        var studyYear: String
+)
