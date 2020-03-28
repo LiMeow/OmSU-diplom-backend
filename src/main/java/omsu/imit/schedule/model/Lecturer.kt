@@ -17,12 +17,7 @@ class Lecturer(@Id
                var user: User,
 
                @OneToMany(fetch = FetchType.LAZY, mappedBy = "lecturer")
-               var preferences: List<LecturerPreferences>?) {
-
-    constructor(id: Int,
-                chair: Chair,
-                user: User) :
-            this(id, chair, user, null)
+               var preferences: List<LecturerPreferences> = listOf()) {
 
     constructor(chair: Chair,
                 user: User) :
