@@ -1,4 +1,4 @@
-package omsu.imit.schedule
+package omsu.imit.schedule.service
 
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -7,9 +7,8 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
 import omsu.imit.schedule.exception.NotFoundException
-import omsu.imit.schedule.model.UserRole
+import omsu.imit.schedule.model.Role
 import omsu.imit.schedule.repository.UserRepository
-import omsu.imit.schedule.service.UserService
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -123,12 +122,12 @@ class UserServiceTests : BaseTests() {
     @Test
     fun testChangeUserRole() {
         val user = getUser()
-        val updatedUser = getUser(true, UserRole.ADMIN)
+        val updatedUser = getUser(true, Role.ROLE_ADMIN)
 
         every { userRepository.findById(user.id) } returns Optional.of(user)
         every { userRepository.save(updatedUser) } returns updatedUser
 
-        assertEquals(updatedUser, userService.changeUserRole(user.id, UserRole.ADMIN))
+        assertEquals(updatedUser, userService.changeUserRole(user.id, Role.ROLE_ADMIN))
 
         verify { userRepository.findById(user.id) }
         verify { userRepository.save(updatedUser) }
@@ -139,7 +138,7 @@ class UserServiceTests : BaseTests() {
         val id = 1
 
         every { userRepository.findById(id) } returns Optional.empty()
-        assertThrows(NotFoundException::class.java) { userService.changeUserRole(id, UserRole.ADMIN) }
+        assertThrows(NotFoundException::class.java) { userService.changeUserRole(id, Role.ROLE_ADMIN) }
 
         verify { userRepository.findById(id) }
     }

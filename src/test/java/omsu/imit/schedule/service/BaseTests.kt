@@ -1,9 +1,6 @@
-package omsu.imit.schedule
+package omsu.imit.schedule.service
 
-import omsu.imit.schedule.dto.response.BuildingInfo
-import omsu.imit.schedule.dto.response.ChairInfo
-import omsu.imit.schedule.dto.response.GroupInfo
-import omsu.imit.schedule.dto.response.StudyDirectionInfo
+import omsu.imit.schedule.dto.response.*
 import omsu.imit.schedule.model.*
 
 open class BaseTests {
@@ -69,14 +66,14 @@ open class BaseTests {
         return TimeBlock("8:00", "9:35")
     }
 
-    fun getUser(enabled: Boolean = true, userRole: UserRole = UserRole.USER): User {
+    fun getUser(enabled: Boolean = true, role: Role = Role.ROLE_USER): User {
         return User(0,
                 "FirstName",
                 "Patronymic",
                 "LastName",
                 "example@gmail.com",
                 "password",
-                userRole,
+                role,
                 enabled)
     }
 
@@ -87,12 +84,27 @@ open class BaseTests {
                 "LastName",
                 "example@gmail.com",
                 null,
-                UserRole.LECTURER,
+                Role.ROLE_LECTURER,
                 false)
     }
 
     fun getBuildingInfo(building: Building): BuildingInfo {
         return BuildingInfo(building.id, building.number, building.address)
+    }
+
+    fun getClassroomShortInfo(classroom: Classroom): ClassroomShortInfo {
+        return ClassroomShortInfo(
+                classroom.id,
+                classroom.building.number,
+                classroom.number)
+    }
+
+    fun getClassroomInfo(classroom: Classroom): ClassroomInfo {
+        return ClassroomInfo(
+                classroom.id,
+                classroom.building.number,
+                classroom.number,
+                listOf())
     }
 
     fun getChairInfo(chair: Chair): ChairInfo {

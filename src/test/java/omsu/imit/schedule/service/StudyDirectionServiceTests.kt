@@ -1,4 +1,4 @@
-package omsu.imit.schedule
+package omsu.imit.schedule.service
 
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -7,7 +7,6 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.repository.StudyDirectionRepository
-import omsu.imit.schedule.service.StudyDirectionService
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions

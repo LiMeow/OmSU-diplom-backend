@@ -6,8 +6,8 @@ import omsu.imit.schedule.dto.response.LecturerShortInfo
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Lecturer
+import omsu.imit.schedule.model.Role
 import omsu.imit.schedule.model.User
-import omsu.imit.schedule.model.UserRole
 import omsu.imit.schedule.repository.LecturerRepository
 import omsu.imit.schedule.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,7 +29,7 @@ constructor(
                 request.patronymic,
                 request.lastName,
                 request.email,
-                UserRole.LECTURER)
+                Role.ROLE_LECTURER)
         userRepository.save(personalData)
 
         val lecturer = Lecturer(chair, personalData)

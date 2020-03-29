@@ -14,10 +14,7 @@ class ConfirmationToken(@Id
 
                         @OneToOne(fetch = FetchType.LAZY)
                         @JoinColumn(nullable = false, name = "user_id")
-                        var user: User,
+                        var user: User) {
 
-                        @Temporal(TemporalType.TIMESTAMP)
-                        var expiredDate: Date) {
-
-    constructor(user: User, expiredDate: Date) : this(0, UUID.randomUUID().toString(), user, expiredDate)
+    constructor(user: User) : this(0, UUID.randomUUID().toString(), user)
 }

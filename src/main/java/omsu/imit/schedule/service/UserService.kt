@@ -2,8 +2,8 @@ package omsu.imit.schedule.service
 
 import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
+import omsu.imit.schedule.model.Role
 import omsu.imit.schedule.model.User
-import omsu.imit.schedule.model.UserRole
 import omsu.imit.schedule.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -13,10 +13,10 @@ class UserService
 @Autowired
 constructor(private val userRepository: UserRepository) {
 
-    fun changeUserRole(userId: Int, userRole: UserRole): User {
+    fun changeUserRole(userId: Int, role: Role): User {
         val user = getUserById(userId)
 
-        user.userRole = userRole
+        user.role = role
         userRepository.save(user)
 
         return user

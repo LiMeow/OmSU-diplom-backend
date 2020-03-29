@@ -9,13 +9,13 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 @Service
-open class EmailSenderService
+class EmailSenderService
 @Autowired
 constructor(private val javaMailSender: JavaMailSender,
             private val mailContentBuilder: MailContentBuilder) {
 
     @Async
-    open fun sendEmail(user: User, subject: String, verifyToken: String) {
+    fun sendEmail(user: User, subject: String, verifyToken: String) {
         val mimeMessage = javaMailSender.createMimeMessage()
         val helper = MimeMessageHelper(mimeMessage, false, "UTF-8")
         val mailContent = mailContentBuilder.build(MailContentDto(user, verifyToken))

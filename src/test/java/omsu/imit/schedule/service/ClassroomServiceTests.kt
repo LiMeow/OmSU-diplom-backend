@@ -1,4 +1,4 @@
-package omsu.imit.schedule
+package omsu.imit.schedule.service
 
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -8,8 +8,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import omsu.imit.schedule.dto.request.CreateClassroomRequest
 import omsu.imit.schedule.dto.request.EditClassroomRequest
-import omsu.imit.schedule.dto.response.ClassroomInfo
-import omsu.imit.schedule.dto.response.ClassroomShortInfo
 import omsu.imit.schedule.dto.response.ClassroomsByBuildingInfo
 import omsu.imit.schedule.dto.response.MetaInfo
 import omsu.imit.schedule.exception.CommonValidationException
@@ -19,9 +17,6 @@ import omsu.imit.schedule.model.Classroom
 import omsu.imit.schedule.model.Tag
 import omsu.imit.schedule.repository.ClassroomRepository
 import omsu.imit.schedule.repository.EventPeriodRepository
-import omsu.imit.schedule.service.BuildingService
-import omsu.imit.schedule.service.ClassroomService
-import omsu.imit.schedule.service.TagService
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -271,21 +266,6 @@ class ClassroomServiceTests : BaseTests() {
         verify { classroomRepository.findById(classroom.id) }
     }
 
-
-    private fun getClassroomShortInfo(classroom: Classroom): ClassroomShortInfo {
-        return ClassroomShortInfo(
-                classroom.id,
-                classroom.building.number,
-                classroom.number)
-    }
-
-    private fun getClassroomInfo(classroom: Classroom): ClassroomInfo {
-        return ClassroomInfo(
-                classroom.id,
-                classroom.building.number,
-                classroom.number,
-                listOf())
-    }
 
     private fun getMetaInfo(building: Building,
                             total: Int,

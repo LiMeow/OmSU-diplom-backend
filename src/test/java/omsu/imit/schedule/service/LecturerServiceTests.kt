@@ -1,4 +1,4 @@
-package omsu.imit.schedule
+package omsu.imit.schedule.service
 
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -13,8 +13,6 @@ import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Lecturer
 import omsu.imit.schedule.repository.LecturerRepository
 import omsu.imit.schedule.repository.UserRepository
-import omsu.imit.schedule.service.ChairService
-import omsu.imit.schedule.service.LecturerService
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
@@ -79,6 +77,16 @@ class LecturerServiceTests : BaseTests() {
 
         assertEquals(lecturer, lecturerService.getLecturer(lecturer.id))
         verify { lecturerRepository.findById(lecturer.id) }
+    }
+
+    @Test
+    fun testGetLecturerByNonExistingId() {
+        val id = 1
+
+        every { lecturerRepository.findById(id) } returns Optional.empty()
+
+        Assertions.assertThrows(NotFoundException::class.java) { lecturerService.getLecturer(id) }
+        verify { lecturerRepository.findById(id) }
     }
 
     @Test

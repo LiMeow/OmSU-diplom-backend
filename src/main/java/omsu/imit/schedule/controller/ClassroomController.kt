@@ -24,7 +24,6 @@ constructor(private val classroomService: ClassroomService) {
 
     @GetMapping(value = ["/{classroomId}"])
     fun getClassroomById(@PathVariable classroomId: Int): ResponseEntity<*> {
-
         return ResponseEntity.ok().body(classroomService.getClassroomInfo(classroomId))
     }
 

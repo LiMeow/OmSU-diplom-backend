@@ -27,7 +27,7 @@ class User(@Id
 
            @Column(name = "user_type")
            @Enumerated(EnumType.STRING)
-           var userRole: UserRole,
+           var role: Role,
 
            @Column
            var enabled: Boolean) {
@@ -37,15 +37,15 @@ class User(@Id
                 lastName: String,
                 email: String,
                 password: String?,
-                userRole: UserRole)
-            : this(0, firstName, patronymic, lastName, email, password, userRole, false)
+                role: Role)
+            : this(0, firstName, patronymic, lastName, email, password, role, false)
 
     constructor(firstName: String,
                 patronymic: String?,
                 lastName: String,
                 email: String,
-                userRole: UserRole)
-            : this(firstName, patronymic, lastName, email, null, userRole)
+                role: Role)
+            : this(firstName, patronymic, lastName, email, null, role)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -57,7 +57,7 @@ class User(@Id
         if (lastName != other.lastName) return false
         if (email != other.email) return false
         if (password != other.password) return false
-        if (userRole != other.userRole) return false
+        if (role != other.role) return false
 
         return true
     }
@@ -69,7 +69,7 @@ class User(@Id
         result = 31 * result + lastName.hashCode()
         result = 31 * result + email.hashCode()
         result = 31 * result + (password?.hashCode() ?: 0)
-        result = 31 * result + userRole.hashCode()
+        result = 31 * result + role.hashCode()
         return result
     }
 
@@ -81,7 +81,7 @@ class User(@Id
                 "lastName='$lastName', " +
                 "email='$email', " +
                 "password=$password, " +
-                "userRole=$userRole)"
+                "userRole=$role)"
     }
 
 

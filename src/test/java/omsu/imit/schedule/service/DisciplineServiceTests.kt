@@ -1,4 +1,4 @@
-package omsu.imit.schedule
+package omsu.imit.schedule.service
 
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -11,7 +11,6 @@ import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Discipline
 import omsu.imit.schedule.repository.DisciplineRepository
-import omsu.imit.schedule.service.DisciplineService
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
