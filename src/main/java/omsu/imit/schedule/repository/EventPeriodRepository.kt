@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.time.LocalDate
 
 @Repository
 interface EventPeriodRepository : JpaRepository<EventPeriod, Int> {
@@ -19,8 +19,8 @@ interface EventPeriodRepository : JpaRepository<EventPeriod, Int> {
             "AND e.dateTo >= :dateFrom")
     fun findByClassroomDayAndTime(@Param("classroomId") classroomId: Int,
                                   @Param("day") day: Day,
-                                  @Param("dateFrom") dateFrom: Date,
-                                  @Param("dateTo") dateTo: Date,
+                                  @Param("dateFrom") dateFrom: LocalDate,
+                                  @Param("dateTo") dateTo: LocalDate,
                                   @Param("timeBlockId") timeBlockId: Int): List<EventPeriod>
 
 
@@ -32,5 +32,5 @@ interface EventPeriodRepository : JpaRepository<EventPeriod, Int> {
     )
     fun findAllByClassroomDayAndDate(@Param("classroomId") classroomId: Int,
                                      @Param("day") day: Day,
-                                     @Param("date") date: Date): List<EventPeriod>
+                                     @Param("date") date: LocalDate): List<EventPeriod>
 }

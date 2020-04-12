@@ -2,6 +2,7 @@ package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.SignInRequest
 import omsu.imit.schedule.dto.request.SignUpRequest
+import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.model.Role
 import omsu.imit.schedule.security.JwtTokenProvider
 import omsu.imit.schedule.service.AuthService
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
@@ -44,16 +46,6 @@ constructor(private val authService: AuthService,
         return ResponseEntity.ok(userInfo);
     }
 
-    @GetMapping(path = ["/token"])
-    fun getToken(@RequestParam email: String,
-                 response: HttpServletResponse): ResponseEntity<*> {
-
-        val cookie = getCookie(email)
-        response.addCookie(cookie)
-
-        return ResponseEntity.ok(cookie);
-    }
-
     @DeleteMapping(path = ["/signout"])
     fun signOut(response: HttpServletResponse): ResponseEntity<*> {
         val cookie = Cookie("accessToken", "")
@@ -63,6 +55,14 @@ constructor(private val authService: AuthService,
         response.addCookie(cookie)
 
         return ResponseEntity.noContent().build<Any>()
+    }
+
+    @GetMapping("/refresh")
+    fun refresh(req: HttpServletRequest, response: HttpServletResponse): StatusResponse {
+        val cookie = getCookie(req.remoteUser)
+        response.addCookie(cookie)
+
+        return StatusResponse.OK;
     }
 
     @GetMapping(path = ["/whoiam"])

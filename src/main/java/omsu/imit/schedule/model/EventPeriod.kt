@@ -1,6 +1,6 @@
 package omsu.imit.schedule.model
 
-import java.sql.Date
+import java.time.LocalDate
 import javax.persistence.*
 
 @Entity
@@ -26,10 +26,10 @@ class EventPeriod(@Id
                   var day: Day,
 
                   @Column(name = "date_from")
-                  var dateFrom: Date,
+                  var dateFrom: LocalDate,
 
                   @Column(name = "date_to")
-                  var dateTo: Date,
+                  var dateTo: LocalDate,
 
                   @Column
                   @Enumerated(EnumType.STRING)
@@ -39,10 +39,21 @@ class EventPeriod(@Id
                 classroom: Classroom,
                 timeBlock: TimeBlock,
                 day: Day,
-                dateFrom: Date,
-                dateTo: Date,
+                dateFrom: LocalDate,
+                dateTo: LocalDate,
                 interval: Interval)
             : this(0, event, classroom, timeBlock, day, dateFrom, dateTo, interval)
+
+    override fun toString(): String {
+        return "EventPeriod(" +
+                "id=$id, " +
+                "classroom=$classroom, " +
+                "timeBlock=$timeBlock, " +
+                "day=$day, " +
+                "dateFrom=$dateFrom, " +
+                "dateTo=$dateTo, " +
+                "interval=$interval)"
+    }
 
 
 }

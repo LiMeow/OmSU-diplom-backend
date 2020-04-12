@@ -76,7 +76,7 @@ open class BaseService {
                 toLecturerShortInfo(event.lecturer),
                 event.comment,
                 event.required,
-                event.eventPeriods.asSequence().map { toEventPeriodInfo(it) }.toMutableList())
+                event.eventPeriods.asSequence().sortedBy { eventPeriod -> eventPeriod.dateFrom }.map { toEventPeriodInfo(it) }.toMutableList())
     }
 
     fun toEventShortInfo(event: Event): EventInfo {

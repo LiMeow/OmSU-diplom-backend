@@ -20,7 +20,7 @@ class Event(@Id
             var required: Boolean,
 
             @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-            var eventPeriods: List<EventPeriod> = ArrayList()) {
+            var eventPeriods: List<EventPeriod> = mutableListOf()) {
 
     constructor(lecturer: Lecturer,
                 comment: String,

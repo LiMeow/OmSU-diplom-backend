@@ -38,17 +38,17 @@ class WebSecurityConfig(@Autowired private val jwtTokenProvider: JwtTokenProvide
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .antMatchers(
-                        "/signup/**",
-                        "/signin",
-                        "/signout",
-                        "/token").permitAll()
+                .antMatchers("/signup/**").permitAll()
+                .antMatchers("/signin").permitAll()
+                .antMatchers("/signout").permitAll()
+                .antMatchers("/token").permitAll()
                 .antMatchers("/debug/clear").permitAll()
                 .antMatchers("/confirm-account").permitAll()
                 .anyRequest().authenticated();
 
-        http.exceptionHandling().accessDeniedPage("/signin");
+//        http.exceptionHandling().accessDeniedPage("/signin");
         http.apply(JwtTokenFilterConfigurer(jwtTokenProvider));
+        super.configure(http);
     }
 
     @Throws(Exception::class)

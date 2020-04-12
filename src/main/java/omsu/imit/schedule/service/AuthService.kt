@@ -9,7 +9,6 @@ import omsu.imit.schedule.model.ConfirmationToken
 import omsu.imit.schedule.model.User
 import omsu.imit.schedule.repository.ConfirmationTokenRepository
 import omsu.imit.schedule.repository.UserRepository
-import omsu.imit.schedule.security.JwtTokenProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -22,7 +21,6 @@ class AuthService
 constructor(
         private val confirmationTokenRepository: ConfirmationTokenRepository,
         private val emailSenderService: EmailSenderService,
-        private val jwtTokenProvider: JwtTokenProvider,
         private val passwordEncoder: PasswordEncoder,
         private val userRepository: UserRepository,
         private val userService: UserService) {

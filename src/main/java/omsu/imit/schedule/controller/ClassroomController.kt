@@ -7,7 +7,7 @@ import omsu.imit.schedule.service.ClassroomService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.sql.Date
+import java.time.LocalDate
 
 import javax.validation.Valid
 
@@ -29,7 +29,7 @@ constructor(private val classroomService: ClassroomService) {
 
     @GetMapping(value = ["/{classroomId}/events"])
     fun getClassroomWithEventsByDate(@PathVariable classroomId: Int,
-                                     @RequestParam date: Date): ResponseEntity<*> {
+                                     @RequestParam date: LocalDate): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(classroomService.getClassroomWithEventsByDate(classroomId, date))
     }

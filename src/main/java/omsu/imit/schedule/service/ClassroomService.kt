@@ -20,7 +20,6 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
 import kotlin.math.roundToInt
 
 @Service
@@ -69,7 +68,7 @@ constructor(private val buildingService: BuildingService,
         return ClassroomsByBuildingInfo(createMetaInfo(building, page, size), classrooms)
     }
 
-    fun getClassroomWithEventsByDate(classroomId: Int, searchDate: Date): ClassroomInfoByDate {
+    fun getClassroomWithEventsByDate(classroomId: Int, searchDate: LocalDate): ClassroomInfoByDate {
         val classroom = getClassroomById(classroomId)
         val date = LocalDate.parse(searchDate.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val day = Day.valueOf(date.dayOfWeek.toString())
@@ -127,7 +126,7 @@ constructor(private val buildingService: BuildingService,
                 lastPage)
     }
 
-    private fun createClassroomInfoByDate(date: Date, classroom: Classroom, eventPeriods: List<EventPeriod>): ClassroomInfoByDate {
+    private fun createClassroomInfoByDate(date: LocalDate, classroom: Classroom, eventPeriods: List<EventPeriod>): ClassroomInfoByDate {
         val events: MutableMap<Int, EventInfo> = mutableMapOf()
 
         eventPeriods.asSequence().forEach { eventPeriod ->
