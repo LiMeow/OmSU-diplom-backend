@@ -48,7 +48,6 @@ class WebSecurityConfig(@Autowired private val jwtTokenProvider: JwtTokenProvide
 
 //        http.exceptionHandling().accessDeniedPage("/signin");
         http.apply(JwtTokenFilterConfigurer(jwtTokenProvider));
-        super.configure(http);
     }
 
     @Throws(Exception::class)
