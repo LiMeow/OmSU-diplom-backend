@@ -5,6 +5,7 @@ import omsu.imit.schedule.dto.request.EditClassroomRequest
 import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.service.ClassroomService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
@@ -29,7 +30,9 @@ constructor(private val classroomService: ClassroomService) {
 
     @GetMapping(value = ["/{classroomId}/events"])
     fun getClassroomWithEventsByDate(@PathVariable classroomId: Int,
-                                     @RequestParam date: LocalDate): ResponseEntity<*> {
+                                     @RequestParam
+                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                     date: LocalDate): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(classroomService.getClassroomWithEventsByDate(classroomId, date))
     }

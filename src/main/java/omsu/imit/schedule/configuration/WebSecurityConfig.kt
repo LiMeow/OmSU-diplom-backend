@@ -46,7 +46,6 @@ class WebSecurityConfig(@Autowired private val jwtTokenProvider: JwtTokenProvide
                 .antMatchers("/confirm-account").permitAll()
                 .anyRequest().authenticated();
 
-//        http.exceptionHandling().accessDeniedPage("/signin");
         http.apply(JwtTokenFilterConfigurer(jwtTokenProvider));
     }
 
