@@ -28,9 +28,6 @@ constructor(private val authService: AuthService,
                response: HttpServletResponse): ResponseEntity<*> {
 
         val userInfo = authService.signUp(request)
-        val cookie = getCookie(userInfo.email, userInfo.role)
-        response.addCookie(cookie)
-
         authService.sendVerificationToken(userInfo);
         return ResponseEntity.ok(userInfo);
     }

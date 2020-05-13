@@ -6,10 +6,10 @@ services:
     container_name: "diploma_nginx"
     build:
       context: "."
-      dockerfile: "./nginx/Dockerfile"
+      dockerfile: "./docker/nginx/Dockerfile"
     restart: "always"
     volumes:
-      - "./nginx/config.conf:/etc/nginx/conf.d/diploma.conf"
+      - "./docker/nginx/config.conf:/etc/nginx/conf.d/diploma.conf"
     network_mode: "host"
 
   postgres:
@@ -23,3 +23,16 @@ services:
     ports:
       - "5432:5432"
 
+  postfix:
+    container_name: "diploma_postfix"
+    image: "tozd/postfix"
+    ports:
+      - "25:25"
+      - "587:587"
+    restart: "always"
+    network_mode: "host"
+    environment:
+      - "MAILNAME=scheduler.wip"
+      - "MY_NETWORKS=127.0.0.0/8"
+      - "ROOT_ALIAS=admin@scheduler.wip"
+      - "MY_DESTINATION=scheduler.wip, mail.scheduler.wip, localhost.localdomain, localhost"
