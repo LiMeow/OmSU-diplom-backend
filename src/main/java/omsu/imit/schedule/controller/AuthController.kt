@@ -23,6 +23,8 @@ constructor(private val authService: AuthService,
             private val userService: UserService,
             private val jwtTokenProvider: JwtTokenProvider) {
 
+    private val COOKIE_LIFE_TIME = 3570000; //59.5 min
+
     @PostMapping(path = ["/signup"])
     fun signUp(@Valid @RequestBody request: SignUpRequest,
                response: HttpServletResponse): ResponseEntity<*> {
@@ -81,6 +83,8 @@ constructor(private val authService: AuthService,
         val cookie = Cookie("accessToken", token)
 
         cookie.isHttpOnly = true
+        cookie.maxAge = (COOKIE_LIFE_TIME);
+
         return cookie
     }
 }

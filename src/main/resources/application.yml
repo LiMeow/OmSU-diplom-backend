@@ -11,6 +11,18 @@ server:
     context-path: /api
 
 spring:
+  mail:
+    host: smtp.ethereal.email
+    port: 587
+    username: hallie.wunsch91@ethereal.email
+    password: 5ZKXP9crWRacxdePCQ
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/dplm_db

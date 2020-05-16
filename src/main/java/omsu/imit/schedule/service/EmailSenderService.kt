@@ -20,6 +20,7 @@ constructor(private val javaMailSender: JavaMailSender,
         val helper = MimeMessageHelper(mimeMessage, false, "UTF-8")
         val mailContent = mailContentBuilder.build(MailContentDto(user, verifyToken))
 
+        helper.setFrom("no-reply@omsu.ru")
         helper.setTo(user.email)
         helper.setSubject(subject)
         helper.setText(mailContent, true)
