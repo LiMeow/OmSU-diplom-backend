@@ -23,7 +23,7 @@ constructor(private val authService: AuthService,
             private val userService: UserService,
             private val jwtTokenProvider: JwtTokenProvider) {
 
-    private val COOKIE_LIFE_TIME = 3570000; //59.5 min
+    private val COOKIE_LIFE_TIME = 3600
 
     @PostMapping(path = ["/signup"])
     fun signUp(@Valid @RequestBody request: SignUpRequest,

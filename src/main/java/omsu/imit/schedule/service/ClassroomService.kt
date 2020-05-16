@@ -52,8 +52,12 @@ constructor(private val buildingService: BuildingService,
                 .orElseThrow { NotFoundException(ErrorCode.CLASSROOM_NOT_EXISTS, classroomId.toString()) }
     }
 
-    fun getClassroomsByTags(tags: List<String>): List<ClassroomShortInfo> {
-        return classroomRepository.findAllByTags(tags).asSequence().map { toClassroomShortInfo(it) }.toList();
+    fun getClassroomsByTags(tags: List<Int>): List<ClassroomShortInfo> {
+        println(tags)
+        println(classroomRepository.findAllByTags(tags))
+        val classrooms = classroomRepository.findAllByTags(tags).asSequence().map { toClassroomShortInfo(it) }.toList();
+
+        return classrooms
     }
 
     fun getAllClassroomsByBuilding(buildingId: Int, page: Int, size: Int): ClassroomsByBuildingInfo {

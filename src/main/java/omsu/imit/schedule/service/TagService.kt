@@ -16,7 +16,7 @@ open class TagService
 constructor(private val tagRepository: TagRepository) {
 
     fun createTag(request: CreateTagRequest): Tag {
-        val tag = Tag(request.tag)
+        val tag = Tag(request.tag.toUpperCase())
 
         try {
             tagRepository.save(tag)

@@ -38,7 +38,7 @@ constructor(private val classroomService: ClassroomService) {
     }
 
     @GetMapping
-    fun getClassroomsByTags(@RequestParam tags: List<String>): ResponseEntity<*> {
+    fun getClassroomsByTags(@RequestParam tags: List<Int>): ResponseEntity<*> {
         return ResponseEntity.ok().body(classroomService.getClassroomsByTags(tags))
     }
 

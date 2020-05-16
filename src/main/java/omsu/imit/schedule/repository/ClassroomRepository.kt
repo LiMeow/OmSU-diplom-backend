@@ -31,11 +31,7 @@ interface ClassroomRepository : JpaRepository<Classroom, Int> {
             "where classroom.id IN ( " +
             "    select classroom_id" +
             "    from classroom_tag" +
-            "    where tag_id IN (" +
-            "        select t.id" +
-            "        from tag t" +
-            "        where t.tag in :tags));", nativeQuery = true)
-    fun findAllByTags(@Param("tags") tags: List<String>): List<Classroom>
-
+            "    where tag_id IN :tags);", nativeQuery = true)
+    fun findAllByTags(@Param("tags") tags: List<Int>): List<Classroom>
 
 }

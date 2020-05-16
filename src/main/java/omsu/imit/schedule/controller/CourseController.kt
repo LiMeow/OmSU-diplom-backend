@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
 @RestController
-@RequestMapping("faculties/")
+@RequestMapping("/faculties")
 @Validated
 class CourseController
 @Autowired

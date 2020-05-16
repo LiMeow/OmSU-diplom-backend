@@ -30,7 +30,7 @@ constructor(private val classroomService: ClassroomService,
 
     fun createScheduleItem(scheduleId: Int, request: CreateScheduleItemRequest): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
         val schedule: Schedule = scheduleService.getScheduleById(scheduleId)
-        val discipline: Discipline = disciplineService.getDiscipline(request.disciplineId)
+        val discipline: Discipline = disciplineService.getDisciplineById(request.disciplineId)
         val groups: List<Group> = groupService.getGroupsByIds(request.groupIds)
 
         validatePeriodsDates(schedule, request.event.periods)

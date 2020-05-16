@@ -38,12 +38,26 @@ class WebSecurityConfig(@Autowired private val jwtTokenProvider: JwtTokenProvide
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .antMatchers("/signup/**").permitAll()
-                .antMatchers("/signin").permitAll()
-                .antMatchers("/signout").permitAll()
-                .antMatchers("/token").permitAll()
-                .antMatchers("/debug/clear").permitAll()
-                .antMatchers("/confirm-account").permitAll()
+                .antMatchers(
+                        "/signup/**",
+                        "/signin",
+                        "/signout",
+                        "/token",
+                        "/debug/clear",
+                        "/confirm-account").permitAll()
+                .antMatchers("/users/**").hasRole("ADMIN")
+                .antMatchers(
+                        "/buildings/**",
+                        "/classrooms/**",
+                        "/events/**",
+                        "/timeblocks/**").hasAnyRole("ADMIN", "DISPATCHER")
+                .antMatchers(
+                        "/chairs/**",
+                        "/disciplines/**",
+                        "/faculties/**",
+                        "/groups/**",
+                        "/lecturers/**",
+                        "/schedules/**").hasAnyRole("ADMIN", "DISPATCHER", "LECTURER")
                 .anyRequest().authenticated();
 
         http.apply(JwtTokenFilterConfigurer(jwtTokenProvider));

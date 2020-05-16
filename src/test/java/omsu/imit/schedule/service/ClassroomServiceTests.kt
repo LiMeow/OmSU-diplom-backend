@@ -131,7 +131,7 @@ class ClassroomServiceTests : BaseTests() {
     @Test
     fun testGetClassroomByTags() {
         val classroom = getClassroomWithTags()
-        val tags = classroom.tags.map { it.tag }.toList()
+        val tags = classroom.tags.map { it.id }.toList()
         val response = listOf(getClassroomShortInfo(classroom))
 
         every { classroomRepository.findAllByTags(tags) } returns listOf(classroom)

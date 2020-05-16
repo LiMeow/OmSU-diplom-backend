@@ -91,7 +91,7 @@ class ClassroomControllerTests : BaseTests() {
     @Test
     fun testGetClassroomsByTags() {
         val classroom = getClassroom()
-        val tags = listOf("1", "2")
+        val tags = listOf(1, 2)
         val response = listOf(getClassroomShortInfo(classroom))
         val params: MultiValueMap<String, String> = LinkedMultiValueMap()
         params.add("tags", "1, 2")
