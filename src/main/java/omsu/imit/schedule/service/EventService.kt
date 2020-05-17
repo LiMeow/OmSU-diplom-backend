@@ -81,12 +81,12 @@ constructor(private val classroomService: ClassroomService,
         val event = getEventById(eventId)
         val timeBlock = timeBlockService.getTimeBlockById(request.timeBlockId)
         val classroom = classroomService.getClassroomById(request.classroomId)
+        val day = Day.valueOf(request.to.dayOfWeek.name)
 
+        this.checkEventPeriod(classroom.id, day, request.to, request.to, timeBlock.id, Interval.NONE)
         this.cancelEvent(request.from, event)
-        val reschedulingEvent = this.createEventPeriod(
-                event, classroom, timeBlock, Day.valueOf(request.to.dayOfWeek.name),
-                request.to, request.to, Interval.NONE)
 
+        val reschedulingEvent = this.createEventPeriod(event, classroom, timeBlock, day, request.to, request.to, Interval.NONE)
         event.eventPeriods = event.eventPeriods.plus(reschedulingEvent)
         this.eventRepository.save(event)
 
@@ -95,23 +95,42 @@ constructor(private val classroomService: ClassroomService,
 
 
     private fun cancelEvent(date: LocalDate, event: Event): Event {
-        event.eventPeriods.forEach { eventPeriod ->
-            if (eventPeriod.dateFrom.isEqual(date)) {
-                eventPeriod.dateFrom = date.plusDays(1)
+        event.eventPeriods
+                .filter { eventPeriod -> eventPeriod.day.description == date.dayOfWeek.toString() }
+                .forEach { eventPeriod ->
 
-            } else if (eventPeriod.dateTo.isEqual(date)) {
-                eventPeriod.dateTo = date.minusDays(1)
+                    if (eventPeriod.dateFrom.isEqual(date) && eventPeriod.dateTo.isEqual(date)) {
+                        /** Cancel a single event */
 
-            } else if (eventPeriod.dateFrom.isBefore(date) && eventPeriod.dateTo.isAfter(date)) {
-                val newEventPeriod = createEventPeriod(
-                        eventPeriod.event, eventPeriod.classroom, eventPeriod.timeBlock,
-                        eventPeriod.day, date.plusDays(1), eventPeriod.dateTo, eventPeriod.interval)
+                        event.eventPeriods = event.eventPeriods.minus(eventPeriod);
+                        eventPeriodRepository.deleteById(eventPeriod.id);
+                    } else if (eventPeriod.dateFrom.isEqual(date)) {
+                        /** Move Start Date */
 
-                eventPeriod.dateTo = date.minusDays(1)
+                        eventPeriod.dateFrom = date.plusWeeks(1)
+                        eventPeriodRepository.save(eventPeriod)
 
-                event.eventPeriods = event.eventPeriods.plus(newEventPeriod)
-            }
-        }
+                    } else if (eventPeriod.dateTo.isEqual(date)) {
+                        /** Move End Date */
+
+                        eventPeriod.dateFrom = date.minusWeeks(1)
+                        eventPeriodRepository.save(eventPeriod)
+
+                    } else if (eventPeriod.dateFrom.isBefore(date) && eventPeriod.dateTo.isAfter(date)) {
+                        /** Cancel the event in the middle of the interval */
+
+                        val newEventPeriod = createEventPeriod(
+                                eventPeriod.event, eventPeriod.classroom,
+                                eventPeriod.timeBlock, eventPeriod.day,
+                                date.plusWeeks(1), eventPeriod.dateTo,
+                                eventPeriod.interval)
+                        eventPeriodRepository.save(newEventPeriod)
+
+                        eventPeriod.dateTo = date.minusWeeks(1)
+                        eventPeriodRepository.save(eventPeriod)
+                        event.eventPeriods = event.eventPeriods.plus(newEventPeriod)
+                    }
+                }
 
         this.eventRepository.save(event)
         return event
@@ -139,27 +158,32 @@ constructor(private val classroomService: ClassroomService,
         return createEventPeriod(event, classroom, timeBlock, request.day, request.dateFrom, request.dateTo, request.interval)
     }
 
+    private fun checkEventPeriod(classroomId: Int, day: Day, dateFrom: LocalDate, dateTo: LocalDate, timeBlockId: Int, interval: Interval) {
+        val existingPeriods = eventPeriodRepository
+                .findByClassroomDayAndTime(classroomId, day, dateFrom, dateTo, timeBlockId)
+                .asSequence()
+                .filter {
+                    it.interval == interval ||
+                            it.interval == Interval.EVERY_WEEK ||
+                            (it.interval != Interval.EVERY_WEEK && interval == Interval.EVERY_WEEK)
+                }
+                .toList()
+
+        if (existingPeriods.isNotEmpty()) {
+            throw throw CommonValidationException(ErrorCode.CLASSROOM_ALREADY_BUSY, classroomId.toString(), timeBlockId.toString(), day.name)
+
+        }
+    }
+
     private fun checkEventPeriods(eventPeriods: List<CreateEventPeriodRequest>) {
         eventPeriods.forEach { eventPeriod ->
-
-            val existingPeriods = eventPeriodRepository
-                    .findByClassroomDayAndTime(
-                            eventPeriod.classroomId,
-                            eventPeriod.day,
-                            eventPeriod.dateFrom,
-                            eventPeriod.dateTo,
-                            eventPeriod.timeBlockId)
-                    .asSequence()
-                    .filter {
-                        it.interval == eventPeriod.interval || it.interval == Interval.EVERY_WEEK ||
-                                (it.interval != Interval.EVERY_WEEK && eventPeriod.interval == Interval.EVERY_WEEK)
-                    }
-                    .toList()
-
-            if (existingPeriods.isNotEmpty()) {
-                throw throw CommonValidationException(ErrorCode.CLASSROOM_ALREADY_BUSY,
-                        eventPeriod.classroomId.toString(), eventPeriod.timeBlockId.toString(), eventPeriod.day.name)
-            }
+            this.checkEventPeriod(
+                    eventPeriod.classroomId,
+                    eventPeriod.day,
+                    eventPeriod.dateFrom,
+                    eventPeriod.dateTo,
+                    eventPeriod.timeBlockId,
+                    eventPeriod.interval)
         }
     }
 }

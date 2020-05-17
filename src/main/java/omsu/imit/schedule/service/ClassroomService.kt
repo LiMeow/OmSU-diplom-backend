@@ -53,11 +53,7 @@ constructor(private val buildingService: BuildingService,
     }
 
     fun getClassroomsByTags(tags: List<Int>): List<ClassroomShortInfo> {
-        println(tags)
-        println(classroomRepository.findAllByTags(tags))
-        val classrooms = classroomRepository.findAllByTags(tags).asSequence().map { toClassroomShortInfo(it) }.toList();
-
-        return classrooms
+        return classroomRepository.findAllByTags(tags).asSequence().map { toClassroomShortInfo(it) }.toList();
     }
 
     fun getAllClassroomsByBuilding(buildingId: Int, page: Int, size: Int): ClassroomsByBuildingInfo {
