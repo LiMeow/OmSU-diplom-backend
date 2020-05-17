@@ -7,30 +7,30 @@ import javax.persistence.*
 @Table(name = "`user`")
 class User(@Id
            @GeneratedValue(strategy = GenerationType.IDENTITY)
-           var id: Int,
+           var id: Int = 0,
 
            @Column(name = "firstname")
-           var firstName: String,
+           var firstName: String = "",
 
            @Column
-           var patronymic: String?,
+           var patronymic: String? = "",
 
            @Column(name = "lastname")
-           var lastName: String,
+           var lastName: String = "",
 
            @Column(name = "email")
-           var email: String,
+           var email: String = "",
 
            @JsonIgnore
            @Column(name = "password")
-           var password: String?,
+           var password: String? = "",
 
            @Column(name = "user_type")
            @Enumerated(EnumType.STRING)
-           var role: Role,
+           var role: Role = Role.ROLE_USER,
 
            @Column
-           var enabled: Boolean) {
+           var enabled: Boolean = false) {
 
     constructor(firstName: String,
                 patronymic: String?,

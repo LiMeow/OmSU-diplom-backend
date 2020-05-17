@@ -10,7 +10,6 @@ import omsu.imit.schedule.model.User
 import omsu.imit.schedule.repository.ConfirmationTokenRepository
 import omsu.imit.schedule.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -26,28 +25,32 @@ constructor(
         private val userService: UserService) {
 
     fun signUp(request: SignUpRequest): User {
-        val user = User(
-                request.firstName,
-                request.patronymic, request.lastName,
-                request.email,
-                passwordEncoder.encode(request.password),
-                request.role)
-        try {
-            userRepository.save(user)
-        } catch (e: DataIntegrityViolationException) {
-            throw CommonValidationException(ErrorCode.USER_ALREADY_EXISTS, request.email)
+        val existingUser = userRepository.findByEmail(request.email)
+        var user = User()
+
+        when {
+            existingUser.isPresent -> user = existingUser.get()
+            existingUser.isEmpty -> user = User(
+                    request.firstName,
+                    request.patronymic, request.lastName,
+                    request.email,
+                    request.role)
         }
+
+        user.password = passwordEncoder.encode(request.password)
+        userRepository.save(user)
+
         return user
     }
 
     fun signIn(request: SignInRequest): User {
         val user = userService.getUserByEmail(request.email)
 
+        if (!user.enabled)
+            throw CommonValidationException(ErrorCode.ACCOUNT_NOT_ACTIVATED, user.email)
+
         if (!passwordEncoder.matches(request.password, user.password))
             throw CommonValidationException(ErrorCode.WRONG_PASSWORD)
-
-//        if (!user.enabled)
-//            throw CommonValidationException(ErrorCode.ACCOUNT_NOT_ACTIVATED, user.email)
 
         return user
     }
@@ -63,13 +66,12 @@ constructor(
 
     fun confirmAccount(token: String) {
         val confirmationToken = confirmationTokenRepository.findByToken(token)
+                .orElseThrow { NotFoundException(ErrorCode.TOKEN_NOT_FOUND) }
 
-        if (!confirmationToken.isPresent)
-            throw  NotFoundException(ErrorCode.TOKEN_NOT_FOUND)
-
-        val user = userService.getUserById(confirmationToken.get().user.id)
-
+        val user = userService.getUserById(confirmationToken.user.id)
         user.enabled = true;
+
         userRepository.save(user)
+        confirmationTokenRepository.deleteById(confirmationToken.id)
     }
 }

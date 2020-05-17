@@ -26,14 +26,11 @@ constructor(private val authService: AuthService,
     private val COOKIE_LIFE_TIME = 3600
 
     @PostMapping(path = ["/signup"])
-    fun signUp(@Valid @RequestBody request: SignUpRequest,
-               response: HttpServletResponse): ResponseEntity<*> {
+    fun signUp(@Valid @RequestBody request: SignUpRequest): ResponseEntity<*> {
 
         val userInfo = authService.signUp(request)
-        val cookie = getCookie(userInfo.email, userInfo.role)
-        response.addCookie(cookie)
-
         authService.sendVerificationToken(userInfo);
+
         return ResponseEntity.ok(userInfo);
     }
 
@@ -74,8 +71,9 @@ constructor(private val authService: AuthService,
     }
 
     @GetMapping(path = ["/confirm-account"])
-    fun confirmAccount(@RequestParam token: String): ResponseEntity<*> {
-        return ResponseEntity.ok(authService.confirmAccount(token));
+    fun confirmAccount(@RequestParam token: String): StatusResponse {
+        authService.confirmAccount(token)
+        return StatusResponse.OK
     }
 
     fun getCookie(email: String, role: Role = Role.ROLE_ADMIN): Cookie {
