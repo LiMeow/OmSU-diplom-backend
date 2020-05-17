@@ -37,8 +37,8 @@ constructor(private val classroomService: ClassroomService,
                 request.comment,
                 request.required)
 
-        eventRepository.save(event)
         event.eventPeriods = request.periods.asSequence().map { createEventPeriod(it, event) }.toMutableList();
+        eventRepository.save(event)
 
         return event
     }

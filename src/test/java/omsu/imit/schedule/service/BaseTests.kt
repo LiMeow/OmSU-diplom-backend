@@ -2,6 +2,7 @@ package omsu.imit.schedule.service
 
 import omsu.imit.schedule.dto.response.*
 import omsu.imit.schedule.model.*
+import java.time.LocalDate
 
 open class BaseTests {
 
@@ -23,6 +24,17 @@ open class BaseTests {
 
     fun getCourse(): Course {
         return Course(getFaculty(), "2016", "2020")
+    }
+
+    fun getEvent(): Event {
+        return Event(getLecturer(), "", true)
+    }
+
+    fun getEventPeriod(dateFrom: LocalDate = LocalDate.of(2020, 5, 1),
+                       dateTo: LocalDate = LocalDate.of(2020, 7, 1),
+                       day: Day = Day.MONDAY,
+                       interval: Interval = Interval.EVERY_WEEK): EventPeriod {
+        return EventPeriod(getEvent(), getClassroom(), getTimeBlock(), day, dateFrom, dateTo, interval)
     }
 
     fun getGroup(): Group {
@@ -111,6 +123,30 @@ open class BaseTests {
         return ChairInfo(chair.id, chair.faculty.name, chair.name)
     }
 
+    fun getEventInfo(event: Event): EventInfo {
+        return return EventInfo(
+                event.id,
+                getLecturerShortInfo(event.lecturer),
+                event.comment,
+                event.required,
+                event.eventPeriods
+                        .asSequence()
+                        .sortedBy { eventPeriod -> eventPeriod.dateFrom }
+                        .map { getEventPeriodInfo(it) }
+                        .toMutableList())
+    }
+
+    private fun getEventPeriodInfo(period: EventPeriod): EventPeriodInfo {
+        return EventPeriodInfo(
+                period.id,
+                getClassroomShortInfo(period.classroom),
+                period.timeBlock,
+                period.day,
+                period.dateFrom,
+                period.dateTo,
+                period.interval)
+    }
+
     fun getGroupInfo(group: Group): GroupInfo {
         return GroupInfo(group.id,
                 group.name,
@@ -127,5 +163,18 @@ open class BaseTests {
                 studyDirection.name,
                 studyDirection.qualification.description,
                 studyDirection.studyForm.form)
+    }
+
+    fun getLecturerInfo(lecturer: Lecturer): LecturerInfo {
+        return LecturerInfo(lecturer.id, lecturer.getFullName(), getChairInfo(lecturer.chair))
+    }
+
+    fun getLecturerShortInfo(lecturer: Lecturer): LecturerShortInfo {
+        return LecturerShortInfo(
+                lecturer.id,
+                lecturer.user.firstName,
+                lecturer.user.patronymic,
+                lecturer.user.lastName,
+                lecturer.user.email)
     }
 }

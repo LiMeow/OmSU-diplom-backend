@@ -43,5 +43,14 @@ class Classroom(@Id
         return result
     }
 
+    override fun toString(): String {
+        return "Classroom(" +
+                "id=$id, " +
+                "building=$building, " +
+                "number='$number', " +
+                "tags=$tags)"
+    }
+
+
 }
 

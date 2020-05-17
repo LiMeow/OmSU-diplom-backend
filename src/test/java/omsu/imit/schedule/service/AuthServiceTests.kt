@@ -161,7 +161,7 @@ class AuthServiceTests : BaseTests() {
         every { userRepository.save(confirmedUser) } returns confirmedUser
         every { confirmationTokenRepository.deleteById(confirmationToken.id) } returns mockk()
 
-        assertEquals(confirmedUser, authService.confirmAccount(token))
+        authService.confirmAccount(token)
 
         verify { confirmationTokenRepository.findByToken(token) }
         verify { userService.getUserById(user.id) }
