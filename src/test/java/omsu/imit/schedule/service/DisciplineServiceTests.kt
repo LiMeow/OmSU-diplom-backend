@@ -17,6 +17,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.dao.DataIntegrityViolationException
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
@@ -41,24 +42,19 @@ class DisciplineServiceTests {
         val request = CreateDisciplineRequest("discipline")
         val discipline = Discipline(0, request.name)
 
-        every { disciplineRepository.findByDisciplineName(discipline.name) } returns (null)
         every { disciplineRepository.save(discipline) } returns discipline
-
         assertEquals(discipline, disciplineService.createDiscipline(request))
-
-        verify { disciplineRepository.findByDisciplineName(discipline.name) }
         verify { disciplineRepository.save(discipline) }
     }
 
     @Test
     fun testCreateAlreadyExistingDiscipline() {
         val request = CreateDisciplineRequest("discipline")
-        val discipline = Discipline(1, request.name)
+        val discipline = Discipline(0, request.name)
 
-        every { disciplineRepository.findByDisciplineName(discipline.name) } returns discipline
-
+        every { disciplineRepository.save(discipline) } throws DataIntegrityViolationException("")
         assertThrows(CommonValidationException::class.java) { disciplineService.createDiscipline(request) }
-        verify { disciplineRepository.findByDisciplineName(discipline.name) }
+        verify { disciplineRepository.save(discipline) }
     }
 
     @Test

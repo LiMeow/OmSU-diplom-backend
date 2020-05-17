@@ -26,6 +26,4 @@ class Tag(@Id
         result = 31 * result + tag.hashCode()
         return result
     }
-
-
 }

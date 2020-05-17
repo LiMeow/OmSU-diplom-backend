@@ -53,12 +53,12 @@ open class BaseTests {
     }
 
     fun getTag(): Tag {
-        return Tag("tag")
+        return Tag(0, "TAG")
     }
 
     fun getTags(): MutableList<Tag> {
-        val tag1 = Tag(1, "tag1")
-        val tag2 = Tag(2, "tag2")
+        val tag1 = Tag(1, "TAG1")
+        val tag2 = Tag(2, "TAG2")
         return mutableListOf(tag1, tag2)
     }
 
