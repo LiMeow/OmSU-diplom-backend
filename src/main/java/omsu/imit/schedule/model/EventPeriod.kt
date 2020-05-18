@@ -61,7 +61,6 @@ class EventPeriod(@Id
         if (other !is EventPeriod) return false
 
         if (id != other.id) return false
-        if (event != other.event) return false
         if (classroom != other.classroom) return false
         if (timeBlock != other.timeBlock) return false
         if (day != other.day) return false

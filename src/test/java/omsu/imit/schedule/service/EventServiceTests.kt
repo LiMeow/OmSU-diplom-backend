@@ -6,7 +6,9 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
+import omsu.imit.schedule.dto.request.CreateEventPeriodRequest
 import omsu.imit.schedule.dto.request.CreateEventRequest
+import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.repository.EventPeriodRepository
 import omsu.imit.schedule.repository.EventRepository
@@ -48,34 +50,141 @@ class EventServiceTests : BaseTests() {
     }
 
     @Test
-    fun testCreateEvent() {
+    fun testCreateEventWithNotIntersectedEventPeriods() {
+        val classroom = getClassroom()
+        val timeBlock = getTimeBlock()
         val lecturer = getLecturer()
         val event = getEvent()
-        val request = CreateEventRequest(lecturer.id, true)
+        val eventPeriod = getEventPeriod()
+        event.eventPeriods = mutableListOf(eventPeriod)
 
-        every { eventRepository.save(event) } returns event
+        val eventPeriodRequest = CreateEventPeriodRequest(
+                classroom.id,
+                timeBlock.id,
+                eventPeriod.day,
+                eventPeriod.dateFrom,
+                eventPeriod.dateTo,
+                eventPeriod.interval)
+        val request = CreateEventRequest(lecturer.id, true, listOf(eventPeriodRequest))
+
+        every {
+            eventPeriodRepository.findByClassroomDayAndTime(
+                    eventPeriod.classroom.id,
+                    eventPeriod.timeBlock.id,
+                    eventPeriod.day,
+                    eventPeriod.dateFrom,
+                    eventPeriod.dateTo)
+        } returns listOf()
+        every { timeBlockService.getTimeBlockById(timeBlock.id) } returns timeBlock
+        every { classroomService.getClassroomById(classroom.id) } returns classroom
         every { lecturerService.getLecturer(lecturer.id) } returns lecturer
+        every { eventRepository.save(event) } returns event
+        every { eventPeriodRepository.save(eventPeriod) } returns eventPeriod
 
         assertEquals(event, eventService.createEvent(request))
 
+        verify {
+            eventPeriodRepository.findByClassroomDayAndTime(
+                    eventPeriod.classroom.id,
+                    eventPeriod.timeBlock.id,
+                    eventPeriod.day,
+                    eventPeriod.dateFrom,
+                    eventPeriod.dateTo)
+        }
+        verify { timeBlockService.getTimeBlockById(timeBlock.id) }
+        verify { classroomService.getClassroomById(classroom.id) }
         verify { lecturerService.getLecturer(lecturer.id) }
         verify { eventRepository.save(event) }
+        verify { eventPeriodRepository.save(eventPeriod) }
+    }
+
+    @Test
+    fun testCreateEventWithIntersectedEventPeriods() {
+        val lecturer = getLecturer()
+        val event = getEvent()
+        val eventPeriod = getEventPeriod()
+        event.eventPeriods = mutableListOf(eventPeriod)
+
+        val eventPeriodRequest = CreateEventPeriodRequest(
+                eventPeriod.classroom.id,
+                eventPeriod.timeBlock.id,
+                eventPeriod.day,
+                eventPeriod.dateFrom,
+                eventPeriod.dateTo,
+                eventPeriod.interval)
+        val request = CreateEventRequest(lecturer.id, true, listOf(eventPeriodRequest))
+
+        every {
+            eventPeriodRepository.findByClassroomDayAndTime(
+                    eventPeriod.classroom.id,
+                    eventPeriod.timeBlock.id,
+                    eventPeriod.day,
+                    eventPeriod.dateFrom,
+                    eventPeriod.dateTo)
+        } returns listOf(eventPeriod)
+        every { lecturerService.getLecturer(lecturer.id) } returns lecturer
+
+        assertThrows(CommonValidationException::class.java) { eventService.createEvent(request) }
+
+        verify {
+            eventPeriodRepository.findByClassroomDayAndTime(
+                    eventPeriod.classroom.id,
+                    eventPeriod.timeBlock.id,
+                    eventPeriod.day,
+                    eventPeriod.dateFrom,
+                    eventPeriod.dateTo)
+        }
+        verify { lecturerService.getLecturer(lecturer.id) }
     }
 
     @Test
     fun testCreateEventAndGetInfo() {
+        val classroom = getClassroom()
+        val timeBlock = getTimeBlock()
         val lecturer = getLecturer()
         val event = getEvent()
-        val request = CreateEventRequest(lecturer.id, true)
+        val eventPeriod = getEventPeriod()
+        event.eventPeriods = mutableListOf(eventPeriod)
+
+        val eventPeriodRequest = CreateEventPeriodRequest(
+                classroom.id,
+                timeBlock.id,
+                eventPeriod.day,
+                eventPeriod.dateFrom,
+                eventPeriod.dateTo,
+                eventPeriod.interval)
+        val request = CreateEventRequest(lecturer.id, true, listOf(eventPeriodRequest))
         val response = getEventInfo(event)
 
-        every { eventRepository.save(event) } returns event
+        every {
+            eventPeriodRepository.findByClassroomDayAndTime(
+                    eventPeriod.classroom.id,
+                    eventPeriod.timeBlock.id,
+                    eventPeriod.day,
+                    eventPeriod.dateFrom,
+                    eventPeriod.dateTo)
+        } returns listOf()
+        every { timeBlockService.getTimeBlockById(timeBlock.id) } returns timeBlock
+        every { classroomService.getClassroomById(classroom.id) } returns classroom
         every { lecturerService.getLecturer(lecturer.id) } returns lecturer
+        every { eventRepository.save(event) } returns event
+        every { eventPeriodRepository.save(eventPeriod) } returns eventPeriod
 
         assertEquals(response, eventService.createEventAndGetInfo(request))
 
+        verify {
+            eventPeriodRepository.findByClassroomDayAndTime(
+                    eventPeriod.classroom.id,
+                    eventPeriod.timeBlock.id,
+                    eventPeriod.day,
+                    eventPeriod.dateFrom,
+                    eventPeriod.dateTo)
+        }
+        verify { timeBlockService.getTimeBlockById(timeBlock.id) }
+        verify { classroomService.getClassroomById(classroom.id) }
         verify { lecturerService.getLecturer(lecturer.id) }
         verify { eventRepository.save(event) }
+        verify { eventPeriodRepository.save(eventPeriod) }
     }
 
     @Test
@@ -124,5 +233,24 @@ class EventServiceTests : BaseTests() {
         verify { eventRepository.existsById(id) }
     }
 
-
+//    @Test
+//    fun testCancelSingleEventPerioEvent() {
+//        val event = getEvent()
+//        val eventWithCanceledEventPeriod = getEvent()
+//        val date =LocalDate.of(2020,5,18)
+//        val eventPeriod= getEventPeriod(date,date,Day.FRIDAY,Interval.NONE)
+//        val request= CancelEventRequest(listOf(date))
+//        val response = getEventInfo(event)
+//
+//        event.eventPeriods= mutableListOf(eventPeriod)
+//
+//        every { eventRepository.findById(event.id) } returns Optional.of(event)
+//        every { eventRepository.save(event) } returns Optional.of(event)
+//        every { eventPeriodRepository.deleteById(eventPeriod.id) } returns mockk()
+//
+//        assertEquals(response, eventService.createEventAndGetInfo(request))
+//
+//        verify { lecturerService.getLecturer(lecturer.id) }
+//        verify { eventRepository.save(event) }
+//    }
 }

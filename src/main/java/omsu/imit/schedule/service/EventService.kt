@@ -132,7 +132,11 @@ constructor(private val classroomService: ClassroomService,
                     }
                 }
 
-        this.eventRepository.save(event)
+        when {
+            event.eventPeriods.isEmpty() -> this.eventRepository.deleteById(event.id)
+            !event.eventPeriods.isEmpty() -> this.eventRepository.save(event)
+        }
+
         return event
     }
 
@@ -160,7 +164,7 @@ constructor(private val classroomService: ClassroomService,
 
     private fun checkEventPeriod(classroomId: Int, day: Day, dateFrom: LocalDate, dateTo: LocalDate, timeBlockId: Int, interval: Interval) {
         val existingPeriods = eventPeriodRepository
-                .findByClassroomDayAndTime(classroomId, day, dateFrom, dateTo, timeBlockId)
+                .findByClassroomDayAndTime(classroomId, timeBlockId, day, dateFrom, dateTo)
                 .asSequence()
                 .filter {
                     it.interval == interval ||
