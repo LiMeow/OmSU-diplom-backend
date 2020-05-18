@@ -3,8 +3,8 @@ package omsu.imit.schedule.controller
 import omsu.imit.schedule.dto.request.CreateBuildingRequest
 import omsu.imit.schedule.dto.request.EditBuildingRequest
 import omsu.imit.schedule.dto.response.StatusResponse
-import omsu.imit.schedule.service.BuildingService
-import omsu.imit.schedule.service.ClassroomService
+import omsu.imit.schedule.services.BuildingService
+import omsu.imit.schedule.services.ClassroomService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

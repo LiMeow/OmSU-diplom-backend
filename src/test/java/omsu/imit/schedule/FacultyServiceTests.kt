@@ -11,8 +11,8 @@ import omsu.imit.schedule.dto.response.FacultyInfo
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Faculty
 import omsu.imit.schedule.repository.FacultyRepository
-import omsu.imit.schedule.service.BuildingService
-import omsu.imit.schedule.service.FacultyService
+import omsu.imit.schedule.services.BuildingService
+import omsu.imit.schedule.services.FacultyService
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions

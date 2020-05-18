@@ -1,7 +1,7 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateScheduleItemRequest
-import omsu.imit.schedule.service.ScheduleItemService
+import omsu.imit.schedule.services.ScheduleItemService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

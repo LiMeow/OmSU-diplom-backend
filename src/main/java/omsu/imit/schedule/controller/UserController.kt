@@ -1,8 +1,8 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.response.StatusResponse
-import omsu.imit.schedule.model.UserRole
-import omsu.imit.schedule.service.UserService
+import omsu.imit.schedule.model.Role
+import omsu.imit.schedule.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,8 +15,8 @@ constructor(private val userService: UserService) {
 
     @PutMapping(value = ["/{userId}/change-role"])
     fun changeUserRole(@PathVariable userId: Int,
-                       @RequestParam userRole: UserRole): ResponseEntity<*> {
-        return ResponseEntity.ok().body(userService.changeUserRole(userId, userRole))
+                       @RequestParam role: Role): ResponseEntity<*> {
+        return ResponseEntity.ok().body(userService.changeUserRole(userId, role))
     }
 
     @PutMapping(value = ["/{userId}/disable"])

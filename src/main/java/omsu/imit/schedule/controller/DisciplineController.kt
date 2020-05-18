@@ -1,8 +1,9 @@
 package omsu.imit.schedule.controller
 
-import omsu.imit.schedule.dto.request.DisciplineRequest
+import omsu.imit.schedule.dto.request.CreateDisciplineRequest
+import omsu.imit.schedule.dto.request.EditDisciplineRequest
 import omsu.imit.schedule.dto.response.StatusResponse
-import omsu.imit.schedule.service.DisciplineService
+import omsu.imit.schedule.services.DisciplineService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,14 +16,14 @@ class DisciplineController
 constructor(private val disciplineService: DisciplineService) {
 
     @PostMapping
-    fun createDiscipline(@Valid @RequestBody request: DisciplineRequest): ResponseEntity<*> {
+    fun createDiscipline(@Valid @RequestBody request: CreateDisciplineRequest): ResponseEntity<*> {
         return ResponseEntity.ok().body(disciplineService.createDiscipline(request))
     }
 
     @GetMapping(value = ["/{disciplineId}"])
     fun getDiscipline(@PathVariable disciplineId: Int): ResponseEntity<*> {
 
-        return ResponseEntity.ok().body(disciplineService.getDiscipline(disciplineId))
+        return ResponseEntity.ok().body(disciplineService.getDisciplineById(disciplineId))
     }
 
     @GetMapping
@@ -33,7 +34,7 @@ constructor(private val disciplineService: DisciplineService) {
 
     @PutMapping(value = ["/{disciplineId}"])
     fun editDiscipline(@PathVariable disciplineId: Int,
-                       @Valid @RequestBody request: DisciplineRequest): ResponseEntity<*> {
+                       @Valid @RequestBody request: EditDisciplineRequest): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(disciplineService.editDiscipline(disciplineId, request))
     }

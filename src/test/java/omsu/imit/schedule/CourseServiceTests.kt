@@ -5,13 +5,11 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import omsu.imit.schedule.dto.response.CourseInfo
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.NotFoundException
-import omsu.imit.schedule.model.Course
 import omsu.imit.schedule.repository.CourseRepository
-import omsu.imit.schedule.service.CourseService
-import omsu.imit.schedule.service.FacultyService
+import omsu.imit.schedule.services.CourseService
+import omsu.imit.schedule.services.FacultyService
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
@@ -97,14 +95,5 @@ class CourseServiceTests : BaseTests() {
 
         assertEquals(response, courseService.getCourseInfo(course.id))
         verify { courseRepository.findById(course.id) }
-    }
-
-    private fun getCourseInfo(course: Course): CourseInfo {
-        return CourseInfo(
-                course.id,
-                course.faculty.name,
-                course.startYear,
-                course.finishYear,
-                course.groups?.asSequence()?.map { getGroupInfo(it) }?.toList())
     }
 }

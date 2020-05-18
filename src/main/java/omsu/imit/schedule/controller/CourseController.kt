@@ -1,6 +1,6 @@
 package omsu.imit.schedule.controller
 
-import omsu.imit.schedule.service.CourseService
+import omsu.imit.schedule.services.CourseService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
 @RestController
-@RequestMapping("faculties/")
+@RequestMapping("/faculties")
 @Validated
 class CourseController
 @Autowired

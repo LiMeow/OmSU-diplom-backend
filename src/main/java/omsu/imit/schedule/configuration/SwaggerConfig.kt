@@ -11,16 +11,16 @@ import springfox.documentation.service.ApiKey
 import springfox.documentation.service.AuthorizationScope
 import springfox.documentation.service.SecurityReference
 import springfox.documentation.spi.DocumentationType
-import springfox.documentation.spi.service.contexts.SecurityContext
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
+import java.util.*
 
 @Configuration
 @EnableSwagger2
-open class SwaggerConfig {
+class SwaggerConfig {
 
     @Bean
-    open fun api(): Docket {
+    fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("omsu.imit.schedule.controller"))
@@ -28,15 +28,7 @@ open class SwaggerConfig {
                 .build()
                 .apiInfo(apiInfo())
                 .securitySchemes(listOf(apiKey()))
-                .securityContexts(Lists.newArrayList(securityContext()))
-    }
-
-    @Bean
-    open fun securityContext(): SecurityContext {
-        return SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.any())
-                .build()
+                .genericModelSubstitutes(Optional::class.java)
     }
 
     private fun defaultAuth(): List<SecurityReference> {
@@ -48,7 +40,7 @@ open class SwaggerConfig {
     }
 
     private fun apiKey(): ApiKey {
-        return ApiKey("JWT", "Authorization", "header")
+        return ApiKey("Bearer %token", "Authorization", "Header")
     }
 
     private fun apiInfo(): ApiInfo {

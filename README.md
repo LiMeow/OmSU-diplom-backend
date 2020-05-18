@@ -101,3 +101,11 @@ mvn liquibase:rollback \
   -Dliquibase.password=password \
   -Dliquibase.rollbackCount=1
 ```
+## To test e-mails sent this application uses fake SMTP [Ethereal](https://ethereal.email/)
+
+To check the sent message you need:
+ 1. Go to [Ethereal Login Page](https://ethereal.email/login)
+ 2. Login with:
+    * userName: *hallie.wunsch91@ethereal.email*
+    * password: *5ZKXP9crWRacxdePCQ*
+ 3. Go to [Messages](https://ethereal.email/messages)

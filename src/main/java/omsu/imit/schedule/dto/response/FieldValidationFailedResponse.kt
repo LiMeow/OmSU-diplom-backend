@@ -10,20 +10,14 @@ import java.util.function.Consumer
 /**
  * Response which used for field validation exception preparing.
  */
-class FieldValidationFailedResponse(status: Status, issues: Map<String, MutableList<String>>) {
-    private val status: Status
-    val issues: Map<String, MutableList<String>>
-
-    fun getStatus(): Status {
-        return status
-    }
+class FieldValidationFailedResponse(val status: Status, val issues: Map<String, MutableList<String>>) {
 
     /**
      * Assistable builder of status.
      */
     class ValidationFailedResponseBuilder {
         private val issues: MutableMap<String, MutableList<String>> = HashMap()
-        fun addIssue(field: String, issue: String): ValidationFailedResponseBuilder {
+        private fun addIssue(field: String, issue: String): ValidationFailedResponseBuilder {
             issues.computeIfAbsent(field) { k: String? -> ArrayList() }.add(issue)
             return this
         }
@@ -39,8 +33,4 @@ class FieldValidationFailedResponse(status: Status, issues: Map<String, MutableL
         }
     }
 
-    init {
-        this.status = status
-        this.issues = issues
-    }
 }

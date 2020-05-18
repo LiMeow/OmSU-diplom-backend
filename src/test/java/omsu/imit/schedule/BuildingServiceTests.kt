@@ -12,7 +12,7 @@ import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Building
 import omsu.imit.schedule.repository.BuildingRepository
-import omsu.imit.schedule.service.BuildingService
+import omsu.imit.schedule.services.BuildingService
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

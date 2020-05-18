@@ -1,9 +1,9 @@
 package omsu.imit.schedule.dto.response
 
-import java.util.*
+import java.time.LocalDate
 
 class ClassroomInfoByDate(
-        var date: Date,
+        var date: LocalDate,
         var classroom: ClassroomInfo,
         var events: MutableCollection<EventInfo>) {
 

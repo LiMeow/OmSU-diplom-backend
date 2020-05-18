@@ -10,8 +10,8 @@ import omsu.imit.schedule.dto.request.CreateChairRequest
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Chair
 import omsu.imit.schedule.repository.ChairRepository
-import omsu.imit.schedule.service.ChairService
-import omsu.imit.schedule.service.FacultyService
+import omsu.imit.schedule.services.ChairService
+import omsu.imit.schedule.services.FacultyService
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows

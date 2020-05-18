@@ -11,9 +11,9 @@ import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Group
 import omsu.imit.schedule.repository.GroupRepository
-import omsu.imit.schedule.service.CourseService
-import omsu.imit.schedule.service.GroupService
-import omsu.imit.schedule.service.StudyDirectionService
+import omsu.imit.schedule.services.CourseService
+import omsu.imit.schedule.services.GroupService
+import omsu.imit.schedule.services.StudyDirectionService
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows

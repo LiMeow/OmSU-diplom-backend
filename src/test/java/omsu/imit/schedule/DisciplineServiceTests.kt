@@ -6,65 +6,66 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
-import omsu.imit.schedule.dto.request.DisciplineRequest
+import omsu.imit.schedule.dto.request.CreateDisciplineRequest
+import omsu.imit.schedule.dto.request.EditDisciplineRequest
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Discipline
 import omsu.imit.schedule.repository.DisciplineRepository
-import omsu.imit.schedule.service.DisciplineService
+import omsu.imit.schedule.services.DisciplineService
+import omsu.imit.schedule.services.TagService
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.dao.DataIntegrityViolationException
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
-class DisciplineServiceTests {
+class DisciplineServiceTests : BaseTests() {
 
     @MockK
     lateinit var disciplineRepository: DisciplineRepository
+
+    @MockK
+    lateinit var tagService: TagService
 
     private lateinit var disciplineService: DisciplineService
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        this.disciplineService = DisciplineService(this.disciplineRepository)
+        this.disciplineService = DisciplineService(this.disciplineRepository, this.tagService)
     }
 
     @Test
     fun testCreateDiscipline() {
-        val request = DisciplineRequest("discipline")
-        val discipline = Discipline(0, request.name)
+        val discipline = getDiscipline()
+        val request = CreateDisciplineRequest(discipline.name)
 
-        every { disciplineRepository.findByDisciplineName(discipline.name) } returns (null)
         every { disciplineRepository.save(discipline) } returns discipline
-
         assertEquals(discipline, disciplineService.createDiscipline(request))
-
-        verify { disciplineRepository.findByDisciplineName(discipline.name) }
         verify { disciplineRepository.save(discipline) }
     }
 
     @Test
     fun testCreateAlreadyExistingDiscipline() {
-        val request = DisciplineRequest("discipline")
-        val discipline = Discipline(1, request.name)
+        val discipline = getDiscipline()
+        val request = CreateDisciplineRequest(discipline.name)
 
-        every { disciplineRepository.findByDisciplineName(discipline.name) } returns discipline
-
+        every { disciplineRepository.save(discipline) } throws DataIntegrityViolationException("")
         assertThrows(CommonValidationException::class.java) { disciplineService.createDiscipline(request) }
-        verify { disciplineRepository.findByDisciplineName(discipline.name) }
+        verify { disciplineRepository.save(discipline) }
     }
 
     @Test
     fun testGetDisciplineById() {
-        val discipline = Discipline(1, "discipline")
+        val discipline = getDiscipline()
 
         every { disciplineRepository.findById(discipline.id) } returns Optional.of(discipline)
 
-        assertEquals(discipline, disciplineService.getDiscipline(discipline.id))
+        assertEquals(discipline, disciplineService.getDisciplineById(discipline.id))
         verify { disciplineRepository.findById(discipline.id) }
     }
 
@@ -73,7 +74,7 @@ class DisciplineServiceTests {
 
         every { disciplineRepository.findById(1) } returns Optional.empty()
 
-        assertThrows(NotFoundException::class.java) { disciplineService.getDiscipline(1) }
+        assertThrows(NotFoundException::class.java) { disciplineService.getDisciplineById(1) }
         verify { disciplineRepository.findById(1) }
     }
 
@@ -92,7 +93,7 @@ class DisciplineServiceTests {
 
     @Test
     fun testEditDiscipline() {
-        val request = DisciplineRequest("updatedDiscipline")
+        val request = EditDisciplineRequest("updatedDiscipline")
         val discipline = Discipline(1, "discipline")
         val updatedDiscipline = Discipline(1, "updatedDiscipline")
 
@@ -107,7 +108,7 @@ class DisciplineServiceTests {
 
     @Test
     fun testEditNonExistingDiscipline() {
-        val request = DisciplineRequest("updatedDiscipline")
+        val request = EditDisciplineRequest("updatedDiscipline")
 
         every { disciplineRepository.findById(1) } returns Optional.empty()
 

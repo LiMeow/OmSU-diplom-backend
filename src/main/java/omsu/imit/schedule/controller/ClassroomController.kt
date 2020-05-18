@@ -3,11 +3,12 @@ package omsu.imit.schedule.controller
 import omsu.imit.schedule.dto.request.CreateClassroomRequest
 import omsu.imit.schedule.dto.request.EditClassroomRequest
 import omsu.imit.schedule.dto.response.StatusResponse
-import omsu.imit.schedule.service.ClassroomService
+import omsu.imit.schedule.services.ClassroomService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.sql.Date
+import java.time.LocalDate
 
 import javax.validation.Valid
 
@@ -24,19 +25,20 @@ constructor(private val classroomService: ClassroomService) {
 
     @GetMapping(value = ["/{classroomId}"])
     fun getClassroomById(@PathVariable classroomId: Int): ResponseEntity<*> {
-
         return ResponseEntity.ok().body(classroomService.getClassroomInfo(classroomId))
     }
 
     @GetMapping(value = ["/{classroomId}/events"])
     fun getClassroomWithEventsByDate(@PathVariable classroomId: Int,
-                                     @RequestParam date: Date): ResponseEntity<*> {
+                                     @RequestParam
+                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                     date: LocalDate): ResponseEntity<*> {
 
         return ResponseEntity.ok().body(classroomService.getClassroomWithEventsByDate(classroomId, date))
     }
 
     @GetMapping
-    fun getClassroomsByTags(@RequestParam tags: List<String>): ResponseEntity<*> {
+    fun getClassroomsByTags(@RequestParam tags: List<Int>): ResponseEntity<*> {
         return ResponseEntity.ok().body(classroomService.getClassroomsByTags(tags))
     }
 

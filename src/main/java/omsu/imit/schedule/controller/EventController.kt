@@ -1,8 +1,10 @@
 package omsu.imit.schedule.controller
 
+import omsu.imit.schedule.dto.request.CancelEventRequest
 import omsu.imit.schedule.dto.request.CreateEventRequest
+import omsu.imit.schedule.dto.request.RescheduleEventRequest
 import omsu.imit.schedule.dto.response.StatusResponse
-import omsu.imit.schedule.service.EventService
+import omsu.imit.schedule.services.EventService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,8 +31,20 @@ constructor(private val eventService: EventService) {
         return ResponseEntity.ok().body(eventService.getClassroomsByEvent(eventId))
     }
 
+    @PutMapping(value = ["/reschedule/{eventId}"])
+    fun rescheduleEvent(@PathVariable eventId: Int,
+                        @Valid @RequestBody request: RescheduleEventRequest): ResponseEntity<*> {
+        return ResponseEntity.ok().body(eventService.rescheduleEvent(request, eventId))
+    }
+
+    @DeleteMapping(value = ["/cancel/{eventId}"])
+    fun cancelEventOnSomeDates(@PathVariable eventId: Int,
+                               @Valid @RequestBody request: CancelEventRequest): ResponseEntity<*> {
+        return ResponseEntity.ok().body(eventService.cancelEventOnSomeDates(request, eventId))
+    }
+
     @DeleteMapping(value = ["/{eventId}"])
-    fun deleteClassroomEvent(@PathVariable eventId: Int): StatusResponse {
+    fun deleteEvent(@PathVariable eventId: Int): StatusResponse {
         eventService.deleteEvent(eventId)
         return StatusResponse.OK
     }

@@ -9,7 +9,13 @@ class Discipline(@Id
                  var id: Int,
 
                  @Column
-                 var name: String) {
+                 var name: String,
+
+                 @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+                 @JoinTable(name = "discipline_requirements",
+                         joinColumns = [JoinColumn(name = "discipline_id", referencedColumnName = "id")],
+                         inverseJoinColumns = [JoinColumn(name = "requirement_id", referencedColumnName = "id")])
+                 var requirements: List<Tag> = mutableListOf()) {
 
     constructor(name: String) : this(0, name)
 
@@ -19,6 +25,7 @@ class Discipline(@Id
 
         if (id != other.id) return false
         if (name != other.name) return false
+        if (requirements != other.requirements) return false
 
         return true
     }
@@ -26,14 +33,7 @@ class Discipline(@Id
     override fun hashCode(): Int {
         var result = id
         result = 31 * result + name.hashCode()
+        result = 31 * result + requirements.hashCode()
         return result
     }
-
-    override fun toString(): String {
-        return "Discipline(" +
-                "id=$id, " +
-                "name='$name')"
-    }
-
-
 }

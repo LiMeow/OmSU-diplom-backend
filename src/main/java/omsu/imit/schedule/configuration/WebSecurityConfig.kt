@@ -1,73 +1,77 @@
 package omsu.imit.schedule.configuration
 
-import omsu.imit.schedule.jwt.JwtAuthenticationProvider
-import omsu.imit.schedule.jwt.JwtSettings
-import omsu.imit.schedule.jwt.JwtTokenService
-import omsu.imit.schedule.jwt.filters.CookieJwtAuthFilter
-import omsu.imit.schedule.service.JsonWebTokenService
+import omsu.imit.schedule.security.JwtTokenFilterConfigurer
+import omsu.imit.schedule.security.JwtTokenProvider
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
-import org.springframework.security.web.util.matcher.NegatedRequestMatcher
 
 
 @Configuration
 @EnableWebSecurity
-open class WebSecurityConfig(val jwtTokenService: JwtTokenService) : WebSecurityConfigurerAdapter() {
+@EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
+class WebSecurityConfig(@Autowired private val jwtTokenProvider: JwtTokenProvider) : WebSecurityConfigurerAdapter() {
 
     @Bean
-    open fun passwordEncoder(): PasswordEncoder {
+    fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
     @Bean
-    open fun jwtTokenService(settings: JwtSettings): JwtTokenService {
-        return JsonWebTokenService(settings)
+    @Throws(Exception::class)
+    override fun authenticationManagerBean(): AuthenticationManager? {
+        return super.authenticationManagerBean()
     }
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
-        http.formLogin().disable()
-        http.logout().disable()
-        http.sessionManagement().disable()
-        http.requestCache().disable()
-        http.anonymous()
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        val loginPageMatcher = AntPathRequestMatcher("/signin")
-        val notLoginPageMatcher = NegatedRequestMatcher(loginPageMatcher)
-        val authFilter = CookieJwtAuthFilter(notLoginPageMatcher)
-
-        http.addFilterBefore(authFilter, FilterSecurityInterceptor::class.java)
-
-        http
-
-                .authorizeRequests().antMatchers(
+        http.authorizeRequests()
+                .antMatchers(
                         "/signup/**",
                         "/signin",
-                        "/signout").permitAll()
-                .and()
-                .authorizeRequests().antMatchers("/debug/clear").permitAll()
-                .and()
-                .authorizeRequests().antMatchers(
-                        "/v2/api-docs",
-                        "/configuration/**",
-                        "/swagger*/**",
-                        "/webjars/**").permitAll()
-                .and()
-                .authorizeRequests().anyRequest().permitAll()
+                        "/signout",
+                        "/token",
+                        "/debug/clear",
+                        "/confirm-account").permitAll()
+                .antMatchers("/users/**").hasRole("ADMIN")
+                .antMatchers(
+                        "/buildings/**",
+                        "/classrooms/**",
+                        "/events/**",
+                        "/timeblocks/**").hasAnyRole("ADMIN", "DISPATCHER")
+                .antMatchers(
+                        "/chairs/**",
+                        "/disciplines/**",
+                        "/faculties/**",
+                        "/groups/**",
+                        "/lecturers/**",
+                        "/schedules/**").hasAnyRole("ADMIN", "DISPATCHER", "LECTURER")
+                .anyRequest().authenticated();
 
+        http.apply(JwtTokenFilterConfigurer(jwtTokenProvider));
     }
 
     @Throws(Exception::class)
-    public override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth!!.authenticationProvider(JwtAuthenticationProvider(jwtTokenService))
+    override fun configure(web: WebSecurity) {
+        web.ignoring().antMatchers("/v2/api-docs")
+                .antMatchers("/swagger-resources/**")
+                .antMatchers("/swagger-ui.html")
+                .antMatchers("/configuration/**")
+                .antMatchers("/webjars/**")
+                .antMatchers("/public")
+
     }
+
 }

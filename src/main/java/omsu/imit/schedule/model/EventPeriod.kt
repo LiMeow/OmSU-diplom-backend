@@ -1,6 +1,6 @@
 package omsu.imit.schedule.model
 
-import java.sql.Date
+import java.time.LocalDate
 import javax.persistence.*
 
 @Entity
@@ -26,10 +26,10 @@ class EventPeriod(@Id
                   var day: Day,
 
                   @Column(name = "date_from")
-                  var dateFrom: Date,
+                  var dateFrom: LocalDate,
 
                   @Column(name = "date_to")
-                  var dateTo: Date,
+                  var dateTo: LocalDate,
 
                   @Column
                   @Enumerated(EnumType.STRING)
@@ -39,10 +39,49 @@ class EventPeriod(@Id
                 classroom: Classroom,
                 timeBlock: TimeBlock,
                 day: Day,
-                dateFrom: Date,
-                dateTo: Date,
+                dateFrom: LocalDate,
+                dateTo: LocalDate,
                 interval: Interval)
             : this(0, event, classroom, timeBlock, day, dateFrom, dateTo, interval)
+
+
+    override fun toString(): String {
+        return "EventPeriod(" +
+                "id=$id, " +
+                "classroom=$classroom, " +
+                "timeBlock=$timeBlock, " +
+                "day=$day, " +
+                "dateFrom=$dateFrom, " +
+                "dateTo=$dateTo, " +
+                "interval=$interval)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is EventPeriod) return false
+
+        if (id != other.id) return false
+        if (classroom != other.classroom) return false
+        if (timeBlock != other.timeBlock) return false
+        if (day != other.day) return false
+        if (dateFrom != other.dateFrom) return false
+        if (dateTo != other.dateTo) return false
+        if (interval != other.interval) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + event.hashCode()
+        result = 31 * result + classroom.hashCode()
+        result = 31 * result + timeBlock.hashCode()
+        result = 31 * result + day.hashCode()
+        result = 31 * result + dateFrom.hashCode()
+        result = 31 * result + dateTo.hashCode()
+        result = 31 * result + interval.hashCode()
+        return result
+    }
 
 
 }

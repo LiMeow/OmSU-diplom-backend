@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import omsu.imit.schedule.model.ActivityType
 import omsu.imit.schedule.model.Interval
 import omsu.imit.schedule.model.TimeBlock
-import java.util.*
+import java.time.LocalDate
 
 class ScheduleItemInfo(
         var id: Int,
-        var dateFrom: Date,
-        var dateTo: Date,
+        var dateFrom: LocalDate,
+        var dateTo: LocalDate,
         var timeBlock: TimeBlock,
         var interval: Interval,
         var buildingNumber: Int,

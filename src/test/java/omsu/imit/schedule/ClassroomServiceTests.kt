@@ -8,8 +8,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import omsu.imit.schedule.dto.request.CreateClassroomRequest
 import omsu.imit.schedule.dto.request.EditClassroomRequest
-import omsu.imit.schedule.dto.response.ClassroomInfo
-import omsu.imit.schedule.dto.response.ClassroomShortInfo
 import omsu.imit.schedule.dto.response.ClassroomsByBuildingInfo
 import omsu.imit.schedule.dto.response.MetaInfo
 import omsu.imit.schedule.exception.CommonValidationException
@@ -19,9 +17,9 @@ import omsu.imit.schedule.model.Classroom
 import omsu.imit.schedule.model.Tag
 import omsu.imit.schedule.repository.ClassroomRepository
 import omsu.imit.schedule.repository.EventPeriodRepository
-import omsu.imit.schedule.service.BuildingService
-import omsu.imit.schedule.service.ClassroomService
-import omsu.imit.schedule.service.TagService
+import omsu.imit.schedule.services.BuildingService
+import omsu.imit.schedule.services.ClassroomService
+import omsu.imit.schedule.services.TagService
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -136,7 +134,7 @@ class ClassroomServiceTests : BaseTests() {
     @Test
     fun testGetClassroomByTags() {
         val classroom = getClassroomWithTags()
-        val tags = classroom.tags.map { it.tag }.toList()
+        val tags = classroom.tags.map { it.id }.toList()
         val response = listOf(getClassroomShortInfo(classroom))
 
         every { classroomRepository.findAllByTags(tags) } returns listOf(classroom)
@@ -271,21 +269,6 @@ class ClassroomServiceTests : BaseTests() {
         verify { classroomRepository.findById(classroom.id) }
     }
 
-
-    private fun getClassroomShortInfo(classroom: Classroom): ClassroomShortInfo {
-        return ClassroomShortInfo(
-                classroom.id,
-                classroom.building.number,
-                classroom.number)
-    }
-
-    private fun getClassroomInfo(classroom: Classroom): ClassroomInfo {
-        return ClassroomInfo(
-                classroom.id,
-                classroom.building.number,
-                classroom.number,
-                listOf())
-    }
 
     private fun getMetaInfo(building: Building,
                             total: Int,

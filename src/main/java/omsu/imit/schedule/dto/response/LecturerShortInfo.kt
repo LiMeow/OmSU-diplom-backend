@@ -5,6 +5,7 @@ class LecturerShortInfo(var id: Int,
                         var patronymic: String?,
                         var lastName: String,
                         var email: String) {
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is LecturerShortInfo) return false
@@ -26,4 +27,15 @@ class LecturerShortInfo(var id: Int,
         result = 31 * result + email.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "LecturerShortInfo(" +
+                "id=$id, " +
+                "firstName='$firstName', " +
+                "patronymic=$patronymic, " +
+                "lastName='$lastName', " +
+                "email='$email')"
+    }
+
+
 }

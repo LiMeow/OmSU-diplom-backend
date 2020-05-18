@@ -7,17 +7,14 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
 import omsu.imit.schedule.dto.request.CreateLecturerRequest
-import omsu.imit.schedule.dto.response.LecturerInfo
-import omsu.imit.schedule.dto.response.LecturerShortInfo
 import omsu.imit.schedule.exception.NotFoundException
-import omsu.imit.schedule.model.Lecturer
 import omsu.imit.schedule.repository.LecturerRepository
 import omsu.imit.schedule.repository.UserRepository
-import omsu.imit.schedule.service.ChairService
-import omsu.imit.schedule.service.LecturerService
+import omsu.imit.schedule.services.ChairService
+import omsu.imit.schedule.services.LecturerService
 import org.junit.Before
 import org.junit.Test
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
 import kotlin.test.assertEquals
@@ -82,6 +79,16 @@ class LecturerServiceTests : BaseTests() {
     }
 
     @Test
+    fun testGetLecturerByNonExistingId() {
+        val id = 1
+
+        every { lecturerRepository.findById(id) } returns Optional.empty()
+
+        assertThrows(NotFoundException::class.java) { lecturerService.getLecturer(id) }
+        verify { lecturerRepository.findById(id) }
+    }
+
+    @Test
     fun testGetAllLecturers() {
         val lecturers = listOf(getLecturer())
         val response = lecturers.map { getLecturerInfo(it) }
@@ -121,7 +128,7 @@ class LecturerServiceTests : BaseTests() {
         val id = 1;
         every { lecturerRepository.existsById(id) } returns false
 
-        Assertions.assertThrows(NotFoundException::class.java) { lecturerService.deleteLecturer(id) }
+        assertThrows(NotFoundException::class.java) { lecturerService.deleteLecturer(id) }
         verify { lecturerRepository.existsById(id) }
     }
 
@@ -134,18 +141,5 @@ class LecturerServiceTests : BaseTests() {
 
         assertEquals(response, lecturerService.getLecturerInfo(lecturer.id))
         verify { lecturerRepository.findById(lecturer.id) }
-    }
-
-    private fun getLecturerInfo(lecturer: Lecturer): LecturerInfo {
-        return LecturerInfo(lecturer.id, lecturer.getFullName(), getChairInfo(lecturer.chair))
-    }
-
-    private fun getLecturerShortInfo(lecturer: Lecturer): LecturerShortInfo {
-        return LecturerShortInfo(
-                lecturer.id,
-                lecturer.user.firstName,
-                lecturer.user.patronymic,
-                lecturer.user.lastName,
-                lecturer.user.email)
     }
 }

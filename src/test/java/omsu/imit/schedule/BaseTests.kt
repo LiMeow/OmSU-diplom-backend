@@ -1,10 +1,8 @@
 package omsu.imit.schedule
 
-import omsu.imit.schedule.dto.response.BuildingInfo
-import omsu.imit.schedule.dto.response.ChairInfo
-import omsu.imit.schedule.dto.response.GroupInfo
-import omsu.imit.schedule.dto.response.StudyDirectionInfo
+import omsu.imit.schedule.dto.response.*
 import omsu.imit.schedule.model.*
+import java.time.LocalDate
 
 open class BaseTests {
 
@@ -25,7 +23,22 @@ open class BaseTests {
     }
 
     fun getCourse(): Course {
-        return Course(getFaculty(), "2016", "2020")
+        return Course(0, getFaculty(), "2016", "2020")
+    }
+
+    fun getDiscipline(): Discipline {
+        return Discipline(0, "discipline")
+    }
+
+    fun getEvent(): Event {
+        return Event(getLecturer(), "", true)
+    }
+
+    fun getEventPeriod(dateFrom: LocalDate = LocalDate.of(2020, 5, 1),
+                       dateTo: LocalDate = LocalDate.of(2020, 7, 1),
+                       day: Day = Day.MONDAY,
+                       interval: Interval = Interval.EVERY_WEEK): EventPeriod {
+        return EventPeriod(getEvent(), getClassroom(), getTimeBlock(), day, dateFrom, dateTo, interval)
     }
 
     fun getGroup(): Group {
@@ -45,6 +58,14 @@ open class BaseTests {
         return Lecturer(getChair(), getLecturerPersonalData())
     }
 
+    fun getSchedule(): Schedule {
+        return Schedule(getCourse(), 1, "2019")
+    }
+
+    fun getScheduleItem(): ScheduleItem {
+        return ScheduleItem(getEvent(), getDiscipline(), ActivityType.PRACTICE, listOf(getGroup()), getSchedule())
+    }
+
     fun getStudyDirection(): StudyDirection {
         return StudyDirection(
                 1,
@@ -56,12 +77,12 @@ open class BaseTests {
     }
 
     fun getTag(): Tag {
-        return Tag("tag")
+        return Tag(0, "TAG")
     }
 
     fun getTags(): MutableList<Tag> {
-        val tag1 = Tag(1, "tag1")
-        val tag2 = Tag(2, "tag2")
+        val tag1 = Tag(1, "TAG1")
+        val tag2 = Tag(2, "TAG2")
         return mutableListOf(tag1, tag2)
     }
 
@@ -69,14 +90,14 @@ open class BaseTests {
         return TimeBlock("8:00", "9:35")
     }
 
-    fun getUser(enabled: Boolean = true, userRole: UserRole = UserRole.USER): User {
+    fun getUser(enabled: Boolean = true, role: Role = Role.ROLE_USER): User {
         return User(0,
                 "FirstName",
                 "Patronymic",
                 "LastName",
                 "example@gmail.com",
                 "password",
-                userRole,
+                role,
                 enabled)
     }
 
@@ -87,7 +108,7 @@ open class BaseTests {
                 "LastName",
                 "example@gmail.com",
                 null,
-                UserRole.LECTURER,
+                Role.ROLE_LECTURER,
                 false)
     }
 
@@ -95,8 +116,56 @@ open class BaseTests {
         return BuildingInfo(building.id, building.number, building.address)
     }
 
+    fun getClassroomShortInfo(classroom: Classroom): ClassroomShortInfo {
+        return ClassroomShortInfo(
+                classroom.id,
+                classroom.building.number,
+                classroom.number)
+    }
+
+    fun getClassroomInfo(classroom: Classroom): ClassroomInfo {
+        return ClassroomInfo(
+                classroom.id,
+                classroom.building.number,
+                classroom.number,
+                listOf())
+    }
+
     fun getChairInfo(chair: Chair): ChairInfo {
         return ChairInfo(chair.id, chair.faculty.name, chair.name)
+    }
+
+    fun getCourseInfo(course: Course): CourseInfo {
+        return CourseInfo(
+                course.id,
+                course.faculty.name,
+                course.startYear,
+                course.finishYear,
+                course.groups?.asSequence()?.map { getGroupInfo(it) }?.toList())
+    }
+
+    fun getEventInfo(event: Event): EventInfo {
+        return return EventInfo(
+                event.id,
+                getLecturerShortInfo(event.lecturer),
+                event.comment,
+                event.required,
+                event.eventPeriods
+                        .asSequence()
+                        .sortedBy { eventPeriod -> eventPeriod.dateFrom }
+                        .map { getEventPeriodInfo(it) }
+                        .toMutableList())
+    }
+
+    private fun getEventPeriodInfo(period: EventPeriod): EventPeriodInfo {
+        return EventPeriodInfo(
+                period.id,
+                getClassroomShortInfo(period.classroom),
+                period.timeBlock,
+                period.day,
+                period.dateFrom,
+                period.dateTo,
+                period.interval)
     }
 
     fun getGroupInfo(group: Group): GroupInfo {
@@ -115,5 +184,18 @@ open class BaseTests {
                 studyDirection.name,
                 studyDirection.qualification.description,
                 studyDirection.studyForm.form)
+    }
+
+    fun getLecturerInfo(lecturer: Lecturer): LecturerInfo {
+        return LecturerInfo(lecturer.id, lecturer.getFullName(), getChairInfo(lecturer.chair))
+    }
+
+    fun getLecturerShortInfo(lecturer: Lecturer): LecturerShortInfo {
+        return LecturerShortInfo(
+                lecturer.id,
+                lecturer.user.firstName,
+                lecturer.user.patronymic,
+                lecturer.user.lastName,
+                lecturer.user.email)
     }
 }
