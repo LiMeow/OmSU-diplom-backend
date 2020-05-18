@@ -13,7 +13,5 @@ data class CreateScheduleRequest(
 
         @get:NotBlank
         @get:Pattern(regexp = "^2\\d{3}\\/2\\d{3}\$", message = "Study year must have format 2***/2***")
-        var studyYear: String,
-
-        @get:NotNull
-        var groupId: Int)
+        var studyYear: String
+)

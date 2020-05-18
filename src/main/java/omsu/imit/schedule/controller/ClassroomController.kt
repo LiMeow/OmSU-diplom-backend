@@ -3,7 +3,7 @@ package omsu.imit.schedule.controller
 import omsu.imit.schedule.dto.request.CreateClassroomRequest
 import omsu.imit.schedule.dto.request.EditClassroomRequest
 import omsu.imit.schedule.dto.response.StatusResponse
-import omsu.imit.schedule.service.ClassroomService
+import omsu.imit.schedule.services.ClassroomService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity

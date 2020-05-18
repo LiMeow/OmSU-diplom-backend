@@ -4,7 +4,7 @@ import omsu.imit.schedule.dto.request.CancelEventRequest
 import omsu.imit.schedule.dto.request.CreateEventRequest
 import omsu.imit.schedule.dto.request.RescheduleEventRequest
 import omsu.imit.schedule.dto.response.StatusResponse
-import omsu.imit.schedule.service.EventService
+import omsu.imit.schedule.services.EventService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

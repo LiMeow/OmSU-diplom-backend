@@ -39,13 +39,22 @@ class Group(@Id
                 dissolutionYear: String?) :
             this(0, studyDirection, course, name, formationYear, dissolutionYear)
 
+
+    override fun toString(): String {
+        return "Group(" +
+                "id=$id, " +
+                "studyDirection=$studyDirection, " +
+                "name='$name', " +
+                "formationYear='$formationYear', " +
+                "dissolutionYear=$dissolutionYear)"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Group) return false
 
         if (id != other.id) return false
         if (studyDirection != other.studyDirection) return false
-        if (course != other.course) return false
         if (name != other.name) return false
         if (formationYear != other.formationYear) return false
         if (dissolutionYear != other.dissolutionYear) return false
@@ -56,20 +65,10 @@ class Group(@Id
     override fun hashCode(): Int {
         var result = id
         result = 31 * result + studyDirection.hashCode()
-        result = 31 * result + course.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + formationYear.hashCode()
         result = 31 * result + (dissolutionYear?.hashCode() ?: 0)
         return result
-    }
-
-    override fun toString(): String {
-        return "Group(" +
-                "id=$id, " +
-                "studyDirection=$studyDirection, " +
-                "name='$name', " +
-                "formationYear='$formationYear', " +
-                "dissolutionYear=$dissolutionYear)"
     }
 
 

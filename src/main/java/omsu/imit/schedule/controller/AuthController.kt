@@ -5,8 +5,8 @@ import omsu.imit.schedule.dto.request.SignUpRequest
 import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.model.Role
 import omsu.imit.schedule.security.JwtTokenProvider
-import omsu.imit.schedule.service.AuthService
-import omsu.imit.schedule.service.UserService
+import omsu.imit.schedule.services.AuthService
+import omsu.imit.schedule.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
