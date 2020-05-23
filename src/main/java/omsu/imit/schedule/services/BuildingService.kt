@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-open class BuildingService @Autowired
+class BuildingService @Autowired
 constructor(private val buildingRepository: BuildingRepository) : BaseService() {
 
 

@@ -7,5 +7,4 @@ import javax.validation.constraints.NotNull
 data class CreateScheduleItemRequest(@get:NotNull var event: CreateEventRequest,
                                      @get:NotNull var activityType: ActivityType,
                                      @get:NotNull var disciplineId: Int,
-                                     @get:NotEmpty var groupIds: List<Int>) {
-}
+                                     @get:NotEmpty var groupIds: List<Int>)

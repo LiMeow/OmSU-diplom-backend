@@ -18,6 +18,7 @@ enum class ErrorCode {
     DISCIPLINE_ALREADY_EXISTS("Discipline '%s' already exists."),
     EMPTY_REQUEST_BODY("Empty request body."),
     EVENT_NOT_EXISTS("Event with id '%s' not exists."),
+    EVENT_PERIOD_NOT_EXISTS("Event Period with id '%s' not exists."),
     FACULTY_ALREADY_EXISTS("Faculty with name '%s' in building with address '%s' already exists"),
     FACULTY_NOT_EXISTS("Faculty with id '%s' not exists"),
     GROUP_ALREADY_EXISTS("Group with name '%s' already exists for this course."),

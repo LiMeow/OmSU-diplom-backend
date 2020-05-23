@@ -59,7 +59,7 @@ open class BaseTests {
     }
 
     fun getSchedule(): Schedule {
-        return Schedule(getCourse(), 1, "2019")
+        return Schedule(getCourse(), 8, "2019/2020")
     }
 
     fun getScheduleItem(): ScheduleItem {
@@ -90,13 +90,13 @@ open class BaseTests {
         return TimeBlock("8:00", "9:35")
     }
 
-    fun getUser(enabled: Boolean = true, role: Role = Role.ROLE_USER): User {
+    fun getUser(enabled: Boolean = true, role: Role = Role.ROLE_USER, password: String = "password"): User {
         return User(0,
                 "FirstName",
                 "Patronymic",
                 "LastName",
                 "example@gmail.com",
-                "password",
+                password,
                 role,
                 enabled)
     }

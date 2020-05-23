@@ -10,7 +10,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/groups")
-class GroupsController @Autowired
+class GroupController @Autowired
 constructor(private val groupService: GroupService) {
 
     @PostMapping

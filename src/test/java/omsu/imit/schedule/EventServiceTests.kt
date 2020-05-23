@@ -64,8 +64,9 @@ class EventServiceTests : BaseTests() {
         val timeBlock = getTimeBlock()
         val lecturer = getLecturer()
         val event = getEvent()
+        val createdEvent = getEvent()
         val eventPeriod = getEventPeriod()
-        event.eventPeriods = mutableListOf(eventPeriod)
+        createdEvent.eventPeriods = mutableListOf(eventPeriod)
 
         val eventPeriodRequest = CreateEventPeriodRequest(
                 classroom.id,
@@ -90,7 +91,7 @@ class EventServiceTests : BaseTests() {
         every { eventRepository.save(event) } returns event
         every { eventPeriodRepository.save(eventPeriod) } returns eventPeriod
 
-        assertEquals(event, eventService.createEvent(request))
+        assertEquals(createdEvent, eventService.createEvent(request))
 
         verify {
             eventPeriodRepository.findByClassroomDayAndTime(
@@ -103,7 +104,6 @@ class EventServiceTests : BaseTests() {
         verify { timeBlockService.getTimeBlockById(timeBlock.id) }
         verify { classroomService.getClassroomById(classroom.id) }
         verify { lecturerService.getLecturer(lecturer.id) }
-        verify { eventRepository.save(event) }
         verify { eventPeriodRepository.save(eventPeriod) }
     }
 
@@ -152,8 +152,9 @@ class EventServiceTests : BaseTests() {
         val timeBlock = getTimeBlock()
         val lecturer = getLecturer()
         val event = getEvent()
+        val createdEvent = getEvent()
         val eventPeriod = getEventPeriod()
-        event.eventPeriods = mutableListOf(eventPeriod)
+        createdEvent.eventPeriods = mutableListOf(eventPeriod)
 
         val eventPeriodRequest = CreateEventPeriodRequest(
                 classroom.id,
@@ -163,7 +164,7 @@ class EventServiceTests : BaseTests() {
                 eventPeriod.dateTo,
                 eventPeriod.interval)
         val request = CreateEventRequest(lecturer.id, true, listOf(eventPeriodRequest))
-        val response = getEventInfo(event)
+        val response = getEventInfo(createdEvent)
 
         every {
             eventPeriodRepository.findByClassroomDayAndTime(
@@ -192,7 +193,6 @@ class EventServiceTests : BaseTests() {
         verify { timeBlockService.getTimeBlockById(timeBlock.id) }
         verify { classroomService.getClassroomById(classroom.id) }
         verify { lecturerService.getLecturer(lecturer.id) }
-        verify { eventRepository.save(event) }
         verify { eventPeriodRepository.save(eventPeriod) }
     }
 

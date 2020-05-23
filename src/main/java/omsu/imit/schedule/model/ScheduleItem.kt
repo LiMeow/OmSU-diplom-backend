@@ -37,6 +37,7 @@ class ScheduleItem(@Id
                 schedule: Schedule)
             : this(0, event, discipline, activityType, groups, schedule)
 
+
     override fun toString(): String {
         return "ScheduleItem(" +
                 "id=$id, " +
@@ -44,6 +45,28 @@ class ScheduleItem(@Id
                 "discipline=${discipline.name}, " +
                 "activityType=${activityType.name}, " +
                 "groups=$groups)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ScheduleItem) return false
+
+        if (id != other.id) return false
+        if (event != other.event) return false
+        if (discipline != other.discipline) return false
+        if (activityType != other.activityType) return false
+        if (groups != other.groups) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + event.hashCode()
+        result = 31 * result + discipline.hashCode()
+        result = 31 * result + activityType.hashCode()
+        result = 31 * result + groups.hashCode()
+        return result
     }
 
 

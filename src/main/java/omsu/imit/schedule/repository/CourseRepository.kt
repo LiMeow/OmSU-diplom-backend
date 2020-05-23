@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository
 
 
 @Repository
-interface CourseRepository : JpaRepository<Course, Int> {
-}
+interface CourseRepository : JpaRepository<Course, Int>
