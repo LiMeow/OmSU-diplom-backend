@@ -2,6 +2,7 @@ package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CancelEventRequest
 import omsu.imit.schedule.dto.request.CreateEventRequest
+import omsu.imit.schedule.dto.request.EditEventRequest
 import omsu.imit.schedule.dto.request.RescheduleEventRequest
 import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.services.EventService
@@ -29,6 +30,12 @@ constructor(private val eventService: EventService) {
     @GetMapping(value = ["/{eventId}/classrooms"])
     fun getClassroomsByEvent(@PathVariable eventId: Int): ResponseEntity<*> {
         return ResponseEntity.ok().body(eventService.getClassroomsByEvent(eventId))
+    }
+
+    @PutMapping(value = ["/{eventId}"])
+    fun editEvent(@PathVariable eventId: Int,
+                  @Valid @RequestBody request: EditEventRequest): ResponseEntity<*> {
+        return ResponseEntity.ok().body(eventService.editEvent(eventId, request))
     }
 
     @PutMapping(value = ["/reschedule/{eventId}"])

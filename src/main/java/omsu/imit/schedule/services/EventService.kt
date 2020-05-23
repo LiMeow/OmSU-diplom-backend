@@ -1,9 +1,6 @@
 package omsu.imit.schedule.services
 
-import omsu.imit.schedule.dto.request.CancelEventRequest
-import omsu.imit.schedule.dto.request.CreateEventPeriodRequest
-import omsu.imit.schedule.dto.request.CreateEventRequest
-import omsu.imit.schedule.dto.request.RescheduleEventRequest
+import omsu.imit.schedule.dto.request.*
 import omsu.imit.schedule.dto.response.ClassroomShortInfo
 import omsu.imit.schedule.dto.response.EventInfo
 import omsu.imit.schedule.exception.CommonValidationException
@@ -30,16 +27,40 @@ constructor(private val classroomService: ClassroomService,
     fun createEvent(request: CreateEventRequest): Event {
         val lecturer = lecturerService.getLecturer(request.lecturerId)
 
-        checkEventPeriods(request.periods)
+        this.checkEventPeriods(request.periods)
 
         val event = Event(
                 lecturer,
                 request.comment,
                 request.required)
 
+        println(event)
         eventRepository.save(event)
-        event.eventPeriods = request.periods.asSequence().map { createEventPeriod(it, event) }.toMutableList();
+        event.eventPeriods = request.periods
+                .asSequence()
+                .map { this.createEventPeriod(it, event) }
+                .toMutableList();
 
+        return event
+    }
+
+    fun editEvent(eventId: Int, request: EditEventRequest): Event {
+        val event = getEventById(eventId)
+
+        if (request.lecturerId !== null) {
+            event.lecturer = lecturerService.getLecturer(request.lecturerId!!)
+        }
+        if (request.required !== null) {
+            event.required = request.required!!
+        }
+        if (request.comment !== null) {
+            event.comment = request.comment!!
+        }
+        if (request.comment !== null) {
+            event.comment = request.comment!!
+        }
+
+        eventRepository.save(event)
         return event
     }
 
@@ -68,7 +89,7 @@ constructor(private val classroomService: ClassroomService,
     }
 
     fun cancelEventOnSomeDates(request: CancelEventRequest, eventId: Int): EventInfo? {
-        var event = getEventById(eventId)
+        val event = getEventById(eventId)
         var result: Event? = null
 
         request.dates.forEach { date ->
@@ -84,10 +105,23 @@ constructor(private val classroomService: ClassroomService,
         val classroom = classroomService.getClassroomById(request.classroomId)
         val day = Day.valueOf(request.to.dayOfWeek.name)
 
-        this.checkEventPeriod(classroom.id, timeBlock.id, day, request.to, request.to, Interval.NONE)
+        this.checkEventPeriod(
+                classroom.id,
+                timeBlock.id,
+                day,
+                request.to,
+                request.to,
+                Interval.NONE)
         this.cancelEvent(request.from, event)
 
-        val reschedulingEvent = this.createEventPeriod(event, classroom, timeBlock, day, request.to, request.to, Interval.NONE)
+        val reschedulingEvent = this.createEventPeriod(
+                event,
+                classroom,
+                timeBlock,
+                day,
+                request.to,
+                request.to,
+                Interval.NONE)
         event.eventPeriods = event.eventPeriods.plus(reschedulingEvent)
         this.eventRepository.save(event)
 
@@ -120,12 +154,14 @@ constructor(private val classroomService: ClassroomService,
                     } else if (eventPeriod.dateFrom.isBefore(date) && eventPeriod.dateTo.isAfter(date)) {
                         /** Cancel the event in the middle of the interval */
 
-                        val newEventPeriod = createEventPeriod(
-                                eventPeriod.event, eventPeriod.classroom,
-                                eventPeriod.timeBlock, eventPeriod.day,
-                                date.plusWeeks(1), eventPeriod.dateTo,
+                        val newEventPeriod = this.createEventPeriod(
+                                eventPeriod.event,
+                                eventPeriod.classroom,
+                                eventPeriod.timeBlock,
+                                eventPeriod.day,
+                                date.plusWeeks(1),
+                                eventPeriod.dateTo,
                                 eventPeriod.interval)
-                        eventPeriodRepository.save(newEventPeriod)
 
                         eventPeriod.dateTo = date.minusWeeks(1)
                         eventPeriodRepository.save(eventPeriod)
@@ -160,12 +196,18 @@ constructor(private val classroomService: ClassroomService,
         return eventPeriod
     }
 
-
     private fun createEventPeriod(request: CreateEventPeriodRequest, event: Event): EventPeriod {
         val timeBlock = timeBlockService.getTimeBlockById(request.timeBlockId)
         val classroom = classroomService.getClassroomById(request.classroomId)
 
-        return createEventPeriod(event, classroom, timeBlock, request.day, request.dateFrom, request.dateTo, request.interval)
+        return createEventPeriod(
+                event,
+                classroom,
+                timeBlock,
+                request.day,
+                request.dateFrom,
+                request.dateTo,
+                request.interval)
     }
 
     private fun checkEventPeriod(classroomId: Int, timeBlockId: Int, day: Day, dateFrom: LocalDate, dateTo: LocalDate, interval: Interval) {
@@ -180,8 +222,11 @@ constructor(private val classroomService: ClassroomService,
                 .toList()
 
         if (existingPeriods.isNotEmpty()) {
-            throw throw CommonValidationException(ErrorCode.CLASSROOM_ALREADY_BUSY, classroomId.toString(), timeBlockId.toString(), day.name)
-
+            throw throw CommonValidationException(
+                    ErrorCode.CLASSROOM_ALREADY_BUSY,
+                    classroomId.toString(),
+                    timeBlockId.toString(),
+                    day.name)
         }
     }
 

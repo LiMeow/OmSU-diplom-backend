@@ -1,6 +1,6 @@
 <configuration>
 
-    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework" level="ERROR"/>
     <logger name="org.hibernate" level="ERROR"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -10,16 +10,15 @@
         </encoder>
     </appender>
 
-    <appender name="schedulelog"
-              class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>schedule.log</File>
+    <appender name="schedulelog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>scheduler.log</File>
         <Append>true</Append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%c %d{yyyy.MM.dd HH:mm:ss.SSS} %-5p [%t] %c{1}: %m%n
             </Pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>test.%i.log.gz</fileNamePattern>
+            <fileNamePattern>scheduler.%i.log.gz</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>3</maxIndex>
         </rollingPolicy>

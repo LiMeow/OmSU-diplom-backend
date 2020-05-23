@@ -26,8 +26,6 @@ class Building(@Id
         if (id != other.id) return false
         if (number != other.number) return false
         if (address != other.address) return false
-        if (classrooms != other.classrooms) return false
-
         return true
     }
 
@@ -35,7 +33,6 @@ class Building(@Id
         var result = id
         result = 31 * result + number
         result = 31 * result + address.hashCode()
-        result = 31 * result + classrooms.hashCode()
         return result
     }
 

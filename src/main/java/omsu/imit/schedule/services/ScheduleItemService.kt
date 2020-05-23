@@ -2,6 +2,7 @@ package omsu.imit.schedule.services
 
 import omsu.imit.schedule.dto.request.CreateEventPeriodRequest
 import omsu.imit.schedule.dto.request.CreateScheduleItemRequest
+import omsu.imit.schedule.dto.request.EditScheduleItemRequest
 import omsu.imit.schedule.dto.response.ScheduleItemInfo
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.ErrorCode
@@ -34,6 +35,7 @@ constructor(private val eventService: EventService,
         val event = eventService.createEvent(request.event)
 
         val scheduleItem = ScheduleItem(event, discipline, request.activityType, groups, schedule)
+        println(scheduleItem)
         scheduleItemRepository.save(scheduleItem)
 
         return toScheduleItemFullInfo(scheduleItem)
@@ -47,6 +49,33 @@ constructor(private val eventService: EventService,
 
     fun getScheduleItemInfo(itemId: Int): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
         return toScheduleItemFullInfo(getScheduleItemById(itemId))
+    }
+
+    fun editScheduleItem(itemId: Int, request: EditScheduleItemRequest): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {
+        val scheduleItem = getScheduleItemById(itemId)
+
+        if (request.activityType !== null) {
+            scheduleItem.activityType = request.activityType!!
+        }
+        if (request.disciplineId !== null) {
+            scheduleItem.discipline = disciplineService.getDisciplineById(request.disciplineId!!)
+        }
+        if (request.groupIds !== null) {
+            scheduleItem.groups = groupService.getGroupsByIds(request.groupIds!!)
+        }
+        if (request.event !== null) {
+            scheduleItem.event = eventService.editEvent(scheduleItem.event.id, request.event!!)
+        }
+
+        scheduleItemRepository.save(scheduleItem)
+
+        return toScheduleItemFullInfo(scheduleItem)
+    }
+
+    fun deleteScheduleItem(id: Int) {
+        if (!scheduleItemRepository.existsById(id))
+            throw NotFoundException(ErrorCode.SCHEDULE_ITEM_NOT_EXISTS, id.toString())
+        scheduleItemRepository.deleteById(id)
     }
 
     private fun toScheduleItemFullInfo(scheduleItem: ScheduleItem): MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>> {

@@ -73,7 +73,6 @@ class EventPeriod(@Id
 
     override fun hashCode(): Int {
         var result = id
-        result = 31 * result + event.hashCode()
         result = 31 * result + classroom.hashCode()
         result = 31 * result + timeBlock.hashCode()
         result = 31 * result + day.hashCode()

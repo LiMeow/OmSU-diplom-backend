@@ -4,12 +4,16 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.verify
 import omsu.imit.schedule.dto.request.CreateEventPeriodRequest
 import omsu.imit.schedule.dto.request.CreateEventRequest
 import omsu.imit.schedule.dto.request.CreateScheduleItemRequest
+import omsu.imit.schedule.dto.request.EditScheduleItemRequest
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.ActivityType
+import omsu.imit.schedule.model.Discipline
+import omsu.imit.schedule.model.Group
 import omsu.imit.schedule.repository.ScheduleItemRepository
 import omsu.imit.schedule.services.*
 import org.junit.Before
@@ -111,5 +115,86 @@ class ScheduleItemServiceTests : BaseTests() {
         every { scheduleItemRepository.findById(scheduleItem.id) } returns Optional.of(scheduleItem)
         scheduleItemService.getScheduleItemInfo(scheduleItem.id)
         verify { scheduleItemRepository.findById(scheduleItem.id) }
+    }
+
+    @Test
+    fun testEditScheduleItemActivityType() {
+        val scheduleItem = getScheduleItem()
+        val updatedScheduleItem = getScheduleItem()
+        updatedScheduleItem.activityType = ActivityType.LECTURE
+
+        val request = EditScheduleItemRequest(
+                event = null,
+                activityType = ActivityType.LECTURE,
+                disciplineId = null,
+                groupIds = null)
+
+        every { scheduleItemRepository.findById(scheduleItem.id) } returns Optional.of(scheduleItem)
+        every { scheduleItemRepository.save(updatedScheduleItem) } returns updatedScheduleItem
+
+        scheduleItemService.editScheduleItem(scheduleItem.id, request)
+
+        verify { scheduleItemRepository.findById(scheduleItem.id) }
+        verify { scheduleItemRepository.save(updatedScheduleItem) }
+    }
+
+    @Test
+    fun testEditScheduleItemDiscipline() {
+        val scheduleItem = getScheduleItem()
+        val updatedScheduleItem = getScheduleItem()
+        val newDiscipline = Discipline(0, "nesDiscipline", listOf())
+        updatedScheduleItem.discipline = newDiscipline
+
+        val request = EditScheduleItemRequest(
+                event = null,
+                activityType = null,
+                disciplineId = 0,
+                groupIds = null)
+
+        every { scheduleItemRepository.findById(scheduleItem.id) } returns Optional.of(scheduleItem)
+        every { scheduleItemRepository.save(updatedScheduleItem) } returns updatedScheduleItem
+        every { disciplineService.getDisciplineById(0) } returns newDiscipline
+
+        scheduleItemService.editScheduleItem(scheduleItem.id, request)
+
+        verify { scheduleItemRepository.findById(scheduleItem.id) }
+        verify { scheduleItemRepository.save(updatedScheduleItem) }
+        verify { disciplineService.getDisciplineById(0) }
+    }
+
+    @Test
+    fun testEditScheduleItemGroups() {
+        val scheduleItem = getScheduleItem()
+        val updatedScheduleItem = getScheduleItem()
+        val newGroups = listOf(Group(0, getStudyDirection(), getCourse(), "ММС-601-О", "2016", "2021"))
+        updatedScheduleItem.groups = newGroups
+
+        val request = EditScheduleItemRequest(
+                event = null,
+                activityType = null,
+                disciplineId = null,
+                groupIds = listOf(0))
+
+        every { scheduleItemRepository.findById(scheduleItem.id) } returns Optional.of(scheduleItem)
+        every { scheduleItemRepository.save(updatedScheduleItem) } returns updatedScheduleItem
+        every { groupService.getGroupsByIds(listOf(0)) } returns newGroups
+
+        scheduleItemService.editScheduleItem(scheduleItem.id, request)
+
+        verify { scheduleItemRepository.findById(scheduleItem.id) }
+        verify { scheduleItemRepository.save(updatedScheduleItem) }
+        verify { groupService.getGroupsByIds(listOf(0)) }
+    }
+
+    @Test
+    fun testDeleteScheduleItem() {
+        val id = 1;
+        every { scheduleItemRepository.existsById(id) } returns true
+        every { scheduleItemRepository.deleteById(id) } returns mockk()
+
+        scheduleItemService.deleteScheduleItem(id)
+
+        verify { scheduleItemRepository.existsById(id) }
+        verify { scheduleItemRepository.deleteById(id) }
     }
 }

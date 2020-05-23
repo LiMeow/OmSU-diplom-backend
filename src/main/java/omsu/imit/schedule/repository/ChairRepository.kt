@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ChairRepository : JpaRepository<Chair, Int> {
-}
+interface ChairRepository : JpaRepository<Chair, Int> {}
