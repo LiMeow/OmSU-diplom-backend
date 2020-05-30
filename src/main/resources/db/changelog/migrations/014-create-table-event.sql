@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS event
 (
     id          SERIAL PRIMARY KEY,
-    lecturer_id INTEGER DEFAULT NULL REFERENCES lecturer (id),
+    lecturer_id INTEGER NOT NULL REFERENCES lecturer (id),
     comment     TEXT    DEFAULT NULL,
     required    BOOLEAN DEFAULT FALSE
 );

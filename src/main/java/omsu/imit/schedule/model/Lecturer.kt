@@ -8,7 +8,7 @@ class Lecturer(@Id
                @GeneratedValue(strategy = GenerationType.IDENTITY)
                var id: Int,
 
-               @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+               @ManyToOne(fetch = FetchType.LAZY)
                @JoinColumn(name = "chair_id")
                var chair: Chair,
 

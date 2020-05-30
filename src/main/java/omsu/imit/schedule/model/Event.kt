@@ -9,7 +9,7 @@ class Event(@Id
             @GeneratedValue(strategy = GenerationType.IDENTITY)
             var id: Int,
 
-            @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+            @ManyToOne(fetch = FetchType.LAZY)
             @JoinColumn(name = "lecturer_id")
             var lecturer: Lecturer,
 

@@ -6,9 +6,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface EventRepository : JpaRepository<Event, Int> {
-
-//    /*TODO("make refactoring of method")*/
-//    @Query("SELECT a FROM Event a " +
-//            "WHERE a.classroom.id = :classroomId ")
-//    fun findByClassroomAndDate(@Param("classroomId") classroomId: Int): List<Event>?
 }
