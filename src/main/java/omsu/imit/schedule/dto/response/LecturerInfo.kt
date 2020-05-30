@@ -1,7 +1,9 @@
 package omsu.imit.schedule.dto.response
 
 class LecturerInfo(var id: Int,
-                   var fullName: String,
+                   var firstName: String,
+                   var patronymic: String?,
+                   var lastName: String,
                    var chair: ChairInfo) {
 
     override fun equals(other: Any?): Boolean {
@@ -9,7 +11,9 @@ class LecturerInfo(var id: Int,
         if (other !is LecturerInfo) return false
 
         if (id != other.id) return false
-        if (fullName != other.fullName) return false
+        if (firstName != other.firstName) return false
+        if (patronymic != other.patronymic) return false
+        if (lastName != other.lastName) return false
         if (chair != other.chair) return false
 
         return true
@@ -17,7 +21,9 @@ class LecturerInfo(var id: Int,
 
     override fun hashCode(): Int {
         var result = id
-        result = 31 * result + fullName.hashCode()
+        result = 31 * result + firstName.hashCode()
+        result = 31 * result + patronymic.hashCode()
+        result = 31 * result + lastName.hashCode()
         result = 31 * result + chair.hashCode()
         return result
     }
@@ -25,7 +31,9 @@ class LecturerInfo(var id: Int,
     override fun toString(): String {
         return "LecturerInfo(" +
                 "id=$id, " +
-                "fullName='$fullName', " +
+                "firstName='$firstName', " +
+                "patronymic='$patronymic', " +
+                "lastName='$lastName', " +
                 "chair=$chair)"
     }
 
