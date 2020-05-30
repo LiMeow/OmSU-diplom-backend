@@ -44,29 +44,16 @@ class EventPeriod(@Id
                 interval: Interval)
             : this(0, event, classroom, timeBlock, day, dateFrom, dateTo, interval)
 
-
-    override fun toString(): String {
-        return "EventPeriod(" +
-                "id=$id, " +
-                "classroom=$classroom, " +
-                "timeBlock=$timeBlock, " +
-                "day=$day, " +
-                "dateFrom=$dateFrom, " +
-                "dateTo=$dateTo, " +
-                "interval=$interval)"
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is EventPeriod) return false
 
         if (id != other.id) return false
-        if (classroom != other.classroom) return false
+        if (classroom.number != other.classroom.number) return false
         if (timeBlock != other.timeBlock) return false
-        if (day != other.day) return false
-        if (dateFrom != other.dateFrom) return false
-        if (dateTo != other.dateTo) return false
-        if (interval != other.interval) return false
+        if (day.description != other.day.description) return false
+        if (dateFrom.toString() != other.dateFrom.toString()) return false
+        if (dateTo.toString() != other.dateTo.toString()) return false
 
         return true
     }
@@ -81,6 +68,4 @@ class EventPeriod(@Id
         result = 31 * result + interval.hashCode()
         return result
     }
-
-
 }

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS lecturer
 (
-    id               SERIAL PRIMARY KEY,
-    chair_id         INTEGER NOT NULL REFERENCES chair (id) ON DELETE CASCADE,
-    user_id INTEGER NOT NULL REFERENCES "user" (id) ON DELETE CASCADE
+    id       SERIAL PRIMARY KEY,
+    chair_id INTEGER DEFAULT NULL REFERENCES chair (id),
+    user_id  INTEGER NOT NULL REFERENCES "user" (id) ON DELETE CASCADE
 );

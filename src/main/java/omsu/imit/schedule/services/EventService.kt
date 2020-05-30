@@ -88,104 +88,94 @@ constructor(private val classroomService: ClassroomService,
         eventRepository.deleteById(eventId)
     }
 
-    fun cancelEventOnSomeDates(request: CancelEventRequest, eventId: Int): EventInfo? {
-        val event = getEventById(eventId)
-        var result: Event? = null
+    fun cancelEventOnSomeDates(request: CancelEventRequest): EventInfo? {
+        val eventPeriod = getEventPeriodById(request.eventPeriodId)
 
         request.dates.forEach { date ->
-            result = this.cancelEvent(date, event)
+            this.cancelEvent(date, eventPeriod)
         }
 
-        return if (result !== null) toEventInfo(result!!) else null
+        val event = getEventById(eventPeriod.event.id)
+
+        if (event.eventPeriods.isEmpty()) {
+            deleteEvent(event.id)
+            return null
+        }
+        return toEventInfo(event)
     }
 
-    fun rescheduleEvent(request: RescheduleEventRequest, eventId: Int): EventInfo {
-        val event = getEventById(eventId)
-        val timeBlock = timeBlockService.getTimeBlockById(request.timeBlockId)
-        val classroom = classroomService.getClassroomById(request.classroomId)
-        val day = Day.valueOf(request.to.dayOfWeek.name)
+    fun rescheduleEventPeriod(request: RescheduleEventRequest): EventInfo {
+        val eventPeriod = getEventPeriodById(request.eventPeriodId)
+        val timeBlock = timeBlockService.getTimeBlockById(request.newTimeBlockId)
+        val classroom = classroomService.getClassroomById(request.newClassroomId)
+        val day = Day.valueOf(request.newDateFrom.dayOfWeek.name)
 
         this.checkEventPeriod(
                 classroom.id,
                 timeBlock.id,
                 day,
-                request.to,
-                request.to,
-                Interval.NONE)
-        this.cancelEvent(request.from, event)
+                request.newDateFrom,
+                request.newDateTo,
+                request.newInterval)
 
-        val reschedulingEvent = this.createEventPeriod(
-                event,
-                classroom,
-                timeBlock,
-                day,
-                request.to,
-                request.to,
-                Interval.NONE)
-        event.eventPeriods = event.eventPeriods.plus(reschedulingEvent)
-        this.eventRepository.save(event)
+        eventPeriod.timeBlock = timeBlock
+        eventPeriod.classroom = classroom
+        eventPeriod.day = day
+        eventPeriod.dateFrom = request.newDateFrom
+        eventPeriod.dateTo = request.newDateTo
+        eventPeriod.interval = request.newInterval
 
-        return toEventInfo(event)
+        this.eventPeriodRepository.save(eventPeriod)
+
+        return getEventInfo(eventPeriod.event.id)
     }
 
 
-    private fun cancelEvent(date: LocalDate, event: Event): Event? {
-        event.eventPeriods
-                .filter { eventPeriod -> eventPeriod.day.description == date.dayOfWeek.toString() }
-                .forEach { eventPeriod ->
+    private fun cancelEvent(date: LocalDate, eventPeriod: EventPeriod) {
 
-                    if (eventPeriod.dateFrom.isEqual(date) && eventPeriod.dateTo.isEqual(date)) {
-                        /** Cancel a single event */
+        if (eventPeriod.dateFrom.isEqual(date) && eventPeriod.dateTo.isEqual(date)) {
+            /** Cancel a single event */
 
-                        event.eventPeriods = event.eventPeriods.minus(eventPeriod);
-                        eventPeriodRepository.deleteById(eventPeriod.id);
-                    } else if (eventPeriod.dateFrom.isEqual(date)) {
-                        /** Move Start Date */
+            eventPeriodRepository.deleteById(eventPeriod.id);
+        } else if (eventPeriod.dateFrom.isEqual(date)) {
+            /** Move Start Date */
 
-                        eventPeriod.dateFrom = date.plusWeeks(1)
-                        eventPeriodRepository.save(eventPeriod)
+            eventPeriod.dateFrom = date.plusWeeks(1)
+            eventPeriodRepository.save(eventPeriod)
+        } else if (eventPeriod.dateTo.isEqual(date)) {
+            /** Move End Date */
 
-                    } else if (eventPeriod.dateTo.isEqual(date)) {
-                        /** Move End Date */
+            eventPeriod.dateTo = date.minusWeeks(1)
+            eventPeriodRepository.save(eventPeriod)
 
-                        eventPeriod.dateTo = date.minusWeeks(1)
-                        eventPeriodRepository.save(eventPeriod)
+        } else if (eventPeriod.dateFrom.isBefore(date) && eventPeriod.dateTo.isAfter(date)) {
+            /** Cancel the event in the middle of the interval */
 
-                    } else if (eventPeriod.dateFrom.isBefore(date) && eventPeriod.dateTo.isAfter(date)) {
-                        /** Cancel the event in the middle of the interval */
+            val newEventPeriod = this.createEventPeriod(
+                    eventPeriod.event,
+                    eventPeriod.classroom,
+                    eventPeriod.timeBlock,
+                    eventPeriod.day,
+                    date.plusWeeks(1),
+                    eventPeriod.dateTo,
+                    eventPeriod.interval)
 
-                        val newEventPeriod = this.createEventPeriod(
-                                eventPeriod.event,
-                                eventPeriod.classroom,
-                                eventPeriod.timeBlock,
-                                eventPeriod.day,
-                                date.plusWeeks(1),
-                                eventPeriod.dateTo,
-                                eventPeriod.interval)
-
-                        eventPeriod.dateTo = date.minusWeeks(1)
-                        eventPeriodRepository.save(eventPeriod)
-                        event.eventPeriods = event.eventPeriods.plus(newEventPeriod)
-                    }
-                }
-
-        when {
-            event.eventPeriods.isEmpty() -> {
-                this.eventRepository.deleteById(event.id)
-            }
-            else -> {
-                this.eventRepository.save(event)
-                println(event)
-            }
+            eventPeriod.dateTo = date.minusWeeks(1)
+            eventPeriodRepository.save(eventPeriod)
+            eventPeriodRepository.save(newEventPeriod)
         }
-
-        return if (event.eventPeriods.isNotEmpty()) event else null
     }
 
-    private fun getEventById(eventId: Int): Event {
+    private fun getEventById(id: Int): Event {
         return eventRepository
-                .findById(eventId)
-                .orElseThrow { NotFoundException(ErrorCode.EVENT_NOT_EXISTS, eventId.toString()) }
+                .findById(id)
+                .orElseThrow { NotFoundException(ErrorCode.EVENT_NOT_EXISTS, id.toString()) }
+    }
+
+    private fun getEventPeriodById(id: Int): EventPeriod {
+        return eventPeriodRepository
+                .findById(id)
+                .orElseThrow { NotFoundException(ErrorCode.EVENT_PERIOD_NOT_EXISTS, id.toString()) }
     }
 
     private fun createEventPeriod(event: Event, classroom: Classroom, timeBlock: TimeBlock, day: Day,

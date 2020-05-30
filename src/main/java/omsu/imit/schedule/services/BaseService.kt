@@ -5,7 +5,7 @@ import omsu.imit.schedule.model.*
 import org.springframework.stereotype.Service
 
 @Service
-open class BaseService {
+class BaseService {
 
     fun toBuildingInfo(building: Building): BuildingInfo {
         return BuildingInfo(
@@ -114,7 +114,9 @@ open class BaseService {
     fun toLecturerInfo(lecturer: Lecturer): LecturerInfo {
         return LecturerInfo(
                 lecturer.id,
-                lecturer.getFullName(),
+                lecturer.user.firstName,
+                lecturer.user.patronymic,
+                lecturer.user.lastName,
                 toChairInfo(lecturer.chair))
     }
 

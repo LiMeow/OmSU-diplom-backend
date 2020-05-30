@@ -28,7 +28,6 @@ class Classroom(@Id
         if (other !is Classroom) return false
 
         if (id != other.id) return false
-        if (building != other.building) return false
         if (number != other.number) return false
         if (tags != other.tags) return false
 
@@ -37,7 +36,6 @@ class Classroom(@Id
 
     override fun hashCode(): Int {
         var result = id
-        result = 31 * result + building.hashCode()
         result = 31 * result + number.hashCode()
         result = 31 * result + tags.hashCode()
         return result
@@ -46,11 +44,8 @@ class Classroom(@Id
     override fun toString(): String {
         return "Classroom(" +
                 "id=$id, " +
-                "building=$building, " +
                 "number='$number', " +
                 "tags=$tags)"
     }
-
-
 }
 

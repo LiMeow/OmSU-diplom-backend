@@ -187,7 +187,11 @@ open class BaseTests {
     }
 
     fun getLecturerInfo(lecturer: Lecturer): LecturerInfo {
-        return LecturerInfo(lecturer.id, lecturer.getFullName(), getChairInfo(lecturer.chair))
+        return LecturerInfo(lecturer.id,
+                lecturer.user.firstName,
+                lecturer.user.patronymic,
+                lecturer.user.lastName,
+                getChairInfo(lecturer.chair))
     }
 
     fun getLecturerShortInfo(lecturer: Lecturer): LecturerShortInfo {
