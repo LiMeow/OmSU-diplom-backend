@@ -247,18 +247,22 @@ class EventServiceTests : BaseTests() {
         val event = getEvent()
         val date = LocalDate.of(2020, 5, 15)
         val eventPeriod = getEventPeriod(date, date, Day.FRIDAY, Interval.NONE)
-        val request = CancelEventRequest(listOf(date))
+        val request = CancelEventRequest(eventPeriod.id, listOf(date))
 
-        event.eventPeriods = mutableListOf(eventPeriod)
+        event.eventPeriods = listOf()
 
+        every { eventRepository.existsById(event.id) } returns true
         every { eventRepository.findById(event.id) } returns Optional.of(event)
         every { eventRepository.deleteById(event.id) } returns mockk()
+        every { eventPeriodRepository.findById(eventPeriod.id) } returns Optional.of(eventPeriod)
         every { eventPeriodRepository.deleteById(eventPeriod.id) } returns mockk()
 
-        assertEquals(null, eventService.cancelEventOnSomeDates(request, event.id))
+        assertEquals(null, eventService.cancelEventOnSomeDates(request))
 
+        verify { eventRepository.existsById(event.id) }
         verify { eventRepository.findById(event.id) }
         verify { eventRepository.deleteById(event.id) }
+        verify { eventPeriodRepository.findById(eventPeriod.id) }
         verify { eventPeriodRepository.deleteById(eventPeriod.id) }
     }
 
@@ -278,17 +282,17 @@ class EventServiceTests : BaseTests() {
         updatedEvent.eventPeriods = mutableListOf(updatedEventPeriod)
 
         val response = getEventInfo(updatedEvent)
-        val request = CancelEventRequest(listOf(dateFrom))
+        val request = CancelEventRequest(eventPeriod.id, listOf(dateFrom))
 
         every { eventRepository.findById(event.id) } returns Optional.of(event)
+        every { eventPeriodRepository.findById(eventPeriod.id) } returns Optional.of(eventPeriod)
         every { eventPeriodRepository.save(updatedEventPeriod) } returns updatedEventPeriod
-        every { eventRepository.save(updatedEvent) } returns updatedEvent
 
-        assertEquals(response, eventService.cancelEventOnSomeDates(request, event.id))
+        assertEquals(response, eventService.cancelEventOnSomeDates(request))
 
         verify { eventRepository.findById(event.id) }
+        verify { eventPeriodRepository.findById(eventPeriod.id) }
         verify { eventPeriodRepository.save(updatedEventPeriod) }
-        verify { eventRepository.save(updatedEvent) }
     }
 
     @Test
@@ -307,22 +311,21 @@ class EventServiceTests : BaseTests() {
         updatedEvent.eventPeriods = mutableListOf(updatedEventPeriod)
 
         val response = getEventInfo(updatedEvent)
-        val request = CancelEventRequest(listOf(dateTo))
+        val request = CancelEventRequest(eventPeriod.id, listOf(dateTo))
 
         every { eventRepository.findById(event.id) } returns Optional.of(event)
+        every { eventPeriodRepository.findById(eventPeriod.id) } returns Optional.of(eventPeriod)
         every { eventPeriodRepository.save(updatedEventPeriod) } returns updatedEventPeriod
-        every { eventRepository.save(updatedEvent) } returns updatedEvent
 
-        assertEquals(response, eventService.cancelEventOnSomeDates(request, event.id))
+        assertEquals(response, eventService.cancelEventOnSomeDates(request))
 
         verify { eventRepository.findById(event.id) }
+        verify { eventPeriodRepository.findById(eventPeriod.id) }
         verify { eventPeriodRepository.save(updatedEventPeriod) }
-        verify { eventRepository.save(updatedEvent) }
     }
 
     @Test
     fun testCancelEventPeriodFromMiddleOfEventInterval() {
-        val event = getEvent()
         val updatedEvent = getEvent()
 
         val dateFrom = LocalDate.of(2020, 5, 15)
@@ -334,79 +337,69 @@ class EventServiceTests : BaseTests() {
         val updatedEventPeriod1 = getEventPeriod(dateFrom, dateFrom, Day.FRIDAY, Interval.EVERY_WEEK)
         val updatedEventPeriod2 = getEventPeriod(startDateOfNewEventPeriod, dateTo, Day.FRIDAY, Interval.EVERY_WEEK)
 
-        event.eventPeriods = mutableListOf(eventPeriod)
         updatedEvent.eventPeriods = mutableListOf(updatedEventPeriod1, updatedEventPeriod2)
 
         val response = getEventInfo(updatedEvent)
-        val request = CancelEventRequest(listOf(cancelingDate))
+        val request = CancelEventRequest(eventPeriod.id, listOf(cancelingDate))
 
-        every { eventRepository.save(updatedEvent) } returns updatedEvent
-        every { eventRepository.findById(event.id) } returns Optional.of(event)
+        every { eventRepository.findById(updatedEvent.id) } returns Optional.of(updatedEvent)
+        every { eventPeriodRepository.findById(eventPeriod.id) } returns Optional.of(eventPeriod)
         every { eventPeriodRepository.save(updatedEventPeriod2) } returns updatedEventPeriod2
         every { eventPeriodRepository.save(updatedEventPeriod1) } returns updatedEventPeriod1
 
-        assertEquals(response, eventService.cancelEventOnSomeDates(request, event.id))
+        assertEquals(response, eventService.cancelEventOnSomeDates(request))
 
-        verify { eventRepository.findById(event.id) }
-        verify { eventRepository.save(updatedEvent) }
+        verify { eventRepository.findById(updatedEvent.id) }
         verify { eventPeriodRepository.save(updatedEventPeriod2) }
         verify { eventPeriodRepository.save(updatedEventPeriod1) }
     }
 
     @Test
     fun testRescheduleEvent() {
-        val event = getEvent()
-        val updatedEvent1 = getEvent()
-        val updatedEvent2 = getEvent()
+        val updatedEvent = getEvent()
+
+        val eventPeriod = getEventPeriod()
+        val updatedEventPeriod = getEventPeriod()
 
         val timeBlock = getTimeBlock()
         val classroom = getClassroom()
+        val newDateFrom = LocalDate.of(2020, 5, 4)
+        val newDateTo = LocalDate.of(2020, 5, 4)
 
-        val dateFrom = LocalDate.of(2020, 5, 1)
-        val dateTo = LocalDate.of(2020, 6, 5)
-        val rescheduleDateFrom = LocalDate.of(2020, 5, 15)
-        val rescheduleDateTo = LocalDate.of(2020, 5, 18)
-        val endDateOfNewFirstEventPeriod = LocalDate.of(2020, 5, 8)
-        val startDateOfNewSecondEventPeriod = LocalDate.of(2020, 5, 22)
+        updatedEventPeriod.dateFrom = newDateFrom
+        updatedEventPeriod.dateTo = newDateTo
+        updatedEventPeriod.interval = Interval.NONE
+        updatedEvent.eventPeriods = listOf(updatedEventPeriod)
 
-        val eventPeriod = getEventPeriod(dateFrom, dateTo, Day.FRIDAY, Interval.EVERY_WEEK)
-        val updatedEventPeriod1 = getEventPeriod(dateFrom, endDateOfNewFirstEventPeriod, Day.FRIDAY, Interval.EVERY_WEEK)
-        val updatedEventPeriod2 = getEventPeriod(startDateOfNewSecondEventPeriod, dateTo, Day.FRIDAY, Interval.EVERY_WEEK)
-        val rescheduledEventPeriod = getEventPeriod(rescheduleDateTo, rescheduleDateTo, Day.MONDAY, Interval.NONE)
+        val response = getEventInfo(updatedEvent)
+        val request = RescheduleEventRequest(
+                eventPeriod.id,
+                classroom.id,
+                timeBlock.id,
+                newDateFrom,
+                newDateTo,
+                Interval.NONE)
 
-        event.eventPeriods = mutableListOf(eventPeriod)
-        updatedEvent1.eventPeriods = mutableListOf(updatedEventPeriod1, updatedEventPeriod2)
-        updatedEvent2.eventPeriods = mutableListOf(updatedEventPeriod1, updatedEventPeriod2, rescheduledEventPeriod)
-
-        val response = getEventInfo(updatedEvent2)
-        val request = RescheduleEventRequest(classroom.id, timeBlock.id, rescheduleDateFrom, rescheduleDateTo)
-
-        every { eventRepository.save(updatedEvent1) } returns updatedEvent1
-        every { eventRepository.save(updatedEvent2) } returns updatedEvent2
-        every { eventRepository.findById(event.id) } returns Optional.of(event)
+        every { eventPeriodRepository.findById(eventPeriod.id) } returns Optional.of(eventPeriod)
+        every { eventPeriodRepository.save(updatedEventPeriod) } returns updatedEventPeriod
+        every { eventRepository.findById(eventPeriod.event.id) } returns Optional.of(updatedEvent)
         every { timeBlockService.getTimeBlockById(timeBlock.id) } returns timeBlock
         every { classroomService.getClassroomById(classroom.id) } returns classroom
-        every { eventPeriodRepository.save(updatedEventPeriod2) } returns updatedEventPeriod2
-        every { eventPeriodRepository.save(updatedEventPeriod1) } returns updatedEventPeriod1
-        every { eventPeriodRepository.save(rescheduledEventPeriod) } returns rescheduledEventPeriod
         every {
             eventPeriodRepository.findByClassroomDayAndTime(
                     classroom.id,
                     timeBlock.id,
                     Day.MONDAY,
-                    rescheduleDateTo,
-                    rescheduleDateTo)
+                    newDateFrom,
+                    newDateTo)
         } returns listOf()
 
-        assertEquals(response, eventService.rescheduleEvent(request, event.id))
+        assertEquals(response, eventService.rescheduleEventPeriod(request))
 
-        verify { eventRepository.findById(event.id) }
-        verify { eventRepository.save(updatedEvent2) }
+        verify { eventPeriodRepository.findById(eventPeriod.id) }
+        verify { eventPeriodRepository.save(updatedEventPeriod) }
+        verify { eventRepository.findById(eventPeriod.event.id) }
         verify { timeBlockService.getTimeBlockById(timeBlock.id) }
         verify { classroomService.getClassroomById(classroom.id) }
-        verify { eventPeriodRepository.save(rescheduledEventPeriod) }
-        verify { eventPeriodRepository.save(updatedEventPeriod2) }
-        verify { eventPeriodRepository.save(updatedEventPeriod1) }
-
     }
 }

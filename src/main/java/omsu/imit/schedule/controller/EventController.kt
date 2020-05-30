@@ -38,16 +38,15 @@ constructor(private val eventService: EventService) {
         return ResponseEntity.ok().body(eventService.editEvent(eventId, request))
     }
 
-    @PutMapping(value = ["/reschedule/{eventId}"])
-    fun rescheduleEvent(@PathVariable eventId: Int,
-                        @Valid @RequestBody request: RescheduleEventRequest): ResponseEntity<*> {
-        return ResponseEntity.ok().body(eventService.rescheduleEvent(request, eventId))
+    @PutMapping(value = ["/reschedule"])
+    fun rescheduleEventPeriod(@Valid @RequestBody request: RescheduleEventRequest): ResponseEntity<*> {
+        return ResponseEntity.ok().body(eventService.rescheduleEventPeriod(request))
     }
 
-    @DeleteMapping(value = ["/cancel/{eventId}"])
-    fun cancelEventOnSomeDates(@PathVariable eventId: Int,
-                               @Valid @RequestBody request: CancelEventRequest): ResponseEntity<*> {
-        return ResponseEntity.ok().body(eventService.cancelEventOnSomeDates(request, eventId))
+    @DeleteMapping(value = ["/cancel"])
+    fun cancelEventOnSomeDates(@Valid @RequestBody request: CancelEventRequest): Any {
+        val event = eventService.cancelEventOnSomeDates(request)
+        return if (event !== null) ResponseEntity.ok().body(event) else StatusResponse.OK
     }
 
     @DeleteMapping(value = ["/{eventId}"])
