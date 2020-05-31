@@ -44,7 +44,7 @@ constructor(private val classroomService: ClassroomService,
         return event
     }
 
-    fun editEvent(eventId: Int, request: EditEventRequest): Event {
+    fun editEvent(eventId: Int, request: EditEventRequest): EventInfo {
         val event = getEventById(eventId)
 
         if (request.lecturerId !== null) {
@@ -61,7 +61,7 @@ constructor(private val classroomService: ClassroomService,
         }
 
         eventRepository.save(event)
-        return event
+        return toEventInfo(event)
     }
 
     fun createEventAndGetInfo(request: CreateEventRequest): EventInfo {
@@ -110,7 +110,7 @@ constructor(private val classroomService: ClassroomService,
         val classroom = classroomService.getClassroomById(request.newClassroomId)
         val day = Day.valueOf(request.rescheduleTo.dayOfWeek.name)
 
-        if (eventPeriod.day.description == request.rescheduleFrom.dayOfWeek.toString()) {
+        if (eventPeriod.day.description !== request.rescheduleFrom.dayOfWeek.toString()) {
             throw CommonValidationException(ErrorCode.DATE_NOT_INCLUDING_IN_EVENT_PERIOD, request.rescheduleFrom.toString())
         }
 
