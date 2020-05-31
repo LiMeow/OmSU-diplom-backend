@@ -68,12 +68,14 @@ constructor(private val buildingService: BuildingService,
         return ClassroomsByBuildingInfo(createMetaInfo(building, page, size), classrooms)
     }
 
-    fun getClassroomWithEventsByDate(classroomId: Int, searchDate: LocalDate): ClassroomInfoByDate {
+    fun getClassroomWithEventsByDate(classroomId: Int, requestDateFrom: LocalDate, requestDateTo: LocalDate): ClassroomInfoByDate {
         val classroom = getClassroomById(classroomId)
-        val date = LocalDate.parse(searchDate.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        val day = Day.valueOf(date.dayOfWeek.toString())
-        val events = eventPeriodRepository.findAllByClassroomDayAndDate(classroomId, day, searchDate)
-        return createClassroomInfoByDate(searchDate, classroom, events)
+        val dateFrom = LocalDate.parse(requestDateFrom.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val dateTo = LocalDate.parse(requestDateTo.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+        val day = Day.valueOf(dateFrom.dayOfWeek.toString())
+        val events = eventPeriodRepository.findAllByClassroomDayAndDate(classroomId, day, dateFrom, dateTo)
+        return createClassroomInfoByDate(dateFrom, dateTo, classroom, events)
     }
 
     fun editClassroom(classroomId: Int, request: EditClassroomRequest): ClassroomShortInfo {
@@ -126,7 +128,10 @@ constructor(private val buildingService: BuildingService,
                 lastPage)
     }
 
-    private fun createClassroomInfoByDate(date: LocalDate, classroom: Classroom, eventPeriods: List<EventPeriod>): ClassroomInfoByDate {
+    private fun createClassroomInfoByDate(dateFrom: LocalDate,
+                                          dateTo: LocalDate,
+                                          classroom: Classroom,
+                                          eventPeriods: List<EventPeriod>): ClassroomInfoByDate {
         val events: MutableMap<Int, EventInfo> = mutableMapOf()
 
         eventPeriods.asSequence().forEach { eventPeriod ->
@@ -137,7 +142,8 @@ constructor(private val buildingService: BuildingService,
         }
 
         return ClassroomInfoByDate(
-                date,
+                dateFrom,
+                dateTo,
                 toClassroomInfo(classroom),
                 events.values)
     }
