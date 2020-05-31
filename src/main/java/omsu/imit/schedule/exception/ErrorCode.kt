@@ -14,6 +14,7 @@ enum class ErrorCode {
     CLASSROOM_ALREADY_EXISTS("Classroom '%s' already exists in building '%s'."),
     CLASSROOM_NOT_EXISTS("Classroom with id '%s' not exists."),
     DATABASE_ERROR("Database error"),
+    DATE_NOT_INCLUDING_IN_EVENT_PERIOD("Date not including in event period."),
     DISCIPLINE_NOT_EXISTS("Discipline with id '%s' not exists."),
     DISCIPLINE_ALREADY_EXISTS("Discipline '%s' already exists."),
     EMPTY_REQUEST_BODY("Empty request body."),

@@ -108,25 +108,33 @@ constructor(private val classroomService: ClassroomService,
         val eventPeriod = getEventPeriodById(request.eventPeriodId)
         val timeBlock = timeBlockService.getTimeBlockById(request.newTimeBlockId)
         val classroom = classroomService.getClassroomById(request.newClassroomId)
-        val day = Day.valueOf(request.newDateFrom.dayOfWeek.name)
+        val day = Day.valueOf(request.rescheduleTo.dayOfWeek.name)
+
+        if (eventPeriod.day.description == request.rescheduleFrom.dayOfWeek.toString()) {
+            throw CommonValidationException(ErrorCode.DATE_NOT_INCLUDING_IN_EVENT_PERIOD, request.rescheduleFrom.toString())
+        }
 
         this.checkEventPeriod(
                 classroom.id,
                 timeBlock.id,
                 day,
-                request.newDateFrom,
-                request.newDateTo,
-                request.newInterval)
+                request.rescheduleTo,
+                request.rescheduleTo,
+                Interval.NONE)
 
-        eventPeriod.timeBlock = timeBlock
-        eventPeriod.classroom = classroom
-        eventPeriod.day = day
-        eventPeriod.dateFrom = request.newDateFrom
-        eventPeriod.dateTo = request.newDateTo
-        eventPeriod.interval = request.newInterval
+        this.cancelEvent(request.rescheduleFrom, eventPeriod)
 
-        this.eventPeriodRepository.save(eventPeriod)
+        val rescheduledEventPeriod = this.createEventPeriod(
+                eventPeriod.event,
+                classroom,
+                timeBlock,
+                day,
+                request.rescheduleTo,
+                request.rescheduleTo,
+                Interval.NONE
+        )
 
+        this.eventPeriodRepository.save(rescheduledEventPeriod)
         return getEventInfo(eventPeriod.event.id)
     }
 
