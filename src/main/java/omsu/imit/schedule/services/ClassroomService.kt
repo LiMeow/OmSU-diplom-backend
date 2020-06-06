@@ -8,7 +8,6 @@ import omsu.imit.schedule.exception.ErrorCode
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Building
 import omsu.imit.schedule.model.Classroom
-import omsu.imit.schedule.model.Day
 import omsu.imit.schedule.model.EventPeriod
 import omsu.imit.schedule.repository.ClassroomRepository
 import omsu.imit.schedule.repository.EventPeriodRepository
@@ -73,8 +72,7 @@ constructor(private val buildingService: BuildingService,
         val dateFrom = LocalDate.parse(requestDateFrom.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val dateTo = LocalDate.parse(requestDateTo.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-        val day = Day.valueOf(dateFrom.dayOfWeek.toString())
-        val events = eventPeriodRepository.findAllByClassroomDayAndDate(classroomId, day, dateFrom, dateTo)
+        val events = eventPeriodRepository.findAllByClassroomDayAndDate(classroomId, dateFrom, dateTo)
         return createClassroomInfoByDate(dateFrom, dateTo, classroom, events)
     }
 
