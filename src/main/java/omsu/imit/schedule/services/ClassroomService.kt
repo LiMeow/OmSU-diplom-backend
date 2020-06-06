@@ -20,7 +20,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import kotlin.math.roundToInt
+import kotlin.math.ceil
 
 @Service
 class ClassroomService
@@ -103,8 +103,8 @@ constructor(private val buildingService: BuildingService,
     private fun createMetaInfo(building: Building, page: Int, size: Int): MetaInfo {
         val baseUrl = "api/buildings/"
         val total = classroomRepository.countClassroomssByBuilding(building).toInt()
-        val lastPageNumber = ((total / size) - 1).toFloat().roundToInt()
-
+        val lastPageNumber = ceil((total.toDouble() / size.toDouble()) - 1).toInt()
+        
         var nextPage: String? = null
         var prevPage: String? = null
         val firstPage = "${baseUrl}${building.id}/classrooms?page=0&size=${size}"
