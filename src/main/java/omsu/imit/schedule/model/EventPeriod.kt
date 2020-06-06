@@ -68,4 +68,17 @@ class EventPeriod(@Id
         result = 31 * result + interval.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "EventPeriod(" +
+                "id=$id, " +
+                "classroom=$classroom, " +
+                "timeBlock=$timeBlock, " +
+                "day=$day, " +
+                "dateFrom=$dateFrom, " +
+                "dateTo=$dateTo, " +
+                "interval=$interval)"
+    }
+
+
 }

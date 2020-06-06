@@ -201,7 +201,7 @@ class EventServiceTests : BaseTests() {
         val event = getEvent()
         val eventPeriod = getEventPeriod()
         val response = listOf(getClassroomShortInfo(eventPeriod.classroom))
-        event.eventPeriods = listOf(eventPeriod)
+        event.eventPeriods = mutableListOf(eventPeriod)
 
         every { eventRepository.findById(event.id) } returns Optional.of(event)
         assertEquals(response, eventService.getClassroomsByEvent(event.id))
@@ -249,7 +249,7 @@ class EventServiceTests : BaseTests() {
         val eventPeriod = getEventPeriod(date, date, Day.FRIDAY, Interval.NONE)
         val request = CancelEventRequest(eventPeriod.id, listOf(date))
 
-        event.eventPeriods = listOf()
+        event.eventPeriods = mutableListOf()
 
         every { eventRepository.existsById(event.id) } returns true
         every { eventRepository.findById(event.id) } returns Optional.of(event)
@@ -359,29 +359,34 @@ class EventServiceTests : BaseTests() {
         val updatedEvent = getEvent()
 
         val eventPeriod = getEventPeriod()
-        val updatedEventPeriod = getEventPeriod()
+        val updatedEventPeriod1 = getEventPeriod()
+        val updatedEventPeriod2 = getEventPeriod()
+
 
         val timeBlock = getTimeBlock()
         val classroom = getClassroom()
-        val newDateFrom = LocalDate.of(2020, 5, 4)
-        val newDateTo = LocalDate.of(2020, 5, 4)
+        val updatedDateFrom = LocalDate.of(2020, 5, 8)
+        val rescheduleFrom = LocalDate.of(2020, 5, 1)
+        val rescheduleTo = LocalDate.of(2020, 5, 4)
 
-        updatedEventPeriod.dateFrom = newDateFrom
-        updatedEventPeriod.dateTo = newDateTo
-        updatedEventPeriod.interval = Interval.NONE
-        updatedEvent.eventPeriods = listOf(updatedEventPeriod)
+        updatedEventPeriod1.dateFrom = rescheduleTo
+        updatedEventPeriod1.dateTo = rescheduleTo
+        updatedEventPeriod1.day = Day.MONDAY
+        updatedEventPeriod1.interval = Interval.NONE
+        updatedEventPeriod2.dateFrom = updatedDateFrom
+        updatedEvent.eventPeriods = mutableListOf(updatedEventPeriod1, updatedEventPeriod2)
 
         val response = getEventInfo(updatedEvent)
         val request = RescheduleEventRequest(
                 eventPeriod.id,
                 classroom.id,
                 timeBlock.id,
-                newDateFrom,
-                newDateTo,
-                Interval.NONE)
+                rescheduleFrom,
+                rescheduleTo)
 
         every { eventPeriodRepository.findById(eventPeriod.id) } returns Optional.of(eventPeriod)
-        every { eventPeriodRepository.save(updatedEventPeriod) } returns updatedEventPeriod
+        every { eventPeriodRepository.save(updatedEventPeriod1) } returns updatedEventPeriod1
+        every { eventPeriodRepository.save(updatedEventPeriod2) } returns updatedEventPeriod2
         every { eventRepository.findById(eventPeriod.event.id) } returns Optional.of(updatedEvent)
         every { timeBlockService.getTimeBlockById(timeBlock.id) } returns timeBlock
         every { classroomService.getClassroomById(classroom.id) } returns classroom
@@ -390,14 +395,14 @@ class EventServiceTests : BaseTests() {
                     classroom.id,
                     timeBlock.id,
                     Day.MONDAY,
-                    newDateFrom,
-                    newDateTo)
+                    rescheduleTo,
+                    rescheduleTo)
         } returns listOf()
 
         assertEquals(response, eventService.rescheduleEventPeriod(request))
 
         verify { eventPeriodRepository.findById(eventPeriod.id) }
-        verify { eventPeriodRepository.save(updatedEventPeriod) }
+        verify { eventPeriodRepository.save(updatedEventPeriod1) }
         verify { eventRepository.findById(eventPeriod.event.id) }
         verify { timeBlockService.getTimeBlockById(timeBlock.id) }
         verify { classroomService.getClassroomById(classroom.id) }

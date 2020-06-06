@@ -44,7 +44,7 @@ constructor(private val classroomService: ClassroomService,
         return event
     }
 
-    fun editEvent(eventId: Int, request: EditEventRequest): Event {
+    fun editEvent(eventId: Int, request: EditEventRequest): EventInfo {
         val event = getEventById(eventId)
 
         if (request.lecturerId !== null) {
@@ -59,9 +59,20 @@ constructor(private val classroomService: ClassroomService,
         if (request.comment !== null) {
             event.comment = request.comment!!
         }
+        if (request.periods !== null) {
+            val updatedEventPeriods = request.periods!!.asSequence().map { editEventPeriod(event, it) }.toList()
+
+            event.eventPeriods.asSequence().forEachIndexed { index, eventPeriod ->
+                updatedEventPeriods.asSequence().forEach { updatedEventPeriod ->
+                    if (eventPeriod.id == updatedEventPeriod.id) {
+                        event.eventPeriods[index] = updatedEventPeriod
+                    }
+                }
+            }
+        }
 
         eventRepository.save(event)
-        return event
+        return toEventInfo(event)
     }
 
     fun createEventAndGetInfo(request: CreateEventRequest): EventInfo {
@@ -108,28 +119,35 @@ constructor(private val classroomService: ClassroomService,
         val eventPeriod = getEventPeriodById(request.eventPeriodId)
         val timeBlock = timeBlockService.getTimeBlockById(request.newTimeBlockId)
         val classroom = classroomService.getClassroomById(request.newClassroomId)
-        val day = Day.valueOf(request.newDateFrom.dayOfWeek.name)
+        val day = Day.valueOf(request.rescheduleTo.dayOfWeek.name)
+
+        if (eventPeriod.day.description !== request.rescheduleFrom.dayOfWeek.toString()) {
+            throw CommonValidationException(ErrorCode.DATE_NOT_INCLUDING_IN_EVENT_PERIOD, request.rescheduleFrom.toString())
+        }
 
         this.checkEventPeriod(
                 classroom.id,
                 timeBlock.id,
                 day,
-                request.newDateFrom,
-                request.newDateTo,
-                request.newInterval)
+                request.rescheduleTo,
+                request.rescheduleTo,
+                Interval.NONE)
 
-        eventPeriod.timeBlock = timeBlock
-        eventPeriod.classroom = classroom
-        eventPeriod.day = day
-        eventPeriod.dateFrom = request.newDateFrom
-        eventPeriod.dateTo = request.newDateTo
-        eventPeriod.interval = request.newInterval
+        this.cancelEvent(request.rescheduleFrom, eventPeriod)
 
-        this.eventPeriodRepository.save(eventPeriod)
+        val rescheduledEventPeriod = this.createEventPeriod(
+                eventPeriod.event,
+                classroom,
+                timeBlock,
+                day,
+                request.rescheduleTo,
+                request.rescheduleTo,
+                Interval.NONE
+        )
 
+        this.eventPeriodRepository.save(rescheduledEventPeriod)
         return getEventInfo(eventPeriod.event.id)
     }
-
 
     private fun cancelEvent(date: LocalDate, eventPeriod: EventPeriod) {
 
@@ -164,6 +182,40 @@ constructor(private val classroomService: ClassroomService,
             eventPeriodRepository.save(eventPeriod)
             eventPeriodRepository.save(newEventPeriod)
         }
+    }
+
+
+    private fun editEventPeriod(event: Event, request: EditEventPeriodRequest): EventPeriod {
+        val eventPeriod = this.getEventPeriodById(request.eventPeriodId)
+
+        if (eventPeriod.event.id != event.id) {
+            throw CommonValidationException(ErrorCode.EVENT_NOT_CONTAIN_PERIOD, event.id.toString(), eventPeriod.id.toString())
+        }
+
+        if (request.classroomId !== null) {
+            eventPeriod.classroom = this.classroomService.getClassroomById(request.classroomId!!)
+        }
+        if (request.timeBlockId !== null) {
+            eventPeriod.timeBlock = this.timeBlockService.getTimeBlockById(request.timeBlockId!!)
+        }
+        if (request.day !== null) {
+            if (eventPeriod.interval == Interval.NONE) {
+                throw CommonValidationException(ErrorCode.NON_RECURRING_EVENT_PERIOD)
+            }
+            eventPeriod.day = request.day!!
+        }
+        if (request.dateFrom !== null) {
+            eventPeriod.dateFrom = request.dateFrom!!
+        }
+        if (request.dateTo !== null) {
+            eventPeriod.dateTo = request.dateTo!!
+        }
+        if (request.interval !== null) {
+            eventPeriod.interval = request.interval!!
+        }
+        this.eventPeriodRepository.save(eventPeriod)
+
+        return eventPeriod
     }
 
     private fun getEventById(id: Int): Event {

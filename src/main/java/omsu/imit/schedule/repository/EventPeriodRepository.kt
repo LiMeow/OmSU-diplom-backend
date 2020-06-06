@@ -24,13 +24,12 @@ interface EventPeriodRepository : JpaRepository<EventPeriod, Int> {
                                   @Param("dateTo") dateTo: LocalDate): List<EventPeriod>
 
 
-    @Query("SELECT e FROM EventPeriod e " +
-            "WHERE e.classroom.id = :classroomId " +
-            "AND e.day =:day " +
-            "AND e.dateFrom <= :date " +
-            "AND e.dateTo >= :date"
+    @Query("SELECT * FROM  event_period as e " +
+            "WHERE e.classroom_id = :classroomId " +
+            "AND e.date_from >= :dateFrom " +
+            "AND e.date_to <= :dateTo", nativeQuery = true
     )
     fun findAllByClassroomDayAndDate(@Param("classroomId") classroomId: Int,
-                                     @Param("day") day: Day,
-                                     @Param("date") date: LocalDate): List<EventPeriod>
+                                     @Param("dateFrom") dateFrom: LocalDate,
+                                     @Param("dateTo") dateTo: LocalDate): List<EventPeriod>
 }

@@ -28,13 +28,18 @@ constructor(private val classroomService: ClassroomService) {
         return ResponseEntity.ok().body(classroomService.getClassroomInfo(classroomId))
     }
 
-    @GetMapping(value = ["/{classroomId}/events"])
+    @GetMapping(value = ["/{classroomId}/events-by-date"])
     fun getClassroomWithEventsByDate(@PathVariable classroomId: Int,
+
                                      @RequestParam
                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                                     date: LocalDate): ResponseEntity<*> {
+                                     dateFrom: LocalDate,
 
-        return ResponseEntity.ok().body(classroomService.getClassroomWithEventsByDate(classroomId, date))
+                                     @RequestParam
+                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                     dateTo: LocalDate): ResponseEntity<*> {
+
+        return ResponseEntity.ok().body(classroomService.getClassroomWithEventsByDate(classroomId, dateFrom, dateTo))
     }
 
     @GetMapping
