@@ -36,7 +36,7 @@ open class BaseTests {
 
     fun getEventPeriod(dateFrom: LocalDate = LocalDate.of(2020, 5, 1),
                        dateTo: LocalDate = LocalDate.of(2020, 7, 1),
-                       day: Day = Day.MONDAY,
+                       day: Day = Day.FRIDAY,
                        interval: Interval = Interval.EVERY_WEEK): EventPeriod {
         return EventPeriod(getEvent(), getClassroom(), getTimeBlock(), day, dateFrom, dateTo, interval)
     }

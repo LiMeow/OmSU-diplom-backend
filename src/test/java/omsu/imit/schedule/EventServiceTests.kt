@@ -9,6 +9,7 @@ import io.mockk.verify
 import omsu.imit.schedule.dto.request.CancelEventRequest
 import omsu.imit.schedule.dto.request.CreateEventPeriodRequest
 import omsu.imit.schedule.dto.request.CreateEventRequest
+import omsu.imit.schedule.dto.request.RescheduleEventRequest
 import omsu.imit.schedule.exception.CommonValidationException
 import omsu.imit.schedule.exception.NotFoundException
 import omsu.imit.schedule.model.Day
@@ -355,50 +356,55 @@ class EventServiceTests : BaseTests() {
 
     @Test
     fun testRescheduleEvent() {
-//        val updatedEvent = getEvent()
-//
-//        val eventPeriod = getEventPeriod()
-//        val updatedEventPeriod = getEventPeriod()
-//
-//        val timeBlock = getTimeBlock()
-//        val classroom = getClassroom()
-//        val rescheduleFrom = LocalDate.of(2020, 5, 1)
-//        val rescheduleTo = LocalDate.of(2020, 5, 4)
-//
-//        updatedEventPeriod.dateFrom = rescheduleTo
-//        updatedEventPeriod.dateTo = rescheduleTo
-//        updatedEventPeriod.interval = Interval.NONE
-//        updatedEvent.eventPeriods = listOf(updatedEventPeriod)
-//
-//        val response = getEventInfo(updatedEvent)
-//        val request = RescheduleEventRequest(
-//                eventPeriod.id,
-//                classroom.id,
-//                timeBlock.id,
-//                rescheduleFrom,
-//                rescheduleTo,
-//                Interval.NONE)
-//
-//        every { eventPeriodRepository.findById(eventPeriod.id) } returns Optional.of(eventPeriod)
-//        every { eventPeriodRepository.save(updatedEventPeriod) } returns updatedEventPeriod
-//        every { eventRepository.findById(eventPeriod.event.id) } returns Optional.of(updatedEvent)
-//        every { timeBlockService.getTimeBlockById(timeBlock.id) } returns timeBlock
-//        every { classroomService.getClassroomById(classroom.id) } returns classroom
-//        every {
-//            eventPeriodRepository.findByClassroomDayAndTime(
-//                    classroom.id,
-//                    timeBlock.id,
-//                    Day.MONDAY,
-//                    rescheduleFrom,
-//                    rescheduleTo)
-//        } returns listOf()
-//
-//        assertEquals(response, eventService.rescheduleEventPeriod(request))
-//
-//        verify { eventPeriodRepository.findById(eventPeriod.id) }
-//        verify { eventPeriodRepository.save(updatedEventPeriod) }
-//        verify { eventRepository.findById(eventPeriod.event.id) }
-//        verify { timeBlockService.getTimeBlockById(timeBlock.id) }
-//        verify { classroomService.getClassroomById(classroom.id) }
+        val updatedEvent = getEvent()
+
+        val eventPeriod = getEventPeriod()
+        val updatedEventPeriod1 = getEventPeriod()
+        val updatedEventPeriod2 = getEventPeriod()
+
+
+        val timeBlock = getTimeBlock()
+        val classroom = getClassroom()
+        val updatedDateFrom = LocalDate.of(2020, 5, 8)
+        val rescheduleFrom = LocalDate.of(2020, 5, 1)
+        val rescheduleTo = LocalDate.of(2020, 5, 4)
+
+        updatedEventPeriod1.dateFrom = rescheduleTo
+        updatedEventPeriod1.dateTo = rescheduleTo
+        updatedEventPeriod1.day = Day.MONDAY
+        updatedEventPeriod1.interval = Interval.NONE
+        updatedEventPeriod2.dateFrom = updatedDateFrom
+        updatedEvent.eventPeriods = mutableListOf(updatedEventPeriod1, updatedEventPeriod2)
+
+        val response = getEventInfo(updatedEvent)
+        val request = RescheduleEventRequest(
+                eventPeriod.id,
+                classroom.id,
+                timeBlock.id,
+                rescheduleFrom,
+                rescheduleTo)
+
+        every { eventPeriodRepository.findById(eventPeriod.id) } returns Optional.of(eventPeriod)
+        every { eventPeriodRepository.save(updatedEventPeriod1) } returns updatedEventPeriod1
+        every { eventPeriodRepository.save(updatedEventPeriod2) } returns updatedEventPeriod2
+        every { eventRepository.findById(eventPeriod.event.id) } returns Optional.of(updatedEvent)
+        every { timeBlockService.getTimeBlockById(timeBlock.id) } returns timeBlock
+        every { classroomService.getClassroomById(classroom.id) } returns classroom
+        every {
+            eventPeriodRepository.findByClassroomDayAndTime(
+                    classroom.id,
+                    timeBlock.id,
+                    Day.MONDAY,
+                    rescheduleTo,
+                    rescheduleTo)
+        } returns listOf()
+
+        assertEquals(response, eventService.rescheduleEventPeriod(request))
+
+        verify { eventPeriodRepository.findById(eventPeriod.id) }
+        verify { eventPeriodRepository.save(updatedEventPeriod1) }
+        verify { eventRepository.findById(eventPeriod.event.id) }
+        verify { timeBlockService.getTimeBlockById(timeBlock.id) }
+        verify { classroomService.getClassroomById(classroom.id) }
     }
 }
