@@ -200,7 +200,7 @@ class EventServiceTests : BaseTests() {
         val event = getEvent()
         val eventPeriod = getEventPeriod()
         val response = listOf(getClassroomShortInfo(eventPeriod.classroom))
-        event.eventPeriods = listOf(eventPeriod)
+        event.eventPeriods = mutableListOf(eventPeriod)
 
         every { eventRepository.findById(event.id) } returns Optional.of(event)
         assertEquals(response, eventService.getClassroomsByEvent(event.id))
@@ -248,7 +248,7 @@ class EventServiceTests : BaseTests() {
         val eventPeriod = getEventPeriod(date, date, Day.FRIDAY, Interval.NONE)
         val request = CancelEventRequest(eventPeriod.id, listOf(date))
 
-        event.eventPeriods = listOf()
+        event.eventPeriods = mutableListOf()
 
         every { eventRepository.existsById(event.id) } returns true
         every { eventRepository.findById(event.id) } returns Optional.of(event)
