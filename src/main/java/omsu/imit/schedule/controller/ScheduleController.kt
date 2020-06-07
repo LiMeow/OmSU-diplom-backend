@@ -1,6 +1,10 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateScheduleRequest
+import omsu.imit.schedule.dto.response.ScheduleInfo
+import omsu.imit.schedule.dto.response.ScheduleInfoByCourse
+import omsu.imit.schedule.dto.response.ScheduleInfoByGroup
+import omsu.imit.schedule.dto.response.ScheduleInfoByLecturer
 import omsu.imit.schedule.services.ScheduleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -16,7 +20,7 @@ class ScheduleController
 constructor(private val scheduleService: ScheduleService) {
 
     @PostMapping
-    fun createSchedule(@RequestBody @Validated request: CreateScheduleRequest): ResponseEntity<*> {
+    fun createSchedule(@RequestBody @Validated request: CreateScheduleRequest): ResponseEntity<ScheduleInfo> {
         return ResponseEntity.ok().body(scheduleService.createSchedule(request))
     }
 
@@ -25,7 +29,7 @@ constructor(private val scheduleService: ScheduleService) {
                            @RequestParam(required = true, defaultValue = "20--/20--")
                            @Pattern(regexp = "^2\\d{3}/2\\d{3}\$", message = "Study year must have format 2***/2***")
                            studyYear: String,
-                           @RequestParam(required = true, defaultValue = "1") semester: Int): ResponseEntity<*> {
+                           @RequestParam(required = true, defaultValue = "1") semester: Int): ResponseEntity<ScheduleInfoByGroup> {
         return ResponseEntity.ok().body(scheduleService.getScheduleByGroup(groupId, studyYear, semester))
     }
 
@@ -34,7 +38,7 @@ constructor(private val scheduleService: ScheduleService) {
                               @RequestParam(required = true, defaultValue = "20--/20--")
                               @Pattern(regexp = "^2\\d{3}/2\\d{3}\$", message = "Study year must have format 2***/2***")
                               studyYear: String,
-                              @RequestParam(required = true, defaultValue = "1") semester: Int): ResponseEntity<*> {
+                              @RequestParam(required = true, defaultValue = "1") semester: Int): ResponseEntity<ScheduleInfoByLecturer> {
         return ResponseEntity.ok().body(scheduleService.getScheduleByLecturer(lecturerId, studyYear, semester))
     }
 
@@ -43,7 +47,7 @@ constructor(private val scheduleService: ScheduleService) {
                             @RequestParam(required = true, defaultValue = "20--/20--")
                             @Pattern(regexp = "^2\\d{3}/2\\d{3}\$", message = "Study year must have format 2***/2***")
                             studyYear: String,
-                            @RequestParam(required = true, defaultValue = "1") semester: Int): ResponseEntity<*> {
+                            @RequestParam(required = true, defaultValue = "1") semester: Int): ResponseEntity<ScheduleInfoByCourse> {
         return ResponseEntity.ok().body(scheduleService.getScheduleByCourse(courseId, studyYear, semester))
     }
 }

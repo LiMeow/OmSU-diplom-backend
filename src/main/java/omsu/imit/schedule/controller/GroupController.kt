@@ -1,6 +1,7 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateGroupRequest
+import omsu.imit.schedule.dto.response.GroupInfo
 import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.services.GroupService
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,17 +15,17 @@ class GroupController @Autowired
 constructor(private val groupService: GroupService) {
 
     @PostMapping
-    fun createGroup(@Valid @RequestBody request: CreateGroupRequest): ResponseEntity<*> {
+    fun createGroup(@Valid @RequestBody request: CreateGroupRequest): ResponseEntity<GroupInfo> {
         return ResponseEntity.ok().body(groupService.createGroup(request))
     }
 
     @GetMapping(value = ["/{groupId}"])
-    fun getGroup(@PathVariable groupId: Int): ResponseEntity<*> {
+    fun getGroup(@PathVariable groupId: Int): ResponseEntity<GroupInfo> {
         return ResponseEntity.ok().body(groupService.getGroupInfo(groupId))
     }
 
     @GetMapping
-    fun getAllGroups(): ResponseEntity<*> {
+    fun getAllGroups(): ResponseEntity<List<GroupInfo>> {
         return ResponseEntity.ok().body(groupService.getAllGroups())
     }
 

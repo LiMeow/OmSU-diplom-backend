@@ -4,6 +4,7 @@ import omsu.imit.schedule.dto.request.SignInRequest
 import omsu.imit.schedule.dto.request.SignUpRequest
 import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.model.Role
+import omsu.imit.schedule.model.User
 import omsu.imit.schedule.security.JwtTokenProvider
 import omsu.imit.schedule.services.AuthService
 import omsu.imit.schedule.services.UserService
@@ -26,7 +27,7 @@ constructor(private val authService: AuthService,
     private val COOKIE_LIFE_TIME = 3600
 
     @PostMapping(path = ["/signup"])
-    fun signUp(@Valid @RequestBody request: SignUpRequest): ResponseEntity<*> {
+    fun signUp(@Valid @RequestBody request: SignUpRequest): ResponseEntity<User> {
 
         val userInfo = authService.signUp(request)
         authService.sendVerificationToken(userInfo);
@@ -36,7 +37,7 @@ constructor(private val authService: AuthService,
 
     @PostMapping(path = ["/signin"])
     fun signIn(@Valid @RequestBody request: SignInRequest,
-               response: HttpServletResponse): ResponseEntity<*> {
+               response: HttpServletResponse): ResponseEntity<User> {
 
         val userInfo = authService.signIn(request)
         val cookie = getCookie(userInfo.email, userInfo.role)
@@ -46,14 +47,14 @@ constructor(private val authService: AuthService,
     }
 
     @DeleteMapping(path = ["/signout"])
-    fun signOut(response: HttpServletResponse): ResponseEntity<*> {
+    fun signOut(response: HttpServletResponse): StatusResponse {
         val cookie = Cookie("accessToken", "")
 
         cookie.isHttpOnly = true
         cookie.maxAge = (0)
         response.addCookie(cookie)
 
-        return ResponseEntity.noContent().build<Any>()
+        return StatusResponse.OK
     }
 
     @GetMapping("/refresh")
@@ -65,7 +66,7 @@ constructor(private val authService: AuthService,
     }
 
     @GetMapping(path = ["/whoiam"])
-    fun whoIAm(): ResponseEntity<*> {
+    fun whoIAm(): ResponseEntity<User> {
         val email = SecurityContextHolder.getContext().authentication.name;
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }

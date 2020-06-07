@@ -1,6 +1,7 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateFacultyRequest
+import omsu.imit.schedule.dto.response.FacultyInfo
 import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.services.FacultyService
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,18 +15,18 @@ class FacultyController
 @Autowired constructor(private val facultyService: FacultyService) {
 
     @PostMapping
-    fun createFaculty(@Valid @RequestBody request: CreateFacultyRequest): ResponseEntity<*> {
+    fun createFaculty(@Valid @RequestBody request: CreateFacultyRequest): ResponseEntity<FacultyInfo> {
         return ResponseEntity.ok().body(facultyService.createFaculty(request))
     }
 
     @GetMapping(value = ["/{facultyId}"])
-    fun getFacultyInfo(@PathVariable facultyId: Int): ResponseEntity<*> {
+    fun getFacultyInfo(@PathVariable facultyId: Int): ResponseEntity<FacultyInfo> {
 
         return ResponseEntity.ok().body(facultyService.getFacultyInfo(facultyId))
     }
 
     @GetMapping
-    fun getAllFaculties(): ResponseEntity<*> {
+    fun getAllFaculties(): ResponseEntity<List<FacultyInfo>> {
 
         return ResponseEntity.ok().body(facultyService.getAllFaculties())
     }

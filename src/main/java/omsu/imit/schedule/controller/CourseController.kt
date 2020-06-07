@@ -1,5 +1,6 @@
 package omsu.imit.schedule.controller
 
+import omsu.imit.schedule.dto.response.CourseInfo
 import omsu.imit.schedule.services.CourseService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -22,12 +23,12 @@ constructor(private val courseService: CourseService) {
                      start_year: String,
                      @RequestParam(required = true, defaultValue = "20--")
                      @Pattern(regexp = "^\\s?|2\\d{3}\$", message = "Finish year must have format 2*** or be blank.")
-                     finish_year: String): ResponseEntity<*> {
+                     finish_year: String): ResponseEntity<CourseInfo> {
         return ResponseEntity.ok().body(courseService.createCourse(facultyId, start_year, finish_year))
     }
 
     @GetMapping(value = ["/courses/{courseId}"])
-    fun getCourseById(@PathVariable courseId: Int): ResponseEntity<*> {
+    fun getCourseById(@PathVariable courseId: Int): ResponseEntity<CourseInfo> {
         return ResponseEntity.ok().body(courseService.getCourseInfo(courseId))
     }
 }

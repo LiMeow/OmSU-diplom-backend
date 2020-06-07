@@ -50,7 +50,7 @@ constructor(
         return toScheduleInfoByGroup(group, scheduleItems, studyYear, semester)
     }
 
-    fun getScheduleByLecturer(lecturerId: Int, studyYear: String, semester: Int): Any {
+    fun getScheduleByLecturer(lecturerId: Int, studyYear: String, semester: Int): ScheduleInfoByLecturer {
         val lecturer = lecturerService.getLecturer(lecturerId)
         val scheduleItems = scheduleItemRepository.findByLecturer(lecturerId, studyYear, semester)
         return toScheduleInfoByLecturer(lecturer, scheduleItems, studyYear, semester)

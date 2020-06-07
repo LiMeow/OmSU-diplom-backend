@@ -2,6 +2,7 @@ package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateTagRequest
 import omsu.imit.schedule.dto.response.StatusResponse
+import omsu.imit.schedule.model.Tag
 import omsu.imit.schedule.services.TagService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -15,18 +16,18 @@ class TagController
 constructor(private val tagService: TagService) {
 
     @PostMapping
-    fun addTag(@Valid @RequestBody request: CreateTagRequest): ResponseEntity<*> {
+    fun addTag(@Valid @RequestBody request: CreateTagRequest): ResponseEntity<Tag> {
         return ResponseEntity.ok().body(tagService.createTag(request))
     }
 
     @GetMapping(value = ["/{tagId}"])
-    fun getTag(@PathVariable tagId: Int): ResponseEntity<*> {
+    fun getTag(@PathVariable tagId: Int): ResponseEntity<Tag> {
 
         return ResponseEntity.ok().body(tagService.getTagById(tagId))
     }
 
     @GetMapping
-    fun getAllTags(): ResponseEntity<*> {
+    fun getAllTags(): ResponseEntity<MutableList<Tag>> {
         return ResponseEntity.ok().body(tagService.getAllTags())
     }
 

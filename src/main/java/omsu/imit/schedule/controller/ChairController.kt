@@ -1,6 +1,8 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateChairRequest
+import omsu.imit.schedule.dto.response.ChairInfo
+import omsu.imit.schedule.dto.response.LecturerShortInfo
 import omsu.imit.schedule.dto.response.StatusResponse
 import omsu.imit.schedule.services.ChairService
 import omsu.imit.schedule.services.LecturerService
@@ -16,22 +18,22 @@ constructor(private val chairService: ChairService,
             private val lecturerService: LecturerService) {
 
     @PostMapping
-    fun createChair(@Valid @RequestBody request: CreateChairRequest): ResponseEntity<*> {
+    fun createChair(@Valid @RequestBody request: CreateChairRequest): ResponseEntity<ChairInfo> {
         return ResponseEntity.ok().body(chairService.createChair(request))
     }
 
     @GetMapping(value = ["/{chairId}"])
-    fun getChair(@PathVariable chairId: Int): ResponseEntity<*> {
+    fun getChair(@PathVariable chairId: Int): ResponseEntity<ChairInfo> {
         return ResponseEntity.ok().body(chairService.getChairInfo(chairId))
     }
 
     @GetMapping(value = ["/{chairId}/lecturers"])
-    fun getLecturersByChair(@PathVariable chairId: Int): ResponseEntity<*> {
+    fun getLecturersByChair(@PathVariable chairId: Int): ResponseEntity<List<LecturerShortInfo>> {
         return ResponseEntity.ok().body(lecturerService.getLecturersByChair(chairId))
     }
 
     @GetMapping
-    fun getAllChairs(): ResponseEntity<*> {
+    fun getAllChairs(): ResponseEntity<List<ChairInfo>> {
         return ResponseEntity.ok().body(chairService.getAllChairs())
     }
 
