@@ -59,7 +59,7 @@ constructor(
         val confirmationToken = ConfirmationToken(user)
         confirmationTokenRepository.save(confirmationToken)
         val subject = "Complete Registration!"
-        val verificationToken = "http://localhost:8080/api/confirm-account?token=" + confirmationToken.token
+        val verificationToken = "https://i-scheduler-api.herokuapp.com/api/confirm-account?token=" + confirmationToken.token
 
         emailSenderService.sendEmail(user, subject, verificationToken)
     }
