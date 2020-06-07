@@ -213,6 +213,14 @@ constructor(private val classroomService: ClassroomService,
         if (request.interval !== null) {
             eventPeriod.interval = request.interval!!
         }
+        this.checkEventPeriod(
+                classroomId = eventPeriod.classroom.id,
+                timeBlockId = eventPeriod.timeBlock.id,
+                day = eventPeriod.day,
+                dateFrom = eventPeriod.dateFrom,
+                dateTo = eventPeriod.dateTo,
+                interval = eventPeriod.interval,
+                eventPeriodId = eventPeriod.id)
         this.eventPeriodRepository.save(eventPeriod)
 
         return eventPeriod
@@ -252,14 +260,15 @@ constructor(private val classroomService: ClassroomService,
                 request.interval)
     }
 
-    private fun checkEventPeriod(classroomId: Int, timeBlockId: Int, day: Day, dateFrom: LocalDate, dateTo: LocalDate, interval: Interval) {
+    private fun checkEventPeriod(classroomId: Int, timeBlockId: Int, day: Day, dateFrom: LocalDate, dateTo: LocalDate, interval: Interval, eventPeriodId: Int? = null) {
         val existingPeriods = eventPeriodRepository
                 .findByClassroomDayAndTime(classroomId, timeBlockId, day, dateFrom, dateTo)
                 .asSequence()
                 .filter {
-                    it.interval == interval ||
-                            it.interval == Interval.EVERY_WEEK ||
-                            (it.interval != Interval.EVERY_WEEK && interval == Interval.EVERY_WEEK)
+                    (eventPeriodId !== null && it.id != eventPeriodId) &&
+                            (it.interval == interval ||
+                                    it.interval == Interval.EVERY_WEEK ||
+                                    (it.interval != Interval.EVERY_WEEK && interval == Interval.EVERY_WEEK))
                 }
                 .toList()
 
