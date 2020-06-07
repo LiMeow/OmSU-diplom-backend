@@ -14,6 +14,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import java.util.*
 
 
 @Configuration
@@ -35,6 +39,7 @@ class WebSecurityConfig(@Autowired private val jwtTokenProvider: JwtTokenProvide
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
+        http.cors()
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
@@ -74,4 +79,22 @@ class WebSecurityConfig(@Autowired private val jwtTokenProvider: JwtTokenProvide
 
     }
 
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource? {
+        val configuration = CorsConfiguration()
+        configuration.allowedOrigins = Arrays.asList("http://localhost:3000")
+        configuration.allowedMethods = Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH")
+        configuration.allowedHeaders = listOf(
+                "Access-Control-Allow-Headers",
+                "Access-Control-Allow-Headers",
+                "Origin", "Accept",
+                "X-Requested-With",
+                "Content-Type",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers")
+        configuration.allowCredentials = true
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
+    }
 }
