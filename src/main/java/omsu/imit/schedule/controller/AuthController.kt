@@ -71,12 +71,6 @@ constructor(private val authService: AuthService,
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
-    @GetMapping(path = ["/confirm-account"])
-    fun confirmAccount(@RequestParam token: String): StatusResponse {
-        authService.confirmAccount(token)
-        return StatusResponse.OK
-    }
-
     fun getCookie(email: String, role: Role = Role.ROLE_ADMIN): Cookie {
         val token = jwtTokenProvider.createToken(email, listOf(role));
         val cookie = Cookie("accessToken", token)
