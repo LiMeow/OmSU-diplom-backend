@@ -82,7 +82,7 @@ class WebSecurityConfig(@Autowired private val jwtTokenProvider: JwtTokenProvide
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource? {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = Arrays.asList("http://localhost:3000")
+        configuration.allowedOrigins = Arrays.asList("https://i-scheduler-app.herokuapp.com")
         configuration.allowedMethods = Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH")
         configuration.allowedHeaders = listOf(
                 "Access-Control-Allow-Headers",
