@@ -26,7 +26,8 @@ interface EventPeriodRepository : JpaRepository<EventPeriod, Int> {
 
     @Query("SELECT * FROM  event_period as e " +
             "WHERE e.classroom_id = :classroomId " +
-            "AND (e.date_from, e.date_to) overlaps (:dateFrom, :dateTo)", nativeQuery = true
+            "AND ((e.date_from, e.date_to) overlaps (:dateFrom, :dateTo) OR " +
+            "(:dateFrom, :dateTo) overlaps (e.date_from, e.date_to))", nativeQuery = true
     )
     fun findAllByClassroomDayAndDate(@Param("classroomId") classroomId: Int,
                                      @Param("dateFrom") dateFrom: LocalDate,
