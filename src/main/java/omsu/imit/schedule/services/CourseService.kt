@@ -37,4 +37,9 @@ constructor(private val courseRepository: CourseRepository,
         return toCourseInfo(getCourseById(courseId))
     }
 
+    fun getCoursesByFaculty(facultyId: Int): List<CourseInfo> {
+        val faculty = facultyService.getFacultyById(facultyId)
+        return courseRepository.findByFaculty(faculty).asSequence().map { toCourseInfo(it) }.toList()
+    }
+
 }

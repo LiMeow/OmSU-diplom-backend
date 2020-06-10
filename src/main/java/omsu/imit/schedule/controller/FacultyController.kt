@@ -1,8 +1,10 @@
 package omsu.imit.schedule.controller
 
 import omsu.imit.schedule.dto.request.CreateFacultyRequest
+import omsu.imit.schedule.dto.response.CourseInfo
 import omsu.imit.schedule.dto.response.FacultyInfo
 import omsu.imit.schedule.dto.response.StatusResponse
+import omsu.imit.schedule.services.CourseService
 import omsu.imit.schedule.services.FacultyService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -12,7 +14,8 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/faculties")
 class FacultyController
-@Autowired constructor(private val facultyService: FacultyService) {
+@Autowired constructor(private val facultyService: FacultyService,
+                       private val courseService: CourseService) {
 
     @PostMapping
     fun createFaculty(@Valid @RequestBody request: CreateFacultyRequest): ResponseEntity<FacultyInfo> {
@@ -23,6 +26,12 @@ class FacultyController
     fun getFacultyInfo(@PathVariable facultyId: Int): ResponseEntity<FacultyInfo> {
 
         return ResponseEntity.ok().body(facultyService.getFacultyInfo(facultyId))
+    }
+
+    @GetMapping(value = ["/{facultyId}/courses"])
+    fun getCoursesByFaculty(@PathVariable facultyId: Int): ResponseEntity<List<CourseInfo>> {
+
+        return ResponseEntity.ok().body(courseService.getCoursesByFaculty(facultyId))
     }
 
     @GetMapping
