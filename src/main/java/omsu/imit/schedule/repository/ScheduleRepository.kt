@@ -11,5 +11,5 @@ interface ScheduleRepository : JpaRepository<Schedule, Int> {
             "WHERE s.course.id = :courseId  " +
             "AND s.studyYear = :studyYear " +
             "AND s.semester = :semester")
-    fun findByCourse(courseId: Int, studyYear: String, semester: Int): List<Schedule>
+    fun findByCourse(courseId: Int, studyYear: String, semester: Int): Schedule
 }

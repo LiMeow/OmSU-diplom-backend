@@ -5,5 +5,5 @@ class ScheduleInfoByGroup(
         var semester: Int,
         var studyYear: String,
         var group: GroupInfo,
-        var scheduleItems: MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>>) {
+        var schedule: MutableMap<String, MutableMap<String, MutableList<ScheduleItemInfo>>>) {
 }

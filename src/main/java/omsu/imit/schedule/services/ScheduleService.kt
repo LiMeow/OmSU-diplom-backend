@@ -61,6 +61,7 @@ constructor(
         val schedulesInfo: MutableMap<String, ScheduleByCourseElement> = mutableMapOf()
         val course = courseService.getCourseById(courseId)
         val courseNumber = LocalDate.now().year - course.startYear.toInt()
+        val schedule: Schedule = this.scheduleRepository.findByCourse(courseId, studyYear, semester)
 
         course.groups?.asSequence()?.forEach { group ->
             val scheduleItems = scheduleItemRepository.findByGroup(group.id, studyYear, semester)
@@ -69,6 +70,7 @@ constructor(
                     toScheduleItemsInfo(scheduleItems, true))
         }
         return ScheduleInfoByCourse(
+                schedule.id,
                 courseNumber,
                 semester,
                 studyYear,
