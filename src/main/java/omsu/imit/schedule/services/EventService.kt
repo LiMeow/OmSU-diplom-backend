@@ -34,7 +34,6 @@ constructor(private val classroomService: ClassroomService,
                 request.comment,
                 request.required)
 
-        println(event)
         eventRepository.save(event)
         event.eventPeriods = request.periods
                 .asSequence()
@@ -52,9 +51,6 @@ constructor(private val classroomService: ClassroomService,
         }
         if (request.required !== null) {
             event.required = request.required!!
-        }
-        if (request.comment !== null) {
-            event.comment = request.comment!!
         }
         if (request.comment !== null) {
             event.comment = request.comment!!
@@ -198,14 +194,9 @@ constructor(private val classroomService: ClassroomService,
         if (request.timeBlockId !== null) {
             eventPeriod.timeBlock = this.timeBlockService.getTimeBlockById(request.timeBlockId!!)
         }
-        if (request.day !== null) {
-            if (eventPeriod.interval == Interval.NONE) {
-                throw CommonValidationException(ErrorCode.NON_RECURRING_EVENT_PERIOD)
-            }
-            eventPeriod.day = request.day!!
-        }
         if (request.dateFrom !== null) {
             eventPeriod.dateFrom = request.dateFrom!!
+            eventPeriod.day = Day.valueOf(request.dateFrom!!.dayOfWeek.name)
         }
         if (request.dateTo !== null) {
             eventPeriod.dateTo = request.dateTo!!
@@ -249,12 +240,13 @@ constructor(private val classroomService: ClassroomService,
     private fun createEventPeriod(request: CreateEventPeriodRequest, event: Event): EventPeriod {
         val timeBlock = timeBlockService.getTimeBlockById(request.timeBlockId)
         val classroom = classroomService.getClassroomById(request.classroomId)
+        val day = Day.valueOf(request.dateFrom.dayOfWeek.name)
 
         return createEventPeriod(
                 event,
                 classroom,
                 timeBlock,
-                request.day,
+                day,
                 request.dateFrom,
                 request.dateTo,
                 request.interval)
@@ -286,7 +278,7 @@ constructor(private val classroomService: ClassroomService,
             this.checkEventPeriod(
                     eventPeriod.classroomId,
                     eventPeriod.timeBlockId,
-                    eventPeriod.day,
+                    Day.valueOf(eventPeriod.dateFrom.dayOfWeek.name),
                     eventPeriod.dateFrom,
                     eventPeriod.dateTo,
                     eventPeriod.interval)
