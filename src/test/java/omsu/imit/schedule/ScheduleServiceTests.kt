@@ -145,11 +145,13 @@ class ScheduleServiceTests : BaseTests() {
         val scheduleItem = getScheduleItem()
         val studyYear = scheduleItem.schedule.studyYear
         val semester = scheduleItem.schedule.semester
+        val schedule = getSchedule()
 
         course.groups = groups
 
         every { courseService.getCourseById(course.id) } returns course
         every { scheduleItemRepository.findByGroup(course.id, studyYear, semester) } returns listOf(scheduleItem)
+        every { scheduleRepository.findByCourse(course.id, studyYear, semester) } returns schedule
 
         scheduleService.getScheduleByCourse(course.id, studyYear, semester)
 

@@ -37,7 +37,7 @@ constructor(private val eventService: EventService) {
     @PutMapping(value = ["/{eventId}"])
     fun editEvent(@PathVariable eventId: Int,
                   @Valid @RequestBody request: EditEventRequest): ResponseEntity<EventInfo> {
-        return ResponseEntity.ok().body(eventService.editEvent(eventId, request))
+        return ResponseEntity.ok().body(eventService.editEventAndGetInfo(eventId, request))
     }
 
     @PutMapping(value = ["/reschedule"])

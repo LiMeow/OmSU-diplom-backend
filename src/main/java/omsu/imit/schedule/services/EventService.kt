@@ -43,7 +43,7 @@ constructor(private val classroomService: ClassroomService,
         return event
     }
 
-    fun editEvent(eventId: Int, request: EditEventRequest): EventInfo {
+    fun editEvent(eventId: Int, request: EditEventRequest): Event {
         val event = getEventById(eventId)
 
         if (request.lecturerId !== null) {
@@ -68,7 +68,11 @@ constructor(private val classroomService: ClassroomService,
         }
 
         eventRepository.save(event)
-        return toEventInfo(event)
+        return event
+    }
+
+    fun editEventAndGetInfo(eventId: Int, request: EditEventRequest): EventInfo {
+        return toEventInfo(editEvent(eventId, request))
     }
 
     fun createEventAndGetInfo(request: CreateEventRequest): EventInfo {
@@ -257,7 +261,7 @@ constructor(private val classroomService: ClassroomService,
                 .findByClassroomDayAndTime(classroomId, timeBlockId, day, dateFrom, dateTo)
                 .asSequence()
                 .filter {
-                    (eventPeriodId !== null && it.id != eventPeriodId) &&
+                    (eventPeriodId !== null && it.id != eventPeriodId) ||
                             (it.interval == interval ||
                                     it.interval == Interval.EVERY_WEEK ||
                                     (it.interval != Interval.EVERY_WEEK && interval == Interval.EVERY_WEEK))

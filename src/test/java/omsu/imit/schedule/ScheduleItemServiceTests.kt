@@ -67,7 +67,6 @@ class ScheduleItemServiceTests : BaseTests() {
         val eventPeriodRequest = CreateEventPeriodRequest(
                 0,
                 0,
-                eventPeriod.day,
                 eventPeriod.dateFrom,
                 eventPeriod.dateTo,
                 eventPeriod.interval)

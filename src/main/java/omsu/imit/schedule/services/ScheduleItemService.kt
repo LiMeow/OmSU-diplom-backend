@@ -63,9 +63,9 @@ constructor(private val eventService: EventService,
         if (request.groupIds !== null) {
             scheduleItem.groups = groupService.getGroupsByIds(request.groupIds!!)
         }
-//        if (request.event !== null) {
-//            scheduleItem.event = eventService.editEvent(scheduleItem.event.id, request.event!!)
-//        }
+        if (request.event !== null) {
+            scheduleItem.event = eventService.editEvent(scheduleItem.event.id, request.event!!)
+        }
 
         scheduleItemRepository.save(scheduleItem)
 

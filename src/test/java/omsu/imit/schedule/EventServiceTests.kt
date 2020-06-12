@@ -71,7 +71,6 @@ class EventServiceTests : BaseTests() {
         val eventPeriodRequest = CreateEventPeriodRequest(
                 classroom.id,
                 timeBlock.id,
-                eventPeriod.day,
                 eventPeriod.dateFrom,
                 eventPeriod.dateTo,
                 eventPeriod.interval)
@@ -112,12 +111,13 @@ class EventServiceTests : BaseTests() {
         val lecturer = getLecturer()
         val event = getEvent()
         val eventPeriod = getEventPeriod()
+        val otherEventPeriod = getEventPeriod()
+
         event.eventPeriods = mutableListOf(eventPeriod)
 
         val eventPeriodRequest = CreateEventPeriodRequest(
                 eventPeriod.classroom.id,
                 eventPeriod.timeBlock.id,
-                eventPeriod.day,
                 eventPeriod.dateFrom,
                 eventPeriod.dateTo,
                 eventPeriod.interval)
@@ -130,7 +130,7 @@ class EventServiceTests : BaseTests() {
                     eventPeriod.day,
                     eventPeriod.dateFrom,
                     eventPeriod.dateTo)
-        } returns listOf(eventPeriod)
+        } returns listOf(otherEventPeriod)
         every { lecturerService.getLecturer(lecturer.id) } returns lecturer
 
         assertThrows(CommonValidationException::class.java) { eventService.createEvent(request) }
@@ -159,7 +159,6 @@ class EventServiceTests : BaseTests() {
         val eventPeriodRequest = CreateEventPeriodRequest(
                 classroom.id,
                 timeBlock.id,
-                eventPeriod.day,
                 eventPeriod.dateFrom,
                 eventPeriod.dateTo,
                 eventPeriod.interval)

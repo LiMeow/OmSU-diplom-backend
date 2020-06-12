@@ -8,11 +8,11 @@ class ScheduleItem(@Id
                    @GeneratedValue(strategy = GenerationType.IDENTITY)
                    var id: Int,
 
-                   @OneToOne(cascade = [CascadeType.ALL])
+                   @OneToOne(fetch = FetchType.LAZY)
                    @JoinColumn(name = "event_id", referencedColumnName = "id")
                    var event: Event,
 
-                   @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+                   @ManyToOne(fetch = FetchType.LAZY)
                    @JoinColumn(name = "discipline_id")
                    var discipline: Discipline,
 
@@ -20,13 +20,13 @@ class ScheduleItem(@Id
                    @Enumerated(EnumType.STRING)
                    var activityType: ActivityType,
 
-                   @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+                   @ManyToMany(fetch = FetchType.LAZY)
                    @JoinTable(name = "schedule_item_group",
                            joinColumns = [JoinColumn(name = "schedule_item_id", referencedColumnName = "id")],
                            inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")])
                    var groups: List<Group>,
 
-                   @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+                   @ManyToOne(fetch = FetchType.LAZY)
                    @JoinColumn(name = "schedule_id")
                    var schedule: Schedule) {
 

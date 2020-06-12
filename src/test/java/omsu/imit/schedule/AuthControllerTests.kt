@@ -111,7 +111,7 @@ class AuthControllerTests : BaseTests() {
         mockMvc.perform(get(URL)
                 .param("token", confirmationToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk)
+                .andExpect(status().is3xxRedirection)
                 .andReturn()
 
         verify(authService, times(1)).confirmAccount(confirmationToken)

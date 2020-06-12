@@ -136,12 +136,7 @@ class BaseService {
             forLecturer: Boolean = false): ScheduleItemInfo {
         val scheduleInfo = ScheduleItemInfo(
                 scheduleItem.id,
-                eventPeriod.dateFrom,
-                eventPeriod.dateTo,
-                eventPeriod.timeBlock,
-                eventPeriod.interval,
-                eventPeriod.classroom.building.number,
-                eventPeriod.classroom.number,
+                toEventPeriodInfo(eventPeriod),
                 scheduleItem.discipline.name,
                 scheduleItem.activityType,
                 scheduleItem.event.comment)
