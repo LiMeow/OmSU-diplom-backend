@@ -261,7 +261,7 @@ constructor(private val classroomService: ClassroomService,
                 .findByClassroomDayAndTime(classroomId, timeBlockId, day, dateFrom, dateTo)
                 .asSequence()
                 .filter {
-                    (eventPeriodId !== null && it.id != eventPeriodId) ||
+                    (eventPeriodId !== null && it.id != eventPeriodId) &&
                             (it.interval == interval ||
                                     it.interval == Interval.EVERY_WEEK ||
                                     (it.interval != Interval.EVERY_WEEK && interval == Interval.EVERY_WEEK))
